@@ -5,8 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VersionControlGitApp"
         mc:Ignorable="d"
+        WindowStyle="ToolWindow"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="15*"/>
+            <ColumnDefinition Width="90*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="95*"/>
+        </Grid.RowDefinitions>
+        <Border Background="Gray" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4"/>
+        <Border Background="LightCoral" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"/>
+        <Border Background="LightCyan" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>
