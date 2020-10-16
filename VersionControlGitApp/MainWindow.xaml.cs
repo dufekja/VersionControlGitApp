@@ -29,7 +29,7 @@ namespace VersionControlGitApp {
 
             string path = @"C:\Users\jandu\Desktop\repo";
 
-            userRepos[0].Status(path);
+            //userRepos[0].Status(path);
 
 
         }

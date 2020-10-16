@@ -5,21 +5,88 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VersionControlGitApp"
         mc:Ignorable="d"
-        WindowStyle="ToolWindow"
-        Title="MainWindow" Height="450" Width="800">
+        WindowStyle="SingleBorderWindow"
+        Title="VersionControlGitApp" MinHeight="400" MinWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*"/>
-            <ColumnDefinition Width="5*"/>
-            <ColumnDefinition Width="15*"/>
+            <ColumnDefinition MinWidth="70"/>
+            <ColumnDefinition MinWidth="90"/>
+            <ColumnDefinition MinWidth="85"/>
             <ColumnDefinition Width="90*"/>
+            <ColumnDefinition Width="40*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="95*"/>
+            <RowDefinition MinHeight="30" Height="15*"/>
+            <RowDefinition MinHeight="70"/>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="30*"/>
+            <RowDefinition MinHeight="110"/>
+            <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
-        <Border Background="Gray" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4"/>
-        <Border Background="LightCoral" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"/>
-        <Border Background="LightCyan" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="2"/>
+
+        <DockPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0.4,0">
+            <Menu DockPanel.Dock="Left" Background="#3f3f46" Foreground="White" Padding="5">
+                <MenuItem Header="Git">
+                </MenuItem>
+            </Menu>
+            <Menu DockPanel.Dock="Left" Background="#3f3f46" >
+                <MenuItem Header="File" Foreground="White" Padding="5">
+                    <MenuItem Header="New Repository" Background="#3f3f46" Padding="3"/>
+                    <MenuItem Header="Open Local Repository" Background="#3f3f46" Padding="3"/>
+                    <MenuItem Header="Clone Repository" Background="#3f3f46" Padding="3"/>
+                </MenuItem>
+            </Menu>
+            <Menu DockPanel.Dock="Left" Background="#3f3f46">
+                <MenuItem Header="Accounts" Foreground="White" Padding="5">
+
+                </MenuItem>
+            </Menu>
+            <Menu DockPanel.Dock="Left" Background="#3f3f46">
+                <MenuItem Header="Branch" Foreground="White" Padding="5">
+                    <MenuItem Header="New" Background="#3f3f46" Padding="3"/>
+                    <MenuItem Header="Rename" Background="#3f3f46" Padding="3"/>
+                    <MenuItem Header="Merge selected" Background="#3f3f46" Padding="3"/>
+                    <MenuItem Header="Delete" Background="#3f3f46" Padding="3" Margin="0 3 0 0"/>
+                </MenuItem>
+            </Menu>
+            <Menu DockPanel.Dock="Left" Background="#3f3f46" Foreground="White">
+                <MenuItem Header="Repository" Foreground="White" Padding="5">
+                    <MenuItem Header="Fetch" Background="#3f3f46" Padding="3"/>
+                    <MenuItem Header="Push" Background="#3f3f46" Padding="3"/>
+                    <MenuItem Header="Pull" Background="#3f3f46" Padding="3"/>
+                    <MenuItem Header="Remove" Background="#3f3f46" Padding="3" Margin="0 3 0 0"/>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        <Border Background="#3f3f46" Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="3" Margin="84.4,0,-0.4,0"/>
+        <Border Background="#3f3f4f" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,84.4,0" Grid.RowSpan="10" Grid.Row="1"/>
+        <Border Background="LightCyan" Grid.Column="2" Grid.ColumnSpan="3" Margin="0.4,0,-0.4,0" Grid.RowSpan="10" Grid.Row="1"/>
+
+        <Border Background="#3f3f4f" Grid.Column="4" Grid.Row="7" Grid.RowSpan="3" BorderThickness="3" BorderBrush="Aqua">
+            <StackPanel>
+                <Label Content="Summary" Foreground="White"/>
+                <TextBox Foreground="Black" HorizontalAlignment="Stretch" Padding="3" Margin="5 5 5 5" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                <Label Content="Description" Foreground="White"/>
+                <TextBox Foreground="Black" HorizontalAlignment="Stretch" Padding="10" Margin="5 5 5 5" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                <Button Content="Commit" HorizontalAlignment="Center" Margin="0 8" Padding="15 5 15 5" FontSize="14"/>
+            </StackPanel>
+        </Border>
+
+        <Label Foreground="White" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Label.Content>
+                <AccessText FontSize="14" TextWrapping="Wrap" Text="Account name"/>
+            </Label.Content>
+        </Label>
+
+        <Button Content="Statistics" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Background="#3f3f46" Foreground="White" BorderBrush="DarkSlateGray" BorderThickness="3" FontSize="18"/>
+        <Button Content="History" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Background="#3f3f46" Foreground="White" BorderBrush="DarkSlateGray" BorderThickness="3" FontSize="18"/>
+        <Button Content="Changes" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Background="#3f3f46" Foreground="White" BorderBrush="DarkSlateGray" BorderThickness="3" FontSize="18"/>
+        <Button Content="Projects" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" Background="#3f3f46" Foreground="White" BorderBrush="DarkSlateGray" BorderThickness="3" FontSize="18"/>
+        <Button Content="Team" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" Background="#3f3f46" Foreground="White" BorderBrush="DarkSlateGray" BorderThickness="3" FontSize="18"/>
     </Grid>
 </Window>
