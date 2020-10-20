@@ -30,44 +30,45 @@
         </Grid.RowDefinitions>
 
         <DockPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0.4,0">
-            <Menu DockPanel.Dock="Left" Background="#3f3f46" Foreground="White" Padding="5">
+            <Menu DockPanel.Dock="Left" Padding="5">
                 <MenuItem Header="Git">
+                    <MenuItem Header="Private Token" Padding="3"/>
                 </MenuItem>
             </Menu>
-            <Menu DockPanel.Dock="Left" Background="#3f3f46" >
-                <MenuItem Header="File" Foreground="White" Padding="5">
-                    <MenuItem Header="New Repository" Background="#3f3f46" Padding="3"/>
-                    <MenuItem Header="Open Local Repository" Background="#3f3f46" Padding="3"/>
-                    <MenuItem Header="Clone Repository" Background="#3f3f46" Padding="3"/>
+            <Menu DockPanel.Dock="Left">
+                <MenuItem Header="File" Padding="5">
+                    <MenuItem Header="New Repository" Padding="3"/>
+                    <MenuItem Click="AddLocalRepository" Header="Add Local Repository" Padding="3"/>
+                    <MenuItem Header="Clone Repository" Padding="3"/>
                 </MenuItem>
             </Menu>
-            <Menu DockPanel.Dock="Left" Background="#3f3f46">
-                <MenuItem Header="Accounts" Foreground="White" Padding="5">
+            <Menu DockPanel.Dock="Left">
+                <MenuItem Header="Accounts" Padding="5">
 
                 </MenuItem>
             </Menu>
-            <Menu DockPanel.Dock="Left" Background="#3f3f46">
-                <MenuItem Header="Branch" Foreground="White" Padding="5">
-                    <MenuItem Header="New" Background="#3f3f46" Padding="3"/>
-                    <MenuItem Header="Rename" Background="#3f3f46" Padding="3"/>
-                    <MenuItem Header="Merge selected" Background="#3f3f46" Padding="3"/>
-                    <MenuItem Header="Delete" Background="#3f3f46" Padding="3" Margin="0 3 0 0"/>
+            <Menu DockPanel.Dock="Left">
+                <MenuItem Header="Branch" Padding="5">
+                    <MenuItem Header="New" Padding="3"/>
+                    <MenuItem Header="Rename" Padding="3"/>
+                    <MenuItem Header="Merge selected" Padding="3"/>
+                    <MenuItem Header="Delete" Padding="3" Margin="0 3 0 0"/>
                 </MenuItem>
             </Menu>
-            <Menu DockPanel.Dock="Left" Background="#3f3f46" Foreground="White">
-                <MenuItem Header="Repository" Foreground="White" Padding="5">
-                    <MenuItem Header="Fetch" Background="#3f3f46" Padding="3"/>
-                    <MenuItem Header="Push" Background="#3f3f46" Padding="3"/>
-                    <MenuItem Header="Pull" Background="#3f3f46" Padding="3"/>
-                    <MenuItem Header="Remove" Background="#3f3f46" Padding="3" Margin="0 3 0 0"/>
+            <Menu DockPanel.Dock="Left">
+                <MenuItem Header="Repository" Padding="5">
+                    <MenuItem Header="Fetch" Padding="3"/>
+                    <MenuItem Header="Push" Padding="3"/>
+                    <MenuItem Header="Pull" Padding="3"/>
+                    <MenuItem Header="Remove" Padding="3" Margin="0 3 0 0"/>
                 </MenuItem>
             </Menu>
         </DockPanel>
         <Border Background="#3f3f46" Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="3" Margin="84.4,0,-0.4,0"/>
         <Border Background="#3f3f4f" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,84.4,0" Grid.RowSpan="10" Grid.Row="1"/>
-        <Border Background="LightCyan" Grid.Column="2" Grid.ColumnSpan="3" Margin="0.4,0,-0.4,0" Grid.RowSpan="10" Grid.Row="1"/>
+        <Border Background="#222222" Grid.Column="2" Grid.ColumnSpan="3" Margin="0.4,0,-0.4,0" Grid.RowSpan="10" Grid.Row="1"/>
 
-        <Border Background="#3f3f4f" Grid.Column="4" Grid.Row="7" Grid.RowSpan="3" BorderThickness="3" BorderBrush="Aqua">
+        <Border Background="#3f3f4f" Grid.Column="4" Grid.Row="7" Grid.RowSpan="3" BorderThickness="3">
             <StackPanel>
                 <Label Content="Summary" Foreground="White"/>
                 <TextBox Foreground="Black" HorizontalAlignment="Stretch" Padding="3" Margin="5 5 5 5" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
@@ -83,10 +84,15 @@
             </Label.Content>
         </Label>
 
-        <Button Content="Statistics" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Background="#3f3f46" Foreground="White" BorderBrush="DarkSlateGray" BorderThickness="3" FontSize="18"/>
-        <Button Content="History" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Background="#3f3f46" Foreground="White" BorderBrush="DarkSlateGray" BorderThickness="3" FontSize="18"/>
-        <Button Content="Changes" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Background="#3f3f46" Foreground="White" BorderBrush="DarkSlateGray" BorderThickness="3" FontSize="18"/>
-        <Button Content="Projects" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" Background="#3f3f46" Foreground="White" BorderBrush="DarkSlateGray" BorderThickness="3" FontSize="18"/>
-        <Button Content="Team" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" Background="#3f3f46" Foreground="White" BorderBrush="DarkSlateGray" BorderThickness="3" FontSize="18"/>
+        <ComboBox MinHeight="40" FontSize="16" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
+            <ComboBoxItem FontSize="12" IsSelected="True">Repo 1</ComboBoxItem>
+            <ComboBoxItem FontSize="12">Repo 2</ComboBoxItem>
+            <ComboBoxItem FontSize="12">Repo 3</ComboBoxItem>
+        </ComboBox>
+        <Button Content="Statistics" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
+        <Button Content="History" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
+        <Button Content="Changes" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
+        <Button Content="Projects" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
+        <Button Content="Team" Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
     </Grid>
 </Window>

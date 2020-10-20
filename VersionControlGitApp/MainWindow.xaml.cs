@@ -1,9 +1,14 @@
 ﻿using Octokit;
+using RestSharp.Extensions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Forms;
+using VersionControlGitApp.Controllers;
+using VersionControlGitApp.Database;
 
 namespace VersionControlGitApp {
     /// <summary>
@@ -12,27 +17,84 @@ namespace VersionControlGitApp {
     public partial class MainWindow : Window {
 
         public static GitHubClient client = new GitHubClient(new ProductHeaderValue("VersionControlGitApp"));
-        public static string token = "63fc1bdad3fb1e6cb40a16cdf49acf6ebb247e37";
-        
+
+        private LocalRepoDB repoDB;
+
+
         public static User user;
         public static List<UserRepository> userRepos;
 
-        public MainWindow() {
+        public MainWindow(string token) {
             InitializeComponent();
+
+            repoDB = new LocalRepoDB();
+            repoDB.InitDB();
 
             // auth user using token
             client = GithubController.Authenticate(client, token);
             user = client.User.Current().Result;
 
-            // get all of user's repositories info
-            userRepos = GithubController.GetAllRepos(client);
+            Console.WriteLine($"\n Token{token} \n");
 
-            string path = @"C:\Users\jandu\Desktop\repo";
+
+            // get all of user's repositories info
+            //userRepos = GithubController.GetAllRepos(client);
 
             //userRepos[0].Status(path);
 
+            /** Init flow
+             * Connect to db
+             * Load all saved repos to Repo list
+             * Async render from repo list to app
+             */
+
+            List<Repo> list = repoDB.ReadDB();
+            foreach (Repo x in list) {
+                Console.WriteLine($"\n{x.Path}");
+            }
 
         }
 
+         
+
+        public void AddLocalRepo(string path) {
+            if (IsRepo(path) == true) {
+                Repo repo = new Repo() {
+                    Name = GetNameFromPath(path),
+                    Path = path
+                };
+                repoDB.WriteDB(repo);
+            }
+        }
+
+        public string GetNameFromPath(string path) {
+            string[] arr = path.Split(Convert.ToChar(92));
+            return arr[arr.Length - 1];
+        }
+
+        public bool IsRepo(string path) {
+
+            bool status = false;
+            if (Directory.Exists(path + @"\.git")) {
+                status = true;
+            }
+            return status;
+        }
+
+        /// <summary>
+        /// Add local repository to db using button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddLocalRepository(object sender, RoutedEventArgs e) {
+            using (var fbd = new FolderBrowserDialog()) {
+                DialogResult result = fbd.ShowDialog();
+                string res = $"{result}";
+                
+                if (res == "OK") {
+                    AddLocalRepo(fbd.SelectedPath);
+                } 
+            }
+        }
     }
 }
