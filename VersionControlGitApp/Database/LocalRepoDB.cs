@@ -25,6 +25,9 @@ namespace VersionControlGitApp.Database {
             var obj = FindByName(repo.Name);
             if (obj == null) {
                 database.Insert(repo);
+                Console.WriteLine("\n New Klasik repo added");
+            } else {
+                Console.WriteLine("\n Repo klasik, but už zasunul");
             }
         }
 

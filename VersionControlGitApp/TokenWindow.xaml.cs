@@ -34,8 +34,7 @@ namespace VersionControlGitApp {
 
         private void GoMainWindow(string token) {
             MainWindow main = new MainWindow(token);
-            main.Owner = this;
-            main.ShowDialog();
+            main.Show();
             this.Close();
         }
 

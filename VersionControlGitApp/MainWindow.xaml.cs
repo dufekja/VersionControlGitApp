@@ -55,8 +55,6 @@ namespace VersionControlGitApp {
 
         }
 
-         
-
         public void AddLocalRepo(string path) {
             if (IsRepo(path) == true) {
                 Repo repo = new Repo() {
@@ -64,6 +62,9 @@ namespace VersionControlGitApp {
                     Path = path
                 };
                 repoDB.WriteDB(repo);
+                Console.WriteLine("\nKlasik");
+            } else {
+                Console.WriteLine("\nNormal folder goes Brrrrr");
             }
         }
 
