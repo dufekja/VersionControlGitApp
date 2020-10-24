@@ -6,12 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace VersionControlGitApp
-{
-    /// <summary>
-    /// Interakční logika pro App.xaml
-    /// </summary>
-    public partial class App : Application
-    {
+namespace VersionControlGitApp {
+    public partial class App : Application {
+
     }
 }

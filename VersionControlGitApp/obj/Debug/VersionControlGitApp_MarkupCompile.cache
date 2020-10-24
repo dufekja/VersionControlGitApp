@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\App.xaml
-21309388467
+3839731941
 3-1124523197
-11-980592173
+13-516059002
 35-1640189235
-MainWindow.xaml;TokenWindow.xaml;
+Windows\CloneRepoWindow.xaml;Windows\MainWindow.xaml;Windows\TokenWindow.xaml;
 
 False
 

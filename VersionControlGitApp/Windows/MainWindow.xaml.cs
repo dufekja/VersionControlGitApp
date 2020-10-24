@@ -2,30 +2,33 @@
 using RestSharp.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Forms;
 using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Database;
 
 namespace VersionControlGitApp {
-    /// <summary>
-    /// Interakční logika pro MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window {
 
         public static GitHubClient client = new GitHubClient(new ProductHeaderValue("VersionControlGitApp"));
 
-        private LocalRepoDB repoDB;
-
+        private readonly LocalRepoDB repoDB;
 
         public static User user;
         public static List<UserRepository> userRepos;
 
         public MainWindow(string token) {
             InitializeComponent();
+
+            // TODO -> synchonizace více pc pomocí stejného tokenu
+            // TODO -> podpora klávesových zkratek (settings)
+            // TODO-> funkce status vybraného repozitáře - vytáhnout z konzole output
+            // TODO -> hezčí klonovací okno
+            // TODO -> stáhnout uživatelské repozitáře a udělat v clone oknu výběr z nich (předvyplnění url)
+            // TODO -> výpis v okně repozitářů lokálních
+            // TODO -> výpis v okně externích repozitářů
+            // TODO -> sledovat změny v lokálním repozitáři
+            // TODO -> základní práce s vybraným repozitářem (commit, branches)
 
             repoDB = new LocalRepoDB();
             repoDB.InitDB();
@@ -40,13 +43,6 @@ namespace VersionControlGitApp {
             // get all of user's repositories info
             //userRepos = GithubController.GetAllRepos(client);
 
-            //userRepos[0].Status(path);
-
-            /** Init flow
-             * Connect to db
-             * Load all saved repos to Repo list
-             * Async render from repo list to app
-             */
 
             List<Repo> list = repoDB.ReadDB();
             foreach (Repo x in list) {
@@ -55,32 +51,6 @@ namespace VersionControlGitApp {
 
         }
 
-        public void AddLocalRepo(string path) {
-            if (IsRepo(path) == true) {
-                Repo repo = new Repo() {
-                    Name = GetNameFromPath(path),
-                    Path = path
-                };
-                repoDB.WriteDB(repo);
-                Console.WriteLine("\nKlasik");
-            } else {
-                Console.WriteLine("\nNormal folder goes Brrrrr");
-            }
-        }
-
-        public string GetNameFromPath(string path) {
-            string[] arr = path.Split(Convert.ToChar(92));
-            return arr[arr.Length - 1];
-        }
-
-        public bool IsRepo(string path) {
-
-            bool status = false;
-            if (Directory.Exists(path + @"\.git")) {
-                status = true;
-            }
-            return status;
-        }
 
         /// <summary>
         /// Add local repository to db using button
@@ -93,9 +63,19 @@ namespace VersionControlGitApp {
                 string res = $"{result}";
                 
                 if (res == "OK") {
-                    AddLocalRepo(fbd.SelectedPath);
+                    GitMethods.AddLocalRepo(fbd.SelectedPath, repoDB);
                 } 
             }
+        }
+
+        /// <summary>
+        /// Show clone repository window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CloneRepository(object sender, RoutedEventArgs e) {
+            CloneRepoWindow window = new CloneRepoWindow(repoDB);
+            window.Show();
         }
     }
 }

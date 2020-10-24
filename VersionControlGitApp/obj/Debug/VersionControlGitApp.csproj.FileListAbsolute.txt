@@ -2,11 +2,9 @@ C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Debug\Versi
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Debug\VersionControlGitApp.exe
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Debug\VersionControlGitApp.pdb
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\VersionControlGitApp.csprojAssemblyReference.cache
-C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\MainWindow.g.cs
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\App.g.cs
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\VersionControlGitApp_MarkupCompile.cache
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\VersionControlGitApp_MarkupCompile.lref
-C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\MainWindow.baml
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\VersionControlGitApp.g.resources
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\VersionControlGitApp.Properties.Resources.resources
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\VersionControlGitApp.csproj.GenerateResource.cache
@@ -48,5 +46,9 @@ C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Debug\Syste
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Debug\System.Memory.xml
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Debug\System.Numerics.Vectors.xml
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\VersionControlGitApp_Content.g.cs
-C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\TokenWindow.g.cs
-C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\TokenWindow.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windows\CloneRepoWindow.g.cs
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windows\MainWindow.g.cs
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windows\TokenWindow.g.cs
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windows\CloneRepoWindow.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windows\MainWindow.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windows\TokenWindow.baml

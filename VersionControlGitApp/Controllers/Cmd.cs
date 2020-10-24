@@ -19,11 +19,14 @@ namespace VersionControlGitApp.Controllers {
 
             if (command != "")
                 try {
-                    var proc = new ProcessStartInfo();
-                    proc.FileName = "cmd.exe";
-                    proc.Arguments = command;
-                    proc.WindowStyle = ProcessWindowStyle.Hidden;
-                    Process.Start(proc);
+                    var process = new ProcessStartInfo();
+                    process.FileName = "cmd.exe";
+                    process.Arguments = command;
+                    process.WindowStyle = ProcessWindowStyle.Hidden;
+                    var proc = Process.Start(process);
+
+                    proc.WaitForExit();
+
                 } catch {
                     state = false;
                 }

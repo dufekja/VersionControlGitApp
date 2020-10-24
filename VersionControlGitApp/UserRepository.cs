@@ -37,14 +37,5 @@ namespace VersionControlGitApp {
             }
 
         }
-
-        public void Clone(string path) {
-
-            string URL = $@"{this.GetHtmlUrl()}.git";
-            string command = $@"/C git clone {URL} {path}";
-
-            Cmd.Run(command);         
-        }
-
     }
 }

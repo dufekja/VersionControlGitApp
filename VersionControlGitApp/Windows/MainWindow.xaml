@@ -39,7 +39,7 @@
                 <MenuItem Header="File" Padding="5">
                     <MenuItem Header="New Repository" Padding="3"/>
                     <MenuItem Click="AddLocalRepository" Header="Add Local Repository" Padding="3"/>
-                    <MenuItem Header="Clone Repository" Padding="3"/>
+                    <MenuItem Click="CloneRepository" Header="Clone Repository" Padding="3"/>
                 </MenuItem>
             </Menu>
             <Menu DockPanel.Dock="Left">

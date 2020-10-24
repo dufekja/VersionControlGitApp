@@ -114,14 +114,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controllers\GitMethods.cs" />
+    <Compile Include="Windows\CloneRepoWindow.xaml.cs">
+      <DependentUpon>CloneRepoWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\Cmd.cs" />
     <Compile Include="Database\LocalRepoDB.cs" />
     <Compile Include="Database\PrivateTokenDB.cs" />
-    <Compile Include="TokenWindow.xaml.cs">
+    <Compile Include="Windows\TokenWindow.xaml.cs">
       <DependentUpon>TokenWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserRepository.cs" />
-    <Page Include="MainWindow.xaml">
+    <Page Include="Windows\CloneRepoWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -130,11 +138,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\GithubController.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="TokenWindow.xaml">
+    <Page Include="Windows\TokenWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
