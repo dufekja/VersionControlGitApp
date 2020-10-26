@@ -7,6 +7,16 @@
         mc:Ignorable="d"
         WindowStyle="SingleBorderWindow"
         Title="VersionControlGitApp" MinHeight="400" MinWidth="800">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open"
+                        Executed="CloneRepository"/>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Command="ApplicationCommands.Open"
+                    Gesture="Ctrl+C"/>
+    </Window.InputBindings>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="70"/>
@@ -18,7 +28,7 @@
         <Grid.RowDefinitions>
             <RowDefinition MinHeight="30" Height="15*"/>
             <RowDefinition MinHeight="70"/>
-            <RowDefinition Height="40*"/>
+            <RowDefinition Height="25*"/>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="40*"/>
@@ -84,15 +94,13 @@
             </Label.Content>
         </Label>
 
-        <ComboBox MinHeight="40" FontSize="16" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
-            <ComboBoxItem FontSize="12" IsSelected="True">Repo 1</ComboBoxItem>
-            <ComboBoxItem FontSize="12">Repo 2</ComboBoxItem>
-            <ComboBoxItem FontSize="12">Repo 3</ComboBoxItem>
-        </ComboBox>
+        <ComboBox x:Name="RepoComboBox" MinHeight="30" FontSize="16" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"></ComboBox>
+        
         <Button Content="Statistics" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
         <Button Content="History" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
         <Button Content="Changes" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
         <Button Content="Projects" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
         <Button Content="Team" Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
     </Grid>
+    
 </Window>

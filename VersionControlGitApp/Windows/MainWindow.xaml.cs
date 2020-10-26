@@ -3,7 +3,9 @@ using RestSharp.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Input;
 using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Database;
 
@@ -13,7 +15,6 @@ namespace VersionControlGitApp {
         public static GitHubClient client = new GitHubClient(new ProductHeaderValue("VersionControlGitApp"));
 
         private readonly LocalRepoDB repoDB;
-
         public static User user;
         public static List<UserRepository> userRepos;
 
@@ -35,20 +36,26 @@ namespace VersionControlGitApp {
 
             // auth user using token
             client = GithubController.Authenticate(client, token);
-            user = client.User.Current().Result;
-
-            Console.WriteLine($"\n Token{token} \n");
+            //user = client.User.Current().Result;
 
 
             // get all of user's repositories info
-            //userRepos = GithubController.GetAllRepos(client);
+            // userRepos = GithubController.GetAllRepos(client);
 
+            List<Repo> localRepos = repoDB.ReadDB();
 
-            List<Repo> list = repoDB.ReadDB();
-            foreach (Repo x in list) {
-                Console.WriteLine($"\n{x.Path}");
+            bool isSelected = false;
+            foreach (Repo repo in localRepos) {
+                ComboBoxItem item = new ComboBoxItem {
+                    Content = repo.Name
+                };
+
+                if (!isSelected)
+                    item.IsSelected = true;
+                    isSelected = true;
+
+                RepoComboBox.Items.Add(item);
             }
-
         }
 
 
@@ -74,7 +81,7 @@ namespace VersionControlGitApp {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void CloneRepository(object sender, RoutedEventArgs e) {
-            CloneRepoWindow window = new CloneRepoWindow(repoDB);
+            CloneRepoWindow window = new CloneRepoWindow(repoDB, client);
             window.Show();
         }
     }

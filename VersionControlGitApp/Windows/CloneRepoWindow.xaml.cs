@@ -14,21 +14,34 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Database;
+using Octokit;
 
 namespace VersionControlGitApp {
     public partial class CloneRepoWindow : Window {
 
         private static LocalRepoDB repoDB;
+        public static List<UserRepository> userRepos;
 
-        public CloneRepoWindow(LocalRepoDB _repoDB) {
+        public CloneRepoWindow(LocalRepoDB _repoDB, GitHubClient client) {
             InitializeComponent();
 
             repoDB = _repoDB;
 
+            userRepos = GithubController.GetAllRepos(client);
+
+            foreach (UserRepository repo in userRepos) {
+                ComboBoxItem item = new ComboBoxItem {
+                    Content = repo.GetName(),
+                    Tag = repo.GetHtmlUrl()
+                };
+
+                ExternalRepoComboBox.Items.Add(item);
+            }
+
         }
 
         private void CloneRepository(object sender, RoutedEventArgs e) {
-            string url = URL.Text;
+            string url = URL.Text.ToString();
 
             using (var fbd = new FolderBrowserDialog()) {
                 DialogResult result = fbd.ShowDialog();
@@ -40,6 +53,11 @@ namespace VersionControlGitApp {
                     this.Close();
                 }
             }
+        }
+
+        private void ExternalRepoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            string selectedRepo = ((ComboBoxItem)ExternalRepoComboBox.SelectedItem).Tag.ToString() + ".git";
+            URL.Text = selectedRepo;
         }
     }
 }

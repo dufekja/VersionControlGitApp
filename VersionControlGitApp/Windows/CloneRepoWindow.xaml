@@ -5,10 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VersionControlGitApp"
         mc:Ignorable="d"
-        Title="CloneRepoWindow" Height="300" Width="500">
+        Title="CloneRepoWindow" Height="300" Width="500" WindowStartupLocation="CenterScreen">
+    
     <StackPanel>
         <Label Content="Insert repostiroy URL: " Margin="20 40 20 0" FontSize="20"/>
         <TextBox x:Name="URL" Margin="20 0 20 10" FontSize="15"/>
+        <ComboBox x:Name="ExternalRepoComboBox" SelectionChanged="ExternalRepoComboBox_SelectionChanged" FontSize="15" Margin="120 5 120 5">
+            
+        </ComboBox>
         <Button Click="CloneRepository" Content="Clone" HorizontalAlignment="Center" Padding="5" Margin="10"/>
     </StackPanel>
 </Window>

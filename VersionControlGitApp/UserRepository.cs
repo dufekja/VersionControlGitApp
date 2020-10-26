@@ -17,8 +17,12 @@ namespace VersionControlGitApp {
             this.repository = repository;
         }
 
-        private string GetHtmlUrl() {
+        public string GetHtmlUrl() {
             return repository.HtmlUrl;
+        }
+
+        public string GetName() {
+            return repository.Name;
         }
 
         public void Init(string path) {

@@ -38,6 +38,17 @@ namespace VersionControlGitApp.Controllers {
         }
 
         /// <summary>
+        /// Get last word from given URL
+        /// </summary>
+        /// <param name="URL">URL string </param>
+        /// <returns>Returns last word string</returns>
+        public static string GetNameFromURL(string URL) {
+            string[] arr = URL.Split('/');
+            arr = arr[arr.Length - 1].Split('.');
+            return arr[0];
+        }
+
+        /// <summary>
         /// Check if directory contains .git folder
         /// </summary>
         /// <param name="path">Path of given folder</param>
@@ -59,10 +70,17 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="repoDB">Initiated LocalRepoDB object</param>
         public static void Clone(string URL, string path, LocalRepoDB repoDB) {
 
-            string command = $@"/C git clone {URL} {path}";
+            string dirName = GetNameFromURL(URL);
+
+            string dirPath = path + @"\" + dirName;
+
+            if (!Directory.Exists(dirPath))
+                Directory.CreateDirectory(dirPath);
+
+            string command = $@"/C git clone {URL} {dirPath}";
             bool state = Cmd.Run(command);
             if (state == true) {
-                AddLocalRepo(path, repoDB);
+                AddLocalRepo(dirPath, repoDB);
             }
         }
     }
