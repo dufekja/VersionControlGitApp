@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using VersionControlGitApp.Database;
 
 namespace VersionControlGitApp.Controllers {
@@ -14,17 +16,31 @@ namespace VersionControlGitApp.Controllers {
         /// </summary>
         /// <param name="path">Path to repository folder</param>
         /// <param name="repoDB">Initiated repodDB object</param>
-        public static void AddLocalRepo(string path, LocalRepoDB repoDB) {
-            if (IsRepo(path) == true) {
+        public static bool AddLocalRepo(string path, LocalRepoDB repoDB) {
+
+            bool created = false;
+            bool exist = false; 
+            List<Repo> repos = repoDB.FindByName(GetNameFromPath(path));
+            if (repos != null)
+                foreach (Repo repo in repos) {
+                    if (repo.Path == path)
+                        exist = true;
+                }
+
+            if (IsRepo(path) && !exist) {
                 Repo repo = new Repo() {
                     Name = GetNameFromPath(path),
                     Path = path
                 };
                 repoDB.WriteDB(repo);
-                Console.WriteLine("\n\nKlasik\n");
+
+                MessageBox.Show("Repozitář přidán", "Info");
+                created = true;
             } else {
-                Console.WriteLine("\nNormal folder goes Brrrrr");
+                MessageBox.Show("Nejdená se o repozitář", "Info");
             }
+
+            return created;
         }
 
         /// <summary>
@@ -81,7 +97,20 @@ namespace VersionControlGitApp.Controllers {
             bool state = Cmd.Run(command);
             if (state == true) {
                 AddLocalRepo(dirPath, repoDB);
+                MessageBox.Show("Repozitář naklonován", "Info");
             }
         }
+
+        public static void Init(string path, LocalRepoDB repoDB) {
+            string command = $@"/C git init {path}";
+            bool state = Cmd.Run(command);
+            if (state == true) {
+                AddLocalRepo(path, repoDB);
+                MessageBox.Show("Repozitář vytvořen", "Info");
+            } else {
+                MessageBox.Show("Už to je repozitář", "Info");
+            }
+        }
+
     }
 }

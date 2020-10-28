@@ -31,16 +31,12 @@ namespace VersionControlGitApp.Database {
             }
         }
 
-        public Repo FindByName(string name) {
+        public List<Repo> FindByName(string name) {
             var query = database.Query<Repo>($"SELECT * FROM Repositories WHERE Name='{name}'");
             if (query.Count == 0) {
                 return null;
             } else {
-                return new Repo() {
-                    ID = query[0].ID,
-                    Name = query[0].Name,
-                    Path = query[0].Path
-                };
+                return query;
             }
         }
 

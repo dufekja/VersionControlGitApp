@@ -10,11 +10,19 @@
 
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open"
+                        Executed="AddLocalRepository"/>
+        <CommandBinding Command="ApplicationCommands.Copy"
                         Executed="CloneRepository"/>
+        <CommandBinding Command="ApplicationCommands.New"
+                        Executed="NewRepository"/>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Command="ApplicationCommands.Open"
-                    Gesture="Ctrl+C"/>
+                    Gesture="Ctrl+Shift+A"/>
+        <KeyBinding Command="ApplicationCommands.Copy"
+                    Gesture="Ctrl+Shift+C"/>
+        <KeyBinding Command="ApplicationCommands.New"
+                    Gesture="Ctrl+Shift+N"/>
     </Window.InputBindings>
 
     <Grid>
@@ -47,9 +55,9 @@
             </Menu>
             <Menu DockPanel.Dock="Left">
                 <MenuItem Header="File" Padding="5">
-                    <MenuItem Header="New Repository" Padding="3"/>
-                    <MenuItem Click="AddLocalRepository" Header="Add Local Repository" Padding="3"/>
-                    <MenuItem Click="CloneRepository" Header="Clone Repository" Padding="3"/>
+                    <MenuItem InputGestureText="Ctrl+Shift+N" Click="NewRepository" Header="New Repository" Padding="3"/>
+                    <MenuItem InputGestureText="Ctrl+Shift+A" Click="AddLocalRepository" Header="Add Local Repository" Padding="3"/>
+                    <MenuItem InputGestureText="Ctrl+Shift+C" Click="CloneRepository" Header="Clone Repository" Padding="3"/>
                 </MenuItem>
             </Menu>
             <Menu DockPanel.Dock="Left">
@@ -70,7 +78,8 @@
                     <MenuItem Header="Fetch" Padding="3"/>
                     <MenuItem Header="Push" Padding="3"/>
                     <MenuItem Header="Pull" Padding="3"/>
-                    <MenuItem Header="Remove" Padding="3" Margin="0 3 0 0"/>
+                    <MenuItem Header="Remove" Padding="3"/>
+                    <MenuItem Header="Delete" Padding="3" Margin="0 3 0 0"/>
                 </MenuItem>
             </Menu>
         </DockPanel>
@@ -88,13 +97,17 @@
             </StackPanel>
         </Border>
 
+        <Image x:Name="UserImage" Grid.Column="0" Grid.Row="1"/>
+
         <Label Foreground="White" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Label.Content>
-                <AccessText FontSize="14" TextWrapping="Wrap" Text="Account name"/>
+                <AccessText x:Name="UserName" FontSize="14" TextWrapping="Wrap" Text="Account name"/>
             </Label.Content>
         </Label>
 
-        <ComboBox x:Name="RepoComboBox" MinHeight="30" FontSize="16" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"></ComboBox>
+        <TextBox x:Name="PathLabel" Foreground="White" Background="Black" Grid.Column="3" Grid.Row="1" Margin="20 0 20 45"/>
+
+        <ComboBox x:Name="RepoComboBox" SelectionChanged="RepoComboBox_SelectionChanged" MinHeight="30" FontSize="16" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"></ComboBox>
         
         <Button Content="Statistics" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
         <Button Content="History" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
