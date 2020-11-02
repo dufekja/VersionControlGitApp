@@ -115,6 +115,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controllers\GitMethods.cs" />
+    <Compile Include="UserRepository.cs" />
     <Compile Include="Windows\CloneRepoWindow.xaml.cs">
       <DependentUpon>CloneRepoWindow.xaml</DependentUpon>
     </Compile>
@@ -124,7 +125,6 @@
     <Compile Include="Windows\TokenWindow.xaml.cs">
       <DependentUpon>TokenWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserRepository.cs" />
     <Page Include="Windows\CloneRepoWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

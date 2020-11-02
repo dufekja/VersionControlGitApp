@@ -24,22 +24,5 @@ namespace VersionControlGitApp {
         public string GetName() {
             return repository.Name;
         }
-
-        public void Init(string path) {
-            string command = $@"/C git init {path}";
-
-            Cmd.Run(command);
-        }
-
-        public void Status(string path) {
-
-            string command = $@"/C cd {path} && git status ";
-
-            if (Directory.Exists($@"{path}\.git")) {
-                string status = Cmd.RunAndRead(command);
-                Console.Write(status);
-            }
-
-        }
     }
 }

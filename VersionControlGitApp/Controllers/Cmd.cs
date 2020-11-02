@@ -1,62 +1,106 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace VersionControlGitApp.Controllers {
     public static class Cmd {
 
-        /// <summary>
-        /// Run cmd commnad
-        /// </summary>
-        /// <param name="command">String of given commnad</param>
-        /// <returns>Returns command run state (success/fail)</returns>
-        public static bool Run(string command) {
+        public static bool Run(string command, string dir) {
 
             bool state = true;
 
             if (command != "")
                 try {
-                    var process = new ProcessStartInfo();
-                    process.FileName = "cmd.exe";
-                    process.Arguments = command;
-                    process.WindowStyle = ProcessWindowStyle.Hidden;
-                    var proc = Process.Start(process);
+                    ProcessStartInfo process = new ProcessStartInfo {
+                        FileName = "git.exe",
+                        Arguments = command,
+                        CreateNoWindow = true,
+                        WorkingDirectory = dir,
+                        WindowStyle = ProcessWindowStyle.Hidden
+                    };
+                    Process proc = Process.Start(process);
 
                     proc.WaitForExit();
+                    Console.WriteLine(proc.ExitCode);
 
                 } catch {
                     state = false;
                 }
-
             return state;
         }
 
-        /// <summary>
-        /// Run commnad and read its output
-        /// </summary>
-        /// <param name="command">String of given commnad</param>
-        /// <returns>Returns string of commnad output</returns>
-        public static string RunAndRead(string command) {
+        public static List<string> RunAndRead(string command, string dir) {
 
-            string output = "";
+            List<string> output = new List<string>();
             if (command != "") {
                 try {
-                    Process proc = new Process();
-                    proc.StartInfo.FileName = "cmd.exe";
-                    proc.StartInfo.Arguments = command;
-                    proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                    proc.Start();
 
-                    output = proc.StandardOutput.ReadToEnd();
+                    ProcessStartInfo startInfo = new ProcessStartInfo() {
+                        FileName = "git.exe",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        UseShellExecute = false,
+                        WorkingDirectory = dir,
+                        RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
+                        Arguments = command
+                    };
+
+                    Process process = new Process {
+                        StartInfo = startInfo
+                    };
+                    process.Start();
+
+                    string line = process.StandardOutput.ReadLine();
+
+                    while (line != null) {
+                        output.Add(line);
+                        line = process.StandardOutput.ReadLine();
+                    }
+                    process.WaitForExit();
+
                 } catch {
-                    output = "";
+                    output = null;
+                }
+
+            }
+
+            return output;
+        }
+
+        public static string Explode(string text, string firstDelimeter, string secondDelimeter) {
+            string[] arr = text.Split(new string[] { firstDelimeter }, StringSplitOptions.None);
+            string[] arr2 = arr[1].Split(new string[] { secondDelimeter }, StringSplitOptions.None);
+            return arr2[0];
+        }
+
+        public static List<string> UntrackedFiles(string path) {
+            List<string> output = Cmd.RunAndRead("ls-files . --exclude-standard --others", path);
+            return output;
+        }
+
+        public static List<string> FilesForCommit(string path) {
+            List<string> output = Cmd.RunAndRead("status", path);
+            List<string> files = new List<string>();
+
+            foreach (string line in output) {
+                if (line.Contains("new file:   ")) {
+                    string file = Explode(line, "new file:   ", ".txt") + ".txt";
+                    files.Add(file);
                 }
             }
-    
-            return output; 
+            return files;
+        }
+
+        public static void KillAllWaitingTasks(MainWindow win) {
+            foreach (Task t in win.RunningTasks) {
+                Console.WriteLine(t);
+            }
         }
     }
 }

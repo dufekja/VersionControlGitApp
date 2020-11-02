@@ -3,6 +3,7 @@ using RestSharp.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,12 +23,13 @@ namespace VersionControlGitApp {
         public static User user;
         public static List<UserRepository> userRepos;
 
-        public static string newRepoName { get; set; }
+        public List<Task> RunningTasks { get; set; }
 
         public MainWindow(string token) {
             InitializeComponent();
 
-            newRepoName = "";
+            RunningTasks = new List<Task>();
+
 
             // TODO -> synchonizace více pc pomocí stejného tokenu
             // TODO -> podpora klávesových zkratek (settings)
@@ -38,6 +40,7 @@ namespace VersionControlGitApp {
             // TODO -> výpis v okně externích repozitářů
             // TODO -> sledovat změny v lokálním repozitáři
             // TODO -> základní práce s vybraným repozitářem (commit, branches)
+            // TODO -> projet celou db a kouknout jestli existují foldery -> smazat ty co nejsou
 
             repoDB = new LocalRepoDB();
             repoDB.InitDB();
@@ -46,35 +49,17 @@ namespace VersionControlGitApp {
             client = GithubController.Authenticate(client, token);
             user = client.User.Current().Result;
             UserName.Text = user.Name;
+ 
+            InitialComboboxLoad();
             LoadUserAvatar();
 
-            // get all of user's repositories info
-            // userRepos = GithubController.GetAllRepos(client);
-
-            List<Repo> localRepos = repoDB.ReadDB();
-
-            bool isSelected = false;
-            string selectedPath = "";
-            foreach (Repo repo in localRepos) {
-                ComboBoxItem item = new ComboBoxItem {
-                    Content = repo.Name
-                };
-
-                if (!isSelected)
-                    item.IsSelected = true;
-                    selectedPath = repo.Path;
-                    isSelected = true;
-
-                RepoComboBox.Items.Add(item);
+            string path = PathLabel.Text.ToString();
+            if (path != null) {
+                var t = Task.Run(() => GitMethods.WaitForChangesOnRepo(this, path));
+                RunningTasks.Add(t);
             }
-            PathLabel.Text = selectedPath;
         }
 
-        /// <summary>
-        /// Add local repository to db using button
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void AddLocalRepository(object sender, RoutedEventArgs e) {
             using (var fbd = new FolderBrowserDialog()) {
                 DialogResult result = fbd.ShowDialog();
@@ -85,23 +70,12 @@ namespace VersionControlGitApp {
                     bool ok = GitMethods.AddLocalRepo(path, repoDB);
 
                     if (ok) {
-                        ComboBoxItem item = new ComboBoxItem {
-                            Content = GitMethods.GetNameFromPath(path),
-                            IsSelected = true
-                        };
-
-                        RepoComboBox.Items.Add(item);
-                        PathLabel.Text = path;
+                        LoadPathLabel(path);
                     }
                 } 
             } 
         }
 
-        /// <summary>
-        /// Show clone repository window
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CloneRepository(object sender, RoutedEventArgs e) {
             CloneRepoWindow window = new CloneRepoWindow(repoDB, client, this);
             window.Show();   
@@ -116,28 +90,34 @@ namespace VersionControlGitApp {
                 if (res == "OK" && !GitMethods.IsRepo(path)) {
                     GitMethods.Init(path, repoDB);
 
-                    Console.WriteLine("Gut init");
-
-                    string name = GitMethods.GetNameFromPath(path);
-                    ComboBoxItem item = new ComboBoxItem {
-                        Content = name,
-                        IsSelected = true
-                    };
-
-                    RepoComboBox.Items.Add(item);
-                    PathLabel.Text = path;
+                    LoadPathLabel(path);
                 }
             }
         }
 
         private void RepoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             string repoName = ((ComboBoxItem)RepoComboBox.SelectedItem).Content.ToString();
-            Console.WriteLine(repoName);
             if (repoName != "") {
+
+                // PathLabel change
                 List<Repo> repos = repoDB.FindByName(repoName);
                 if (repos != null && repos.Count != 0) {
                     string path = repos[0].Path.ToString();
                     PathLabel.Text = path;
+
+                    Cmd.KillAllWaitingTasks(this);
+
+                    // watch selected repo for changes
+                    Task t = Task.Run(() => GitMethods.WaitForChangesOnRepo(this, path));
+                    RunningTasks.Add(t);
+
+                    FilesToCommit.Items.Clear();
+                    List<string> filesForCommit = Cmd.FilesForCommit(path);
+                    if (filesForCommit.Count > 0) {
+                        foreach (string file in filesForCommit) {
+                            FilesToCommit.Items.Add(file);
+                        }
+                    }
                 }
             }
         }
@@ -149,5 +129,35 @@ namespace VersionControlGitApp {
             bi.EndInit();
             UserImage.Source = bi;
         }
+
+        private void LoadPathLabel(string path) {
+            ComboBoxItem item = new ComboBoxItem {
+                Content = GitMethods.GetNameFromPath(path),
+                IsSelected = true
+            };
+
+            RepoComboBox.Items.Add(item);
+            PathLabel.Text = path;
+        }
+
+        private void InitialComboboxLoad() {
+            List<Repo> localRepos = repoDB.ReadDB();
+            bool isSelected = false;
+
+            foreach (Repo repo in localRepos) {
+                ComboBoxItem item = new ComboBoxItem {
+                    Content = repo.Name
+                };
+
+                if (isSelected == false) {
+                    item.IsSelected = true;
+                    PathLabel.Text = repo.Path;
+                    isSelected = true;
+                }
+
+                RepoComboBox.Items.Add(item);
+            }
+        }
+
     }
 }

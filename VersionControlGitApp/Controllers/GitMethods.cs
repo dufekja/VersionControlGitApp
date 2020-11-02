@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,11 +34,7 @@ namespace VersionControlGitApp.Controllers {
                     Path = path
                 };
                 repoDB.WriteDB(repo);
-
-                MessageBox.Show("Repozitář přidán", "Info");
                 created = true;
-            } else {
-                MessageBox.Show("Nejdená se o repozitář", "Info");
             }
 
             return created;
@@ -93,24 +90,54 @@ namespace VersionControlGitApp.Controllers {
             if (!Directory.Exists(dirPath))
                 Directory.CreateDirectory(dirPath);
 
-            string command = $@"/C git clone {URL} {dirPath}";
-            bool state = Cmd.Run(command);
+            string command = $"clone {URL} {dirPath}";
+            bool state = Cmd.Run(command, path);
             if (state == true) {
                 AddLocalRepo(dirPath, repoDB);
-                MessageBox.Show("Repozitář naklonován", "Info");
             }
         }
 
         public static void Init(string path, LocalRepoDB repoDB) {
-            string command = $@"/C git init {path}";
-            bool state = Cmd.Run(command);
+            string command = $"init {path}";
+            bool state = Cmd.Run(command, path);
             if (state == true) {
                 AddLocalRepo(path, repoDB);
-                MessageBox.Show("Repozitář vytvořen", "Info");
-            } else {
-                MessageBox.Show("Už to je repozitář", "Info");
             }
         }
 
+        public static void Status(string path) {
+            List<string> untrackedFiles = Cmd.UntrackedFiles(path);
+
+        }
+
+        public static void AddTrackedFiles(MainWindow win, string path) {
+            List<string> untrackedFiles = Cmd.UntrackedFiles(path);
+            bool state = true;
+
+            foreach (string file in untrackedFiles) {
+                string command = $@"add {file.Trim()}";
+                state = Cmd.Run(command, path);
+                Console.WriteLine($"\n\n File: {file} tracked\n");
+            }
+
+            if (state == true) {
+
+                Cmd.KillAllWaitingTasks(win);
+                var t = Task.Run(() => WaitForChangesOnRepo(win, path));
+            }
+        }
+
+        public static void WaitForChangesOnRepo(MainWindow win, string path) {
+            while (true) {
+                Thread.Sleep(3000);
+
+                List<string> untrackedFiles = Cmd.UntrackedFiles(path);
+                if (untrackedFiles.Count != 0) {
+                    var t = Task.Run(() => AddTrackedFiles(win, path));
+                    win.RunningTasks.Add(t);
+                    break;
+                }
+            }
+        }
     }
 }

@@ -105,6 +105,12 @@
             </Label.Content>
         </Label>
 
+        <StackPanel Background="Black" Grid.Row="1" Grid.Column="2" Grid.RowSpan="4">
+            <Label Content="Files to Commit" Foreground="White" FontSize="10" HorizontalAlignment="Center"/>
+            <ListBox x:Name="FilesToCommit" Background="Black" Foreground="White" FontSize="8" HorizontalAlignment="Center"/>
+        </StackPanel>
+        
+
         <TextBox x:Name="PathLabel" Foreground="White" Background="Black" Grid.Column="3" Grid.Row="1" Margin="20 0 20 45"/>
 
         <ComboBox x:Name="RepoComboBox" SelectionChanged="RepoComboBox_SelectionChanged" MinHeight="30" FontSize="16" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"></ComboBox>
