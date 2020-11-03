@@ -121,7 +121,6 @@ namespace VersionControlGitApp.Controllers {
             }
 
             if (state == true) {
-
                 Cmd.KillAllWaitingTasks(win);
                 var t = Task.Run(() => WaitForChangesOnRepo(win, path));
             }
@@ -132,7 +131,7 @@ namespace VersionControlGitApp.Controllers {
                 Thread.Sleep(3000);
 
                 List<string> untrackedFiles = Cmd.UntrackedFiles(path);
-                if (untrackedFiles.Count != 0) {
+                if (untrackedFiles != null) {
                     var t = Task.Run(() => AddTrackedFiles(win, path));
                     win.RunningTasks.Add(t);
                     break;

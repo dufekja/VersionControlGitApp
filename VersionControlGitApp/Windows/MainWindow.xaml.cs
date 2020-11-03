@@ -2,6 +2,7 @@
 using RestSharp.Extensions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,14 +50,14 @@ namespace VersionControlGitApp {
             client = GithubController.Authenticate(client, token);
             user = client.User.Current().Result;
             UserName.Text = user.Name;
- 
-            InitialComboboxLoad();
+
+            ComboBoxLoad();
             LoadUserAvatar();
 
             string path = PathLabel.Text.ToString();
             if (path != null) {
-                var t = Task.Run(() => GitMethods.WaitForChangesOnRepo(this, path));
-                RunningTasks.Add(t);
+                var t1 = Task.Run(() => GitMethods.WaitForChangesOnRepo(this, path));
+                RunningTasks.Add(t1);
             }
         }
 
@@ -96,7 +97,12 @@ namespace VersionControlGitApp {
         }
 
         private void RepoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            string repoName = ((ComboBoxItem)RepoComboBox.SelectedItem).Content.ToString();
+
+            string repoName = "";
+            if (RepoComboBox.Items.Count > 0) {
+                repoName = ((ComboBoxItem)RepoComboBox.SelectedItem).Content.ToString();
+            }
+   
             if (repoName != "") {
 
                 // PathLabel change
@@ -140,24 +146,57 @@ namespace VersionControlGitApp {
             PathLabel.Text = path;
         }
 
-        private void InitialComboboxLoad() {
-            List<Repo> localRepos = repoDB.ReadDB();
-            bool isSelected = false;
+        private void ComboBoxLoad() {
 
-            foreach (Repo repo in localRepos) {
-                ComboBoxItem item = new ComboBoxItem {
-                    Content = repo.Name
-                };
+            if (RepoComboBox.Items.Count > 0) {
+                Dispatcher.Invoke((Action)(() => RepoComboBox.Items.Clear()));
 
-                if (isSelected == false) {
-                    item.IsSelected = true;
-                    PathLabel.Text = repo.Path;
-                    isSelected = true;
+                List<Repo> localRepos = repoDB.ReadDB();
+                bool isSelected = false;
+
+                foreach (Repo repo in localRepos) {
+                    ComboBoxItem item = new ComboBoxItem {
+                        Content = repo.Name
+                    };
+
+                    if (isSelected == false) {
+                        item.IsSelected = true;
+                        PathLabel.Text = repo.Path;
+                        isSelected = true;
+                    }
+
+                    RepoComboBox.Items.Add(item);
                 }
-
-                RepoComboBox.Items.Add(item);
             }
+            //Task.Run(() => WaitForRepoDelete());
         }
 
+        private void WaitForRepoDelete() {
+            DeleteRemovedReposFromDB();
+            while (true) {
+                Thread.Sleep(3000);
+                bool wasDelted = DeleteRemovedReposFromDB();
+
+                if (wasDelted == true) {
+                    break;
+                }
+            }
+
+            ComboBoxLoad();
+        }
+
+        private bool DeleteRemovedReposFromDB() {
+            List<Repo> repoList = repoDB.ReadDB();
+            bool wasDeleted = false;
+
+            foreach (Repo repo in repoList) {
+                if (!Directory.Exists(repo.Path)) {
+                    repoDB.DeleteByPath(repo.Path);
+                    wasDeleted = true;
+                }
+            }
+
+            return wasDeleted;
+        }
     }
 }

@@ -48,6 +48,14 @@ namespace VersionControlGitApp.Database {
             }
         }
 
+        public void DeleteByPath(string path) {
+            try {
+                database.Query<Repo>($"DELETE FROM Repositories WHERE Path='{path}'");
+            } catch {
+               
+            }
+        }
+
         public List<Repo> ReadDB() {
             var TBrepo = database.Table<Repo>();
             List<Repo> list = new List<Repo>();

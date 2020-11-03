@@ -88,12 +88,15 @@ namespace VersionControlGitApp.Controllers {
             List<string> output = Cmd.RunAndRead("status", path);
             List<string> files = new List<string>();
 
-            foreach (string line in output) {
-                if (line.Contains("new file:   ")) {
-                    string file = Explode(line, "new file:   ", ".txt") + ".txt";
-                    files.Add(file);
+            if (files != null) {
+                foreach (string line in output) {
+                    if (line.Contains("new file:   ")) {
+                        string file = Explode(line, "new file:   ", ".txt") + ".txt";
+                        files.Add(file);
+                    }
                 }
             }
+            
             return files;
         }
 
