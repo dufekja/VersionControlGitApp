@@ -99,11 +99,5 @@ namespace VersionControlGitApp.Controllers {
             
             return files;
         }
-
-        public static void KillAllWaitingTasks(MainWindow win) {
-            foreach (Task t in win.RunningTasks) {
-                Console.WriteLine(t);
-            }
-        }
     }
 }

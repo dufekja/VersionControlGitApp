@@ -1,6 +1,7 @@
 ﻿using SQLite;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,23 @@ namespace VersionControlGitApp.Database {
 
         public void InitDB() {
             database.CreateTable<Repo>();
+        }
+
+        public List<string> Refresh() {
+            List<Repo> repoList = ReadDB();
+            List<string> deletedRepos = new List<string>();
+
+            foreach (Repo repo in repoList) {
+                string repoPath = repo.Path;
+                if (!Directory.Exists(repoPath)) {
+                    deletedRepos.Add(repo.Name);
+                    DeleteByPath(repoPath);   
+                } 
+            }
+            if (deletedRepos.Count == 0)
+                deletedRepos = null;
+
+            return deletedRepos;
         }
 
         public void WriteDB(Repo repo) {

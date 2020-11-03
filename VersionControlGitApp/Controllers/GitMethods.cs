@@ -22,6 +22,7 @@ namespace VersionControlGitApp.Controllers {
             bool created = false;
             bool exist = false; 
             List<Repo> repos = repoDB.FindByName(GetNameFromPath(path));
+
             if (repos != null)
                 foreach (Repo repo in repos) {
                     if (repo.Path == path)
@@ -84,7 +85,6 @@ namespace VersionControlGitApp.Controllers {
         public static void Clone(string URL, string path, LocalRepoDB repoDB) {
 
             string dirName = GetNameFromURL(URL);
-
             string dirPath = path + @"\" + dirName;
 
             if (!Directory.Exists(dirPath))
@@ -121,8 +121,7 @@ namespace VersionControlGitApp.Controllers {
             }
 
             if (state == true) {
-                Cmd.KillAllWaitingTasks(win);
-                var t = Task.Run(() => WaitForChangesOnRepo(win, path));
+                Task.Run(() => WaitForChangesOnRepo(win, path));
             }
         }
 
@@ -132,8 +131,7 @@ namespace VersionControlGitApp.Controllers {
 
                 List<string> untrackedFiles = Cmd.UntrackedFiles(path);
                 if (untrackedFiles != null) {
-                    var t = Task.Run(() => AddTrackedFiles(win, path));
-                    win.RunningTasks.Add(t);
+                    Task.Run(() => AddTrackedFiles(win, path));
                     break;
                 }
             }

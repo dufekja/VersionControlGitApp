@@ -1,19 +1,15 @@
 ﻿using Octokit;
-using RestSharp.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Database;
+using VersionControlGitApp.UIelements;
 
 namespace VersionControlGitApp {
     public partial class MainWindow : Window {
@@ -24,13 +20,8 @@ namespace VersionControlGitApp {
         public static User user;
         public static List<UserRepository> userRepos;
 
-        public List<Task> RunningTasks { get; set; }
-
         public MainWindow(string token) {
             InitializeComponent();
-
-            RunningTasks = new List<Task>();
-
 
             // TODO -> synchonizace více pc pomocí stejného tokenu
             // TODO -> podpora klávesových zkratek (settings)
@@ -49,32 +40,33 @@ namespace VersionControlGitApp {
             // auth user using token
             client = GithubController.Authenticate(client, token);
             user = client.User.Current().Result;
-            UserName.Text = user.Name;
 
-            ComboBoxLoad();
-            LoadUserAvatar();
+            MainWindowUI.InitUIElements(this, user, repoDB);
+
+
 
             string path = PathLabel.Text.ToString();
             if (path != null) {
-                var t1 = Task.Run(() => GitMethods.WaitForChangesOnRepo(this, path));
-                RunningTasks.Add(t1);
+                Task.Run(() => GitMethods.WaitForChangesOnRepo(this, path));
             }
+
+            Task.Run(() => AsyncListener());
+
         }
 
         private void AddLocalRepository(object sender, RoutedEventArgs e) {
-            using (var fbd = new FolderBrowserDialog()) {
-                DialogResult result = fbd.ShowDialog();
-                string res = $"{result}";
-                string path = fbd.SelectedPath;
+            using FolderBrowserDialog fbd = new FolderBrowserDialog();
+            DialogResult result = fbd.ShowDialog();
 
-                if (res == "OK") {
-                    bool ok = GitMethods.AddLocalRepo(path, repoDB);
+            string res = $"{result}";
+            string path = fbd.SelectedPath;
 
-                    if (ok) {
-                        LoadPathLabel(path);
-                    }
-                } 
-            } 
+            if (res == "OK") {
+                bool ok = GitMethods.AddLocalRepo(path, repoDB);
+                Console.WriteLine($"\n\n{ok}\n\n");
+                if (ok == true)
+                    MainWindowUI.LoadPathLabel(path);
+            }
         }
 
         private void CloneRepository(object sender, RoutedEventArgs e) {
@@ -83,39 +75,32 @@ namespace VersionControlGitApp {
         }
 
         private void NewRepository(object sender, RoutedEventArgs e) {
-            using (var fbd = new FolderBrowserDialog()) {
-                DialogResult result = fbd.ShowDialog();
-                string res = $"{result}";
-                string path = fbd.SelectedPath;
+            using FolderBrowserDialog fbd = new FolderBrowserDialog();
+            DialogResult result = fbd.ShowDialog();
 
-                if (res == "OK" && !GitMethods.IsRepo(path)) {
-                    GitMethods.Init(path, repoDB);
+            string res = $"{result}";
+            string path = fbd.SelectedPath;
 
-                    LoadPathLabel(path);
-                }
+            if (res == "OK" && !GitMethods.IsRepo(path)) {
+                GitMethods.Init(path, repoDB);
+                MainWindowUI.LoadPathLabel(path);
             }
         }
 
         private void RepoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 
             string repoName = "";
-            if (RepoComboBox.Items.Count > 0) {
+            if ((ComboBoxItem)RepoComboBox.SelectedItem != null)
                 repoName = ((ComboBoxItem)RepoComboBox.SelectedItem).Content.ToString();
-            }
-   
             if (repoName != "") {
-
                 // PathLabel change
                 List<Repo> repos = repoDB.FindByName(repoName);
-                if (repos != null && repos.Count != 0) {
+                if (repos != null && repos.Count > 0) {
                     string path = repos[0].Path.ToString();
                     PathLabel.Text = path;
 
-                    Cmd.KillAllWaitingTasks(this);
-
                     // watch selected repo for changes
-                    Task t = Task.Run(() => GitMethods.WaitForChangesOnRepo(this, path));
-                    RunningTasks.Add(t);
+                    /* Task.Run(() => GitMethods.WaitForChangesOnRepo(this, path));
 
                     FilesToCommit.Items.Clear();
                     List<string> filesForCommit = Cmd.FilesForCommit(path);
@@ -123,80 +108,25 @@ namespace VersionControlGitApp {
                         foreach (string file in filesForCommit) {
                             FilesToCommit.Items.Add(file);
                         }
-                    }
+                    }*/
                 }
             }
         }
 
-        private void LoadUserAvatar() {
-            var bi = new BitmapImage();
-            bi.BeginInit();
-            bi.UriSource = new Uri(user.AvatarUrl);
-            bi.EndInit();
-            UserImage.Source = bi;
-        }
-
-        private void LoadPathLabel(string path) {
-            ComboBoxItem item = new ComboBoxItem {
-                Content = GitMethods.GetNameFromPath(path),
-                IsSelected = true
-            };
-
-            RepoComboBox.Items.Add(item);
-            PathLabel.Text = path;
-        }
-
-        private void ComboBoxLoad() {
-
-            if (RepoComboBox.Items.Count > 0) {
-                Dispatcher.Invoke((Action)(() => RepoComboBox.Items.Clear()));
-
-                List<Repo> localRepos = repoDB.ReadDB();
-                bool isSelected = false;
-
-                foreach (Repo repo in localRepos) {
-                    ComboBoxItem item = new ComboBoxItem {
-                        Content = repo.Name
-                    };
-
-                    if (isSelected == false) {
-                        item.IsSelected = true;
-                        PathLabel.Text = repo.Path;
-                        isSelected = true;
-                    }
-
-                    RepoComboBox.Items.Add(item);
-                }
-            }
-            //Task.Run(() => WaitForRepoDelete());
-        }
-
-        private void WaitForRepoDelete() {
-            DeleteRemovedReposFromDB();
+        private void AsyncListener() {
             while (true) {
-                Thread.Sleep(3000);
-                bool wasDelted = DeleteRemovedReposFromDB();
+                Thread.Sleep(1000);
 
-                if (wasDelted == true) {
-                    break;
+                // delete removed folders from db
+                List<string> deletedRepos = repoDB.Refresh();
+                if (deletedRepos != null) {
+                    Dispatcher.Invoke((Action)(() => RepoComboBox.Items.Clear()));
+                    Dispatcher.Invoke((Action)(() => MainWindowUI.ComboBoxLoad()));
+                    Console.WriteLine("\n\nnekdo smazal repo omg brrr");
                 }
-            }
 
-            ComboBoxLoad();
+            }
         }
 
-        private bool DeleteRemovedReposFromDB() {
-            List<Repo> repoList = repoDB.ReadDB();
-            bool wasDeleted = false;
-
-            foreach (Repo repo in repoList) {
-                if (!Directory.Exists(repo.Path)) {
-                    repoDB.DeleteByPath(repo.Path);
-                    wasDeleted = true;
-                }
-            }
-
-            return wasDeleted;
-        }
     }
 }

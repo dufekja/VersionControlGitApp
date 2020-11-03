@@ -115,6 +115,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controllers\GitMethods.cs" />
+    <Compile Include="UIelements\MainWindowUI.cs" />
     <Compile Include="UserRepository.cs" />
     <Compile Include="Windows\CloneRepoWindow.xaml.cs">
       <DependentUpon>CloneRepoWindow.xaml</DependentUpon>
