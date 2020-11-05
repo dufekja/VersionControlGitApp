@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Database;
 
@@ -64,5 +65,16 @@ namespace VersionControlGitApp.UIelements {
                 }
             }
         }
+
+        public static void FilesToCommitRefresh(string path) {
+            win.FilesToCommit.Items.Clear();
+            List<string> filesForCommit = Cmd.FilesForCommit(path);
+            if (filesForCommit.Count > 0) {
+                foreach (string file in filesForCommit) {
+                    win.FilesToCommit.Items.Add(file);
+                }
+            }
+        }
+
     }
 }

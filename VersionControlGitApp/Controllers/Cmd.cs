@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using VersionControlGitApp.Logging;
 
 namespace VersionControlGitApp.Controllers {
     public static class Cmd {
@@ -16,18 +17,17 @@ namespace VersionControlGitApp.Controllers {
 
             if (command != "")
                 try {
-                    ProcessStartInfo process = new ProcessStartInfo {
+                    ProcessStartInfo startInfo = new ProcessStartInfo {
                         FileName = "git.exe",
                         Arguments = command,
                         CreateNoWindow = true,
                         WorkingDirectory = dir,
                         WindowStyle = ProcessWindowStyle.Hidden
                     };
-                    Process proc = Process.Start(process);
+                    Process process = Process.Start(startInfo);
 
-                    proc.WaitForExit();
-                    Console.WriteLine(proc.ExitCode);
-
+                    process.WaitForExit();
+                    ConsoleLogger.BlueLog(process.ExitCode.ToString());
                 } catch {
                     state = false;
                 }
@@ -54,16 +54,16 @@ namespace VersionControlGitApp.Controllers {
                     Process process = new Process {
                         StartInfo = startInfo
                     };
+
                     process.Start();
-
                     string line = process.StandardOutput.ReadLine();
-
+                    ConsoleLogger.BlueLog(line);
                     while (line != null) {
                         output.Add(line);
                         line = process.StandardOutput.ReadLine();
                     }
                     process.WaitForExit();
-
+                    ConsoleLogger.BlueLog(process.ExitCode.ToString());
                 } catch {
                     output = null;
                 }

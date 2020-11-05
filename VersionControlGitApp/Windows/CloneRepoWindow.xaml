@@ -5,14 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VersionControlGitApp"
         mc:Ignorable="d"
-        Title="CloneRepoWindow" Height="300" Width="500" WindowStartupLocation="CenterScreen">
+        Title="CloneRepoWindow" Height="250" Width="400" WindowStartupLocation="CenterScreen" Background="#222222">
     
-    <StackPanel>
-        <Label Content="Insert repostiroy URL: " Margin="20 40 20 0" FontSize="20"/>
-        <TextBox x:Name="URL" Margin="20 0 20 10" FontSize="15"/>
-        <ComboBox x:Name="ExternalRepoComboBox" SelectionChanged="ExternalRepoComboBox_SelectionChanged" FontSize="15" Margin="120 5 120 5">
-            
-        </ComboBox>
-        <Button Click="CloneRepository" Content="Clone" HorizontalAlignment="Center" Padding="5" Margin="10"/>
+    <StackPanel Margin="20" VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Insert repository url:" FontSize="18" Foreground="White"/>
+            <ComboBox x:Name="ExternalRepoComboBox" SelectionChanged="ExternalRepoComboBox_SelectionChanged" 
+                      FontSize="15" Margin="15 0 0 0" Width="150"/>
+        </StackPanel>
+        <TextBox x:Name="URL" FontSize="15" Margin="0 10 0 0" Background="Black" BorderBrush="#3f3f46" BorderThickness="2" Foreground="White"/>
+        <Button Click="CloneRepository" Content="Clone" HorizontalAlignment="Center" 
+                Padding="4" Margin="10" Width="90" FontSize="16"/>
     </StackPanel>
 </Window>

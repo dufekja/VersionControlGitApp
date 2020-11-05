@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Octokit;
+using VersionControlGitApp.Logging;
 
 namespace VersionControlGitApp.Controllers {
     public static class GithubController {
@@ -15,9 +16,9 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="token">User private token</param>
         /// <returns>Return authenticated Github client object</returns>
         public static GitHubClient Authenticate(GitHubClient client, string token) {
+            ConsoleLogger.BlueLog("Authenticating client");
             var tokenAuth = new Credentials(token, AuthenticationType.Oauth);
             client.Credentials = tokenAuth;
-
             return client;
         }
 
@@ -27,7 +28,7 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="client">Authenticated Github client object</param>
         /// <returns>Return List of UserRepository objects</returns>
         public static List<UserRepository> GetAllRepos(GitHubClient client) {
-
+            ConsoleLogger.BlueLog("Retrieving client repositories");
             List<UserRepository> userRepos = new List<UserRepository>();
             var repoList = client.Repository.GetAllForCurrent().Result;
 
@@ -35,7 +36,6 @@ namespace VersionControlGitApp.Controllers {
                 UserRepository userRepo = new UserRepository(repo);
                 userRepos.Add(userRepo);
             }
-
             return userRepos;
         }
 

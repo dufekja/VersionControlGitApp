@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VersionControlGitApp"
         mc:Ignorable="d"
         WindowStyle="SingleBorderWindow"
-        Title="VersionControlGitApp" MinHeight="400" MinWidth="800">
+        Title="VersionControlGitApp" MinHeight="400" MinWidth="800" Closed="Window_Closed">
 
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open"
@@ -27,11 +27,13 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="70"/>
-            <ColumnDefinition MinWidth="90"/>
-            <ColumnDefinition MinWidth="85"/>
-            <ColumnDefinition Width="90*"/>
-            <ColumnDefinition Width="40*"/>
+            <ColumnDefinition MinWidth="70" Width="70*"/>
+            <ColumnDefinition MinWidth="90" Width="90*"/>
+            <ColumnDefinition MinWidth="85" Width="85*"/>
+            <ColumnDefinition Width="85*"/>
+            <ColumnDefinition Width="85*"/>
+            <ColumnDefinition Width="85*"/>
+            <ColumnDefinition Width="159*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition MinHeight="30" Height="15*"/>
@@ -47,7 +49,7 @@
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
 
-        <DockPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0.4,0">
+        <DockPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" Margin="0,0,0.6,0">
             <Menu DockPanel.Dock="Left" Padding="5">
                 <MenuItem Header="Git">
                     <MenuItem Header="Private Token" Padding="3"/>
@@ -82,44 +84,57 @@
                     <MenuItem Header="Delete" Padding="3" Margin="0 3 0 0"/>
                 </MenuItem>
             </Menu>
-        </DockPanel>
-        <Border Background="#3f3f46" Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="3" Margin="84.4,0,-0.4,0"/>
-        <Border Background="#3f3f4f" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,84.4,0" Grid.RowSpan="10" Grid.Row="1"/>
-        <Border Background="#222222" Grid.Column="2" Grid.ColumnSpan="3" Margin="0.4,0,-0.4,0" Grid.RowSpan="10" Grid.Row="1"/>
+            <Menu DockPanel.Dock="Left">
+                <MenuItem Header="Statistics" Padding="5">
 
-        <Border Background="#3f3f4f" Grid.Column="4" Grid.Row="7" Grid.RowSpan="3" BorderThickness="3">
+                </MenuItem>
+            </Menu>
+            <Menu DockPanel.Dock="Left">
+                <MenuItem Header="Team" Padding="5">
+
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+
+        <Border Background="#3f3f46" Grid.Column="4" Grid.ColumnSpan="3" Grid.Row="0"/>
+        <Border Background="#3f3f4f" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="10" Grid.Row="1"/>
+        <Border Background="#222222" Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="10" Grid.Row="1"/>
+
+        <Border Background="#3f3f4f" 
+                Grid.Column="5" Grid.Row="6" Grid.RowSpan="5" Grid.ColumnSpan="2"
+                BorderThickness="3" Margin="90.4,43.127,-0.4,20.873">
+            
             <StackPanel>
                 <Label Content="Summary" Foreground="White"/>
-                <TextBox Foreground="Black" HorizontalAlignment="Stretch" Padding="3" Margin="5 5 5 5" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                <TextBox Foreground="Black" HorizontalAlignment="Stretch" Padding="3" Margin="5 5 5 5" 
+                         VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                
                 <Label Content="Description" Foreground="White"/>
-                <TextBox Foreground="Black" HorizontalAlignment="Stretch" Padding="10" Margin="5 5 5 5" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
-                <Button Content="Commit" HorizontalAlignment="Center" Margin="0 8" Padding="15 5 15 5" FontSize="14"/>
+                <TextBox Foreground="Black" HorizontalAlignment="Stretch" Padding="10" Margin="5 5 5 5" 
+                         VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                
+                <Button Content="Commit" HorizontalAlignment="Center" Margin="0 8" Padding="15 5 15 5" FontSize="10"/>
             </StackPanel>
         </Border>
 
-        <Image x:Name="UserImage" Grid.Column="0" Grid.Row="1"/>
+        <Image x:Name="UserImage" Grid.Column="0" Grid.Row="1" Margin="0,0,0.4,25.273" Grid.RowSpan="2"/>
 
-        <Label Foreground="White" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Label Foreground="White" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="15.6,13,14.8,9.4">
             <Label.Content>
                 <AccessText x:Name="UserName" FontSize="14" TextWrapping="Wrap" Text="Account name"/>
             </Label.Content>
         </Label>
 
-        <StackPanel Background="Black" Grid.Row="1" Grid.Column="2" Grid.RowSpan="4">
+        <StackPanel Background="Black" Grid.Row="1" Grid.Column="2" Grid.RowSpan="5" Margin="0.2,0,0.6,41.873">
             <Label Content="Files to Commit" Foreground="White" FontSize="10" HorizontalAlignment="Center"/>
-            <ListBox x:Name="FilesToCommit" Background="Black" Foreground="White" FontSize="8" HorizontalAlignment="Center"/>
+            <ListBox x:Name="FilesToCommit" Background="Black" Foreground="White" FontSize="12" HorizontalAlignment="Center"/>
         </StackPanel>
-        
 
-        <TextBox x:Name="PathLabel" Foreground="White" Background="Black" Grid.Column="3" Grid.Row="1" Margin="20 0 20 45"/>
 
-        <ComboBox x:Name="RepoComboBox" SelectionChanged="RepoComboBox_SelectionChanged" MinHeight="30" FontSize="16" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"></ComboBox>
-        
-        <Button Content="Statistics" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
-        <Button Content="History" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
-        <Button Content="Changes" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
-        <Button Content="Projects" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
-        <Button Content="Team" Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" BorderThickness="3" FontSize="18"/>
+        <TextBox x:Name="PathLabel" Foreground="White" Background="Black"
+                 Grid.Column="3" Grid.Row="1" Margin="20.4,0,19.4,45.4" Grid.ColumnSpan="3"/>
+
+        <ComboBox x:Name="RepoComboBox" SelectionChanged="RepoComboBox_SelectionChanged" 
+                  MinHeight="30" FontSize="16" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2"></ComboBox>
     </Grid>
-    
 </Window>

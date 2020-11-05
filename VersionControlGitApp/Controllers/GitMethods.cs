@@ -7,7 +7,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using VersionControlGitApp.Database;
+using VersionControlGitApp.Logging;
+using VersionControlGitApp.UIelements;
 
 namespace VersionControlGitApp.Controllers {
     public static class GitMethods {
@@ -110,31 +113,27 @@ namespace VersionControlGitApp.Controllers {
 
         }
 
-        public static void AddTrackedFiles(MainWindow win, string path) {
-            List<string> untrackedFiles = Cmd.UntrackedFiles(path);
-            bool state = true;
+        public static void Commit(string path, string msg, string desc = null) {
 
-            foreach (string file in untrackedFiles) {
-                string command = $@"add {file.Trim()}";
-                state = Cmd.Run(command, path);
-                Console.WriteLine($"\n\n File: {file} tracked\n");
+            List<string> lines = Cmd.RunAndRead("git status --porcelain", path);
+            bool uncommitedFiles = false;
+
+            foreach (string line in lines) {
+                if (line.Contains("A  "))
+                    uncommitedFiles = true;
             }
 
-            if (state == true) {
-                Task.Run(() => WaitForChangesOnRepo(win, path));
-            }
-        }
+            if (msg != "" && uncommitedFiles == true) {
+                if (desc != null)
+                    msg += $" -m {desc}";
+                string command = $"commit -m {msg}";
 
-        public static void WaitForChangesOnRepo(MainWindow win, string path) {
-            while (true) {
-                Thread.Sleep(3000);
+                bool state = Cmd.Run(command, path);
+                if (state)
+                    ConsoleLogger.Success("Files commited");
 
-                List<string> untrackedFiles = Cmd.UntrackedFiles(path);
-                if (untrackedFiles != null) {
-                    Task.Run(() => AddTrackedFiles(win, path));
-                    break;
-                }
             }
         }
+
     }
 }

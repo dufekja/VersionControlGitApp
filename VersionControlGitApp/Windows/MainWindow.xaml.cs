@@ -10,6 +10,7 @@ using System.Windows.Media.Imaging;
 using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Database;
 using VersionControlGitApp.UIelements;
+using VersionControlGitApp.Logging;
 
 namespace VersionControlGitApp {
     public partial class MainWindow : Window {
@@ -20,19 +21,19 @@ namespace VersionControlGitApp {
         public static User user;
         public static List<UserRepository> userRepos;
 
+        public List<Thread> RunningThreadsList { get; set; }
+
         public MainWindow(string token) {
             InitializeComponent();
 
-            // TODO -> synchonizace více pc pomocí stejného tokenu
-            // TODO -> podpora klávesových zkratek (settings)
-            // TODO-> funkce status vybraného repozitáře - vytáhnout z konzole output
-            // TODO -> hezčí klonovací okno
-            // TODO -> stáhnout uživatelské repozitáře a udělat v clone oknu výběr z nich (předvyplnění url)
-            // TODO -> výpis v okně repozitářů lokálních
-            // TODO -> výpis v okně externích repozitářů
-            // TODO -> sledovat změny v lokálním repozitáři
+            // TODO -> pčedělat combobox s repos na list nebo vypsat změny pod
+            // TODO -> barevné logování do externí konzole
             // TODO -> základní práce s vybraným repozitářem (commit, branches)
-            // TODO -> projet celou db a kouknout jestli existují foldery -> smazat ty co nejsou
+            // TODO -> podpora klávesových zkratek (settings)
+            // TODO -> heyží okno pro token
+            // TODO -> synchonizace více pc pomocí stejného tokenu
+
+            RunningThreadsList = new List<Thread>();
 
             repoDB = new LocalRepoDB();
             repoDB.InitDB();
@@ -43,15 +44,16 @@ namespace VersionControlGitApp {
 
             MainWindowUI.InitUIElements(this, user, repoDB);
 
-
-
             string path = PathLabel.Text.ToString();
             if (path != null) {
-                Task.Run(() => GitMethods.WaitForChangesOnRepo(this, path));
+                Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
+                repoChangesThread.Start();
+                ConsoleLogger.Success("start - initial files tracker thread");                
+                RunningThreadsList.Add(repoChangesThread);
             }
 
+            // async task for deleting files
             Task.Run(() => AsyncListener());
-
         }
 
         private void AddLocalRepository(object sender, RoutedEventArgs e) {
@@ -63,7 +65,6 @@ namespace VersionControlGitApp {
 
             if (res == "OK") {
                 bool ok = GitMethods.AddLocalRepo(path, repoDB);
-                Console.WriteLine($"\n\n{ok}\n\n");
                 if (ok == true)
                     MainWindowUI.LoadPathLabel(path);
             }
@@ -88,7 +89,6 @@ namespace VersionControlGitApp {
         }
 
         private void RepoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-
             string repoName = "";
             if ((ComboBoxItem)RepoComboBox.SelectedItem != null)
                 repoName = ((ComboBoxItem)RepoComboBox.SelectedItem).Content.ToString();
@@ -100,15 +100,17 @@ namespace VersionControlGitApp {
                     PathLabel.Text = path;
 
                     // watch selected repo for changes
-                    /* Task.Run(() => GitMethods.WaitForChangesOnRepo(this, path));
-
-                    FilesToCommit.Items.Clear();
-                    List<string> filesForCommit = Cmd.FilesForCommit(path);
-                    if (filesForCommit.Count > 0) {
-                        foreach (string file in filesForCommit) {
-                            FilesToCommit.Items.Add(file);
+                    if (RunningThreadsList.Count > 0) {
+                        ConsoleLogger.Warning("Mazání všech vláken");
+                        foreach (Thread t in RunningThreadsList) {
+                            t.Abort();
                         }
-                    }*/
+
+                        Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
+                        repoChangesThread.Start();
+                        ConsoleLogger.Success("start vlákna na základě přepnutí selekce");
+                        RunningThreadsList.Add(repoChangesThread);
+                    }
                 }
             }
         }
@@ -122,11 +124,50 @@ namespace VersionControlGitApp {
                 if (deletedRepos != null) {
                     Dispatcher.Invoke((Action)(() => RepoComboBox.Items.Clear()));
                     Dispatcher.Invoke((Action)(() => MainWindowUI.ComboBoxLoad()));
-                    Console.WriteLine("\n\nnekdo smazal repo omg brrr");
                 }
-
             }
         }
 
+        private void AddTrackedFiles(string path) {
+            List<string> untrackedFiles = Cmd.UntrackedFiles(path);
+            bool state = true;
+
+            foreach (string file in untrackedFiles) {
+                string command = $@"add {file.Trim()}";
+                state = Cmd.Run(command, path);
+                ConsoleLogger.Success($"File: {file} now tracked");
+            }
+
+            if (state == true) {
+                if (RunningThreadsList.Count > 0) {
+                    Console.WriteLine("/n mazání všech vláken");
+                    foreach (Thread t in RunningThreadsList) {
+                        t.Abort();
+                    }
+                }
+
+                Dispatcher.Invoke((Action)(() => MainWindowUI.FilesToCommitRefresh(path)));
+                Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
+                repoChangesThread.Start();
+                ConsoleLogger.Success("start vlákna na základě nových změn");
+                RunningThreadsList.Add(repoChangesThread);
+            }
+        }
+
+        private void WaitForChangesOnRepo(string path) {
+            while (true) {
+                Thread.Sleep(2000);
+
+                List<string> untrackedFiles = Cmd.UntrackedFiles(path);
+                if (untrackedFiles != null) {
+                    Task.Run(() => AddTrackedFiles(path));
+                    break;
+                }
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e) {
+            Environment.Exit(Environment.ExitCode);
+        }
     }
 }
