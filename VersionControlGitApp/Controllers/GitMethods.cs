@@ -113,9 +113,9 @@ namespace VersionControlGitApp.Controllers {
 
         }
 
-        public static void Commit(string path, string msg, string desc = null) {
+        public static void Commit(string path, string msg, string desc) {
 
-            List<string> lines = Cmd.RunAndRead("git status --porcelain", path);
+            List<string> lines = Cmd.RunAndRead("status --porcelain", path);
             bool uncommitedFiles = false;
 
             foreach (string line in lines) {
@@ -124,14 +124,13 @@ namespace VersionControlGitApp.Controllers {
             }
 
             if (msg != "" && uncommitedFiles == true) {
-                if (desc != null)
+                if (desc != "")
                     msg += $" -m {desc}";
                 string command = $"commit -m {msg}";
 
                 bool state = Cmd.Run(command, path);
                 if (state)
-                    ConsoleLogger.Success("Files commited");
-
+                    ConsoleLogger.Success("GitMethods", "Files commited");
             }
         }
 

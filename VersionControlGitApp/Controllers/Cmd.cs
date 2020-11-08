@@ -27,7 +27,6 @@ namespace VersionControlGitApp.Controllers {
                     Process process = Process.Start(startInfo);
 
                     process.WaitForExit();
-                    ConsoleLogger.BlueLog(process.ExitCode.ToString());
                 } catch {
                     state = false;
                 }
@@ -57,13 +56,11 @@ namespace VersionControlGitApp.Controllers {
 
                     process.Start();
                     string line = process.StandardOutput.ReadLine();
-                    ConsoleLogger.BlueLog(line);
                     while (line != null) {
                         output.Add(line);
                         line = process.StandardOutput.ReadLine();
                     }
                     process.WaitForExit();
-                    ConsoleLogger.BlueLog(process.ExitCode.ToString());
                 } catch {
                     output = null;
                 }

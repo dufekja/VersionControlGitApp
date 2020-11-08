@@ -11,6 +11,7 @@ using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Database;
 using VersionControlGitApp.UIelements;
 using VersionControlGitApp.Logging;
+using System.IO;
 
 namespace VersionControlGitApp {
     public partial class MainWindow : Window {
@@ -28,9 +29,10 @@ namespace VersionControlGitApp {
 
             // TODO -> pčedělat combobox s repos na list nebo vypsat změny pod
             // TODO -> barevné logování do externí konzole
-            // TODO -> základní práce s vybraným repozitářem (commit, branches)
+            // TODO -> větve
+            // TODO -> porovnávání změn 
             // TODO -> podpora klávesových zkratek (settings)
-            // TODO -> heyží okno pro token
+            // TODO -> hezčí okno pro token
             // TODO -> synchonizace více pc pomocí stejného tokenu
 
             RunningThreadsList = new List<Thread>();
@@ -48,7 +50,7 @@ namespace VersionControlGitApp {
             if (path != null) {
                 Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();
-                ConsoleLogger.Success("start - initial files tracker thread");                
+                ConsoleLogger.Success("MainWindow", "initial files tracker thread");                
                 RunningThreadsList.Add(repoChangesThread);
             }
 
@@ -88,6 +90,17 @@ namespace VersionControlGitApp {
             }
         }
 
+        private void CommitRepository(object sender, RoutedEventArgs e) {
+            string summary = CommitSummary.Text.ToString();
+            string desc = CommitDescription.Text.ToString();
+            string filePath = PathLabel.Text.ToString();
+
+            GitMethods.Commit(filePath, summary, desc);
+
+            CommitSummary.Text = "";
+            CommitDescription.Text = "";   
+        }
+
         private void RepoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             string repoName = "";
             if ((ComboBoxItem)RepoComboBox.SelectedItem != null)
@@ -101,14 +114,14 @@ namespace VersionControlGitApp {
 
                     // watch selected repo for changes
                     if (RunningThreadsList.Count > 0) {
-                        ConsoleLogger.Warning("Mazání všech vláken");
+                        ConsoleLogger.Warning("MainWindow", "Mazání všech vláken");
                         foreach (Thread t in RunningThreadsList) {
                             t.Abort();
                         }
 
                         Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                         repoChangesThread.Start();
-                        ConsoleLogger.Success("start vlákna na základě přepnutí selekce");
+                        ConsoleLogger.Success("MainWindow", "Start vlákna na základě přepnutí selekce");
                         RunningThreadsList.Add(repoChangesThread);
                     }
                 }
@@ -135,12 +148,11 @@ namespace VersionControlGitApp {
             foreach (string file in untrackedFiles) {
                 string command = $@"add {file.Trim()}";
                 state = Cmd.Run(command, path);
-                ConsoleLogger.Success($"File: {file} now tracked");
+                ConsoleLogger.Success("MainWindow", $"File: {file} now tracked");
             }
 
             if (state == true) {
                 if (RunningThreadsList.Count > 0) {
-                    Console.WriteLine("/n mazání všech vláken");
                     foreach (Thread t in RunningThreadsList) {
                         t.Abort();
                     }
@@ -149,7 +161,7 @@ namespace VersionControlGitApp {
                 Dispatcher.Invoke((Action)(() => MainWindowUI.FilesToCommitRefresh(path)));
                 Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();
-                ConsoleLogger.Success("start vlákna na základě nových změn");
+                ConsoleLogger.Success("MainWindow", "start vlákna na základě nových změn");
                 RunningThreadsList.Add(repoChangesThread);
             }
         }
@@ -168,6 +180,14 @@ namespace VersionControlGitApp {
 
         private void Window_Closed(object sender, EventArgs e) {
             Environment.Exit(Environment.ExitCode);
+        }
+
+        private void FilesToCommit_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            string fileName = "";
+            if (FilesToCommit.SelectedItem != null) {
+                fileName = FilesToCommit.SelectedItem.ToString();
+                FileContent.Text = File.ReadAllText($@"{PathLabel.Text}\{fileName}");
+            } 
         }
     }
 }

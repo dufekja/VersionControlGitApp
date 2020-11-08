@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VersionControlGitApp.Logging;
 
 namespace VersionControlGitApp.Database {
     [Table("Repositories")]
@@ -43,9 +44,9 @@ namespace VersionControlGitApp.Database {
             var obj = FindByName(repo.Name);
             if (obj == null) {
                 database.Insert(repo);
-                Console.WriteLine("\n New Klasik repo added");
+                ConsoleLogger.Success("LocalRepoDB", "New repository added");
             } else {
-                Console.WriteLine("\n Repo klasik, but už zasunul");
+                ConsoleLogger.Warning("LocalRepoDB", "Repository already created");
             }
         }
 

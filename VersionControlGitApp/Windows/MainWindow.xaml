@@ -101,19 +101,19 @@
         <Border Background="#222222" Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="10" Grid.Row="1"/>
 
         <Border Background="#3f3f4f" 
-                Grid.Column="5" Grid.Row="6" Grid.RowSpan="5" Grid.ColumnSpan="2"
-                BorderThickness="3" Margin="90.4,43.127,-0.4,20.873">
+                Grid.Column="0" Grid.Row="7" Grid.RowSpan="3" Grid.ColumnSpan="2"
+                BorderThickness="3">
             
             <StackPanel>
                 <Label Content="Summary" Foreground="White"/>
-                <TextBox Foreground="Black" HorizontalAlignment="Stretch" Padding="3" Margin="5 5 5 5" 
+                <TextBox x:Name="CommitSummary" Foreground="Black" HorizontalAlignment="Stretch" Padding="3" Margin="5 5 5 5" 
                          VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
                 
                 <Label Content="Description" Foreground="White"/>
-                <TextBox Foreground="Black" HorizontalAlignment="Stretch" Padding="10" Margin="5 5 5 5" 
+                <TextBox x:Name="CommitDescription" Foreground="Black" HorizontalAlignment="Stretch" Padding="10" Margin="5 5 5 5" 
                          VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
                 
-                <Button Content="Commit" HorizontalAlignment="Center" Margin="0 8" Padding="15 5 15 5" FontSize="10"/>
+                <Button Click="CommitRepository" Content="Commit" HorizontalAlignment="Center" Margin="0 8" Padding="15 5 15 5" FontSize="10"/>
             </StackPanel>
         </Border>
 
@@ -127,14 +127,17 @@
 
         <StackPanel Background="Black" Grid.Row="1" Grid.Column="2" Grid.RowSpan="5" Margin="0.2,0,0.6,41.873">
             <Label Content="Files to Commit" Foreground="White" FontSize="10" HorizontalAlignment="Center"/>
-            <ListBox x:Name="FilesToCommit" Background="Black" Foreground="White" FontSize="12" HorizontalAlignment="Center"/>
+            <ListBox SelectionChanged="FilesToCommit_SelectionChanged" x:Name="FilesToCommit" Background="Black" Foreground="White" FontSize="12" HorizontalAlignment="Stretch" MinHeight="150"/>
         </StackPanel>
 
 
         <TextBox x:Name="PathLabel" Foreground="White" Background="Black"
                  Grid.Column="3" Grid.Row="1" Margin="20.4,0,19.4,45.4" Grid.ColumnSpan="3"/>
 
+        <TextBox x:Name="FileContent"
+                 Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" Grid.RowSpan="7" Background="#222222" Foreground="White"/>
+
         <ComboBox x:Name="RepoComboBox" SelectionChanged="RepoComboBox_SelectionChanged" 
-                  MinHeight="30" FontSize="16" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2"></ComboBox>
+                  MinHeight="30" FontSize="16" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="1"></ComboBox>
     </Grid>
 </Window>
