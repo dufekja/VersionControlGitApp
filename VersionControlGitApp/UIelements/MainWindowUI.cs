@@ -23,7 +23,7 @@ namespace VersionControlGitApp.UIelements {
             win.UserName.Text = user.Name;
 
             LoadUserAvatar();
-            ComboBoxLoad();
+            ListBoxLoad();
         }
 
         public static void LoadUserAvatar() {
@@ -35,23 +35,23 @@ namespace VersionControlGitApp.UIelements {
         }
 
         public static void LoadPathLabel(string path) {
-            ComboBoxItem item = new ComboBoxItem {
+            ListBoxItem item = new ListBoxItem {
                 Content = GitMethods.GetNameFromPath(path),
                 IsSelected = true
             };
 
-            win.RepoComboBox.Items.Add(item);
+            win.RepoListBox.Items.Add(item);
             win.PathLabel.Text = path;
         }
 
-        public static void ComboBoxLoad() {
+        public static void ListBoxLoad() {
 
             List<Repo> localRepos = repoDB.ReadDB();
             bool isSelected = false;
 
             if (localRepos.Count > 0) {
                 foreach (Repo repo in localRepos) {
-                    ComboBoxItem item = new ComboBoxItem {
+                    ListBoxItem item = new ListBoxItem {
                         Content = repo.Name
                     };
 
@@ -61,7 +61,7 @@ namespace VersionControlGitApp.UIelements {
                         isSelected = true;
                     }
 
-                    win.RepoComboBox.Items.Add(item);
+                    win.RepoListBox.Items.Add(item);
                 }
             }
         }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VersionControlGitApp"
         mc:Ignorable="d"
-        Title="TokenWindow" MinHeight="400" MinWidth="800">
+        Title="TokenWindow" MinHeight="400" MinWidth="800" Background="#222222">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20*"/>
@@ -15,24 +15,32 @@
             <ColumnDefinition Width="20*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="42*"/>
-            <RowDefinition Height="14*"/>
-            <RowDefinition Height="7*"/>
-            <RowDefinition Height="11*"/>
-            <RowDefinition Height="31*"/>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="160*"/>
+            <RowDefinition Height="70*"/>
+            <RowDefinition Height="35*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="150*"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" 
-               HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" 
-               Content="Vložte token:" FontSize="25" />
-        
-        <TextBox x:Name="TokenTextBox" 
-                Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3"
-                 HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                 FontSize="15" />
+        <Label Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="16" HorizontalAlignment="Center">
+            <Hyperlink NavigateUri="https://github.com/settings/tokens" RequestNavigate="Hyperlink_RequestNavigate">
+                Vytvoření privátního tokenu
+            </Hyperlink>
+        </Label>
 
-        <Button Grid.Column="2" Grid.Row="3"  
-                Margin="40 6 40 6"
+        <Label Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="4" 
+               HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" 
+               Content="Vložte token:" FontSize="25" Foreground="White" Margin="0.2,105.6,116.6,32.84" Grid.RowSpan="3"/>
+
+        <TextBox x:Name="TokenTextBox" 
+                Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="4"
+                 HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                 FontSize="15" Margin="0.2,0.2,116.6,51.64" Grid.RowSpan="2"
+                 Background="Black" BorderBrush="#3f3f46" BorderThickness="2" Foreground="White"/>
+
+        <Button Grid.Column="2" Grid.Row="4"  
+                Margin="40.2,6.16,39.8,5.64"
                 Content="Submit" FontSize="20" Click="SubmitToken"/>
     </Grid>
 </Window>

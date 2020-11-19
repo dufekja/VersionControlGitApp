@@ -27,7 +27,7 @@ namespace VersionControlGitApp {
         public MainWindow(string token) {
             InitializeComponent();
 
-            // TODO -> pčedělat combobox s repos na list nebo vypsat změny pod
+            // TODO -> předělat combobox s repos na list nebo vypsat změny pod
             // TODO -> barevné logování do externí konzole
             // TODO -> větve
             // TODO -> porovnávání změn 
@@ -50,7 +50,7 @@ namespace VersionControlGitApp {
             if (path != null) {
                 Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();
-                ConsoleLogger.Success("MainWindow", "initial files tracker thread");                
+                ConsoleLogger.Success("MainWindow", "Iniciace vlákna");                
                 RunningThreadsList.Add(repoChangesThread);
             }
 
@@ -101,10 +101,10 @@ namespace VersionControlGitApp {
             CommitDescription.Text = "";   
         }
 
-        private void RepoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        private void RepoListBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             string repoName = "";
-            if ((ComboBoxItem)RepoComboBox.SelectedItem != null)
-                repoName = ((ComboBoxItem)RepoComboBox.SelectedItem).Content.ToString();
+            if ((ListBoxItem)RepoListBox.SelectedItem != null)
+                repoName = ((ListBoxItem)RepoListBox.SelectedItem).Content.ToString();
             if (repoName != "") {
                 // PathLabel change
                 List<Repo> repos = repoDB.FindByName(repoName);
@@ -121,7 +121,7 @@ namespace VersionControlGitApp {
 
                         Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                         repoChangesThread.Start();
-                        ConsoleLogger.Success("MainWindow", "Start vlákna na základě přepnutí selekce");
+                        ConsoleLogger.Success("MainWindow", "Start nového vlákna");
                         RunningThreadsList.Add(repoChangesThread);
                     }
                 }
@@ -135,8 +135,8 @@ namespace VersionControlGitApp {
                 // delete removed folders from db
                 List<string> deletedRepos = repoDB.Refresh();
                 if (deletedRepos != null) {
-                    Dispatcher.Invoke((Action)(() => RepoComboBox.Items.Clear()));
-                    Dispatcher.Invoke((Action)(() => MainWindowUI.ComboBoxLoad()));
+                    Dispatcher.Invoke((Action)(() => RepoListBox.Items.Clear()));
+                    Dispatcher.Invoke((Action)(() => MainWindowUI.ListBoxLoad()));
                 }
             }
         }
@@ -161,14 +161,14 @@ namespace VersionControlGitApp {
                 Dispatcher.Invoke((Action)(() => MainWindowUI.FilesToCommitRefresh(path)));
                 Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();
-                ConsoleLogger.Success("MainWindow", "start vlákna na základě nových změn");
+                ConsoleLogger.Success("MainWindow", "start nového vlákna");
                 RunningThreadsList.Add(repoChangesThread);
             }
         }
 
         private void WaitForChangesOnRepo(string path) {
             while (true) {
-                Thread.Sleep(2000);
+                Thread.Sleep(1000);
 
                 List<string> untrackedFiles = Cmd.UntrackedFiles(path);
                 if (untrackedFiles != null) {

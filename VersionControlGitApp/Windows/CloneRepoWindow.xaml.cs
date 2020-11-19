@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Database;
 using Octokit;
@@ -58,7 +50,7 @@ namespace VersionControlGitApp {
                         IsSelected = true
                     };
 
-                    win.RepoComboBox.Items.Add(item);
+                    win.RepoListBox.Items.Add(item);
                     win.PathLabel.Text = path + @"\" + GitMethods.GetNameFromURL(url);
                     this.Close();
                 }

@@ -137,7 +137,9 @@
         <TextBox x:Name="FileContent"
                  Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" Grid.RowSpan="7" Background="#222222" Foreground="White"/>
 
-        <ComboBox x:Name="RepoComboBox" SelectionChanged="RepoComboBox_SelectionChanged" 
-                  MinHeight="30" FontSize="16" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="1"></ComboBox>
+        <ScrollViewer Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="4">
+            <ListBox Foreground="White" Background="#3f3f4f" x:Name="RepoListBox" SelectionChanged="RepoListBox_SelectionChanged" 
+                  MinHeight="30" FontSize="16" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        </ScrollViewer>
     </Grid>
 </Window>
