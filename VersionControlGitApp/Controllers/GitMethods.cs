@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Octokit;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -132,6 +133,33 @@ namespace VersionControlGitApp.Controllers {
                 if (state)
                     ConsoleLogger.Success("GitMethods", "Files commited");
             }
+        }
+
+        public static void Push(string path, User user, GitHubClient client) {
+
+
+            // TODO -> zmenit var cesta na path a integrovat tuto metodu s tlacitkem (async)
+
+            string cesta = @"C:\Users\jandu\Desktop\diowjdwq";
+            string name = GetNameFromPath(cesta);
+            string externalRepoPath = @"https://github.com/";
+
+            bool repoExists = GithubController.RepoExists(client, name);
+            if (!repoExists)
+                client.Repository.Create(new NewRepository(name));
+
+            externalRepoPath += $"{user.Login}/{name}.git";
+
+            Cmd.Run($"remote add origin {externalRepoPath}", path);
+            Cmd.Run($"push -u origin master", path);
+
+            ConsoleLogger.Success("GitMethods", $"Pushed from {cesta} to {externalRepoPath}");
+        }
+
+        public static bool Fetch(string path) {
+            string name = GetNameFromPath(path);
+
+            return true;
         }
 
     }

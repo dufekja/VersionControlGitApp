@@ -54,6 +54,9 @@ namespace VersionControlGitApp {
                 RunningThreadsList.Add(repoChangesThread);
             }
 
+            // testing 
+            GitMethods.Push(path, user, client);
+
             // async task for deleting files
             Task.Run(() => AsyncListener());
         }

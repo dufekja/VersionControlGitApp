@@ -39,5 +39,14 @@ namespace VersionControlGitApp.Controllers {
             return userRepos;
         }
 
+        public static bool RepoExists(GitHubClient client, string name) {
+            IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
+            foreach (Repository repo in repos) {
+                if (repo.Name == name)
+                    return true;
+            }
+            return false;
+        }
+
     }
 }
