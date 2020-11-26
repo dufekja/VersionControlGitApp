@@ -54,9 +54,6 @@ namespace VersionControlGitApp {
                 RunningThreadsList.Add(repoChangesThread);
             }
 
-            // testing 
-            GitMethods.Push(path, user, client);
-
             // async task for deleting files
             Task.Run(() => AsyncListener());
         }
@@ -78,6 +75,13 @@ namespace VersionControlGitApp {
         private void CloneRepository(object sender, RoutedEventArgs e) {
             CloneRepoWindow window = new CloneRepoWindow(repoDB, client, this);
             window.Show();   
+        }
+
+        private void PushLocalRepository(object sender, RoutedEventArgs e) {
+            Dispatcher.Invoke(() => 
+               GitMethods.Push(PathLabel.Text.ToString(), client)
+            );
+            
         }
 
         private void NewRepository(object sender, RoutedEventArgs e) {
@@ -155,10 +159,14 @@ namespace VersionControlGitApp {
             }
 
             if (state == true) {
-                if (RunningThreadsList.Count > 0) {
-                    foreach (Thread t in RunningThreadsList) {
-                        t.Abort();
-                    }
+                if (RunningThreadsList[0] != null) {
+                    try {
+                        foreach (Thread t in RunningThreadsList) {
+                            t.Abort();
+                        }
+                    } catch {
+
+                    } 
                 }
 
                 Dispatcher.Invoke((Action)(() => MainWindowUI.FilesToCommitRefresh(path)));

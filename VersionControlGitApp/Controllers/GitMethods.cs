@@ -135,25 +135,27 @@ namespace VersionControlGitApp.Controllers {
             }
         }
 
-        public static void Push(string path, User user, GitHubClient client) {
-
+        
+        public static void Push(string path, GitHubClient client) {
 
             // TODO -> zmenit var cesta na path a integrovat tuto metodu s tlacitkem (async)
 
-            string cesta = @"C:\Users\jandu\Desktop\diowjdwq";
-            string name = GetNameFromPath(cesta);
+            string name = GetNameFromPath(path);
             string externalRepoPath = @"https://github.com/";
 
             bool repoExists = GithubController.RepoExists(client, name);
             if (!repoExists)
                 client.Repository.Create(new NewRepository(name));
 
+            User user = client.User.Current().Result;
             externalRepoPath += $"{user.Login}/{name}.git";
 
+            Thread.Sleep(500);
             Cmd.Run($"remote add origin {externalRepoPath}", path);
             Cmd.Run($"push -u origin master", path);
 
-            ConsoleLogger.Success("GitMethods", $"Pushed from {cesta} to {externalRepoPath}");
+            ConsoleLogger.Success("GitMethods", $"Pushed from {path} to {externalRepoPath}");
+            ConsoleLogger.Popup("GitMethods", $"Pushed from {path} to {externalRepoPath}");
         }
 
         public static bool Fetch(string path) {

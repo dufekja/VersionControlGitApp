@@ -85,7 +85,7 @@ namespace VersionControlGitApp.Controllers {
             List<string> output = Cmd.RunAndRead("status", path);
             List<string> files = new List<string>();
 
-            if (files != null) {
+            if (output != null) {
                 foreach (string line in output) {
                     if (line.Contains("new file:   ")) {
                         string file = Explode(line, "new file:   ", ".txt") + ".txt";

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace VersionControlGitApp.Logging {
     public static class ConsoleLogger {
@@ -29,6 +30,10 @@ namespace VersionControlGitApp.Logging {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Log.Error.{file} - {text}");
             Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public static void Popup(string file, string text) {
+            MessageBox.Show($"Popup.Info.{file} - {text}");
         }
 
     }

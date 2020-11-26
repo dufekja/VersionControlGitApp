@@ -16,6 +16,7 @@
         <CommandBinding Command="ApplicationCommands.New"
                         Executed="NewRepository"/>
     </Window.CommandBindings>
+    
     <Window.InputBindings>
         <KeyBinding Command="ApplicationCommands.Open"
                     Gesture="Ctrl+Shift+A"/>
@@ -78,7 +79,7 @@
             <Menu DockPanel.Dock="Left">
                 <MenuItem Header="Repository" Padding="5">
                     <MenuItem Header="Fetch" Padding="3"/>
-                    <MenuItem Header="Push" Padding="3"/>
+                    <MenuItem Click="PushLocalRepository" Header="Push" Padding="3"/>
                     <MenuItem Header="Pull" Padding="3"/>
                     <MenuItem Header="Remove" Padding="3"/>
                     <MenuItem Header="Delete" Padding="3" Margin="0 3 0 0"/>
