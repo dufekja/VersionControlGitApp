@@ -138,18 +138,16 @@ namespace VersionControlGitApp.Controllers {
         
         public static void Push(string path, GitHubClient client) {
 
-            // TODO -> zmenit var cesta na path a integrovat tuto metodu s tlacitkem (async)
-
             string name = GetNameFromPath(path);
-            string externalRepoPath = @"https://github.com/";
-
             bool repoExists = GithubController.RepoExists(client, name);
+
             if (!repoExists)
                 client.Repository.Create(new NewRepository(name));
 
             User user = client.User.Current().Result;
-            externalRepoPath += $"{user.Login}/{name}.git";
+            string externalRepoPath = $"{Config.GetGithubPath()}{user.Login}/{name}.git";
 
+            // TODO -> delete time sleep - fix waiting on repo creation (while repo created and w8 like 10 sec)
             Thread.Sleep(500);
             Cmd.Run($"remote add origin {externalRepoPath}", path);
             Cmd.Run($"push -u origin master", path);
@@ -158,10 +156,40 @@ namespace VersionControlGitApp.Controllers {
             ConsoleLogger.Popup("GitMethods", $"Pushed from {path} to {externalRepoPath}");
         }
 
-        public static bool Fetch(string path) {
+        public static void Pull(string path, GitHubClient client) {
             string name = GetNameFromPath(path);
 
-            return true;
+            bool repoExists = GithubController.RepoExists(client, name);
+
+            if (repoExists) {
+                User user = client.User.Current().Result;
+                string externalRepoPath = $"{Config.GetGithubPath()}{user.Login}/{name}.git";
+
+                Cmd.Run("pull", path);
+
+                ConsoleLogger.Success("GitMethods", $"Pulled from {externalRepoPath} to {path}");
+                ConsoleLogger.Popup("GitMethods", $"Pulled from {externalRepoPath} to {path}");
+
+            } else {
+                ConsoleLogger.Popup("GitMethods", $"Repozitář neexistuje");
+            }
+                
+
+        }
+
+        public static void Fetch(string path, GitHubClient client) {
+            string name = GetNameFromPath(path);
+            bool repoExists = GithubController.RepoExists(client, name);
+
+            if (repoExists) {
+                List<string> lines = Cmd.RunAndRead("fetch --dry-run", path);
+                string output = "";
+                foreach (string line in lines) {
+                    output += line;
+                }
+                ConsoleLogger.Popup("GitMethods", $"{output}");
+            }
+
         }
 
     }

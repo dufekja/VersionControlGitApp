@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:VersionControlGitApp"
              StartupUri="Windows/TokenWindow.xaml">
     <Application.Resources>
-         
+
     </Application.Resources>
 </Application>

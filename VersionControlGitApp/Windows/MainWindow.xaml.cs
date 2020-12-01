@@ -77,11 +77,23 @@ namespace VersionControlGitApp {
             window.Show();   
         }
 
+        private void FetchExternalRepository(object sender, RoutedEventArgs e) {
+            Dispatcher.Invoke(() =>
+               GitMethods.Fetch(PathLabel.Text.ToString(), client)
+            );
+        }
+
         private void PushLocalRepository(object sender, RoutedEventArgs e) {
             Dispatcher.Invoke(() => 
                GitMethods.Push(PathLabel.Text.ToString(), client)
             );
             
+        }
+
+        private void PullExternalRepository(object sende, RoutedEventArgs e) {
+            Dispatcher.Invoke(() =>
+               GitMethods.Pull(PathLabel.Text.ToString(), client)
+            );
         }
 
         private void NewRepository(object sender, RoutedEventArgs e) {
