@@ -72,10 +72,10 @@
             <!-- Branch menu -->
             <Menu DockPanel.Dock="Left">
                 <MenuItem Header="Branch" Padding="5">
-                    <MenuItem Header="New" Padding="3"/>
-                    <MenuItem Header="Rename" Padding="3"/>
-                    <MenuItem Header="Merge selected" Padding="3"/>
-                    <MenuItem Header="Delete" Padding="3" Margin="0 3 0 0"/>
+                    <MenuItem Header="New" InputGestureText="Ctrl+B+N" Click="CreateNewBranch" Padding="3"/>
+                    <MenuItem Header="Rename" InputGestureText="Ctrl+B+R" Click="RenameCurrentBranch" Padding="3"/>
+                    <MenuItem Header="Merge selected" InputGestureText="Ctrl+B+M" Click="MergeCurrentBranch" Padding="3"/>
+                    <MenuItem Header="Delete" InputGestureText="Ctrl+B+D" Click="DeleteCurrentBranch" Padding="3" Margin="0 3 0 0"/>
                 </MenuItem>
             </Menu>
 

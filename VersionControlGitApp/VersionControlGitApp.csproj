@@ -111,6 +111,9 @@
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="UIelements\MainWindowUI.cs" />
     <Compile Include="UserRepository.cs" />
+    <Compile Include="Windows\BranchEditWindow.xaml.cs">
+      <DependentUpon>BranchEditWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\CloneRepoWindow.xaml.cs">
       <DependentUpon>CloneRepoWindow.xaml</DependentUpon>
     </Compile>
@@ -120,6 +123,10 @@
     <Compile Include="Windows\TokenWindow.xaml.cs">
       <DependentUpon>TokenWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Windows\BranchEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\CloneRepoWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

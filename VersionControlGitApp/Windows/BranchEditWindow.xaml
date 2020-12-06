@@ -1,0 +1,15 @@
+﻿<Window x:Class="VersionControlGitApp.Windows.BranchEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VersionControlGitApp.Windows"
+        mc:Ignorable="d"
+        Title="BranchEditWindow" Height="450" Width="800" Background="{StaticResource DarkBackgroundColor}">
+    <StackPanel Margin="100">
+        <Label Margin="15,0,0,0" FontSize="18" Foreground="{StaticResource WhiteTextColor}" Content="Vyberte větev nebo vytvořte novou:"/>
+        <ComboBox x:Name="BranchesComboBox" Margin="15,5,300,0" SelectionChanged="BranchesComboBox_SelectionChanged"/>
+        <TextBox x:Name="BranchesTextBox" FontSize="25" Margin="15,15,15,15"/>
+        <Button Click="CheckoutBranchButton_Clicked" FontSize="18" Content="Submit" HorizontalAlignment="Stretch" Margin="200,15,200,15"/>
+    </StackPanel>
+</Window>

@@ -13,6 +13,7 @@ using VersionControlGitApp.UIelements;
 using VersionControlGitApp.Logging;
 using System.IO;
 using System.Windows.Input;
+using VersionControlGitApp.Windows;
 
 namespace VersionControlGitApp {
     public partial class MainWindow : Window {
@@ -134,6 +135,25 @@ namespace VersionControlGitApp {
             if (repoPath != "") {
                 ConsoleLogger.Popup("MainWindow", $"DeleteRepo - {repoPath}");
             }
+        }
+
+        private void CreateNewBranch(object sender, RoutedEventArgs e) {
+
+            List<string> lines = GitMethods.GetBranches(PathLabel.Text.ToString());        
+            BranchEditWindow window = new BranchEditWindow(lines, PathLabel.Text.ToString());
+            window.Show();
+        }
+
+        private void RenameCurrentBranch(object sender, RoutedEventArgs e) {
+            ConsoleLogger.Popup("MainWindow", "rename branch");
+        }
+
+        private void MergeCurrentBranch(object sender, RoutedEventArgs e) {
+            ConsoleLogger.Popup("MainWindow", "merge branch");
+        }
+
+        private void DeleteCurrentBranch(object sender, RoutedEventArgs e) {
+            ConsoleLogger.Popup("MainWindow", "delete branch");
         }
 
         // trigger when selection changed in RepoListBox

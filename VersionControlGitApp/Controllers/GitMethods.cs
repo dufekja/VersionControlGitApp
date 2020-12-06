@@ -192,5 +192,14 @@ namespace VersionControlGitApp.Controllers {
 
         }
 
+        public static List<string> GetBranches(string path) {
+            List<string> lines = Cmd.RunAndRead("branch", path);
+
+            if (lines == null)
+                return null;
+
+            return lines;
+        }
+
     }
 }
