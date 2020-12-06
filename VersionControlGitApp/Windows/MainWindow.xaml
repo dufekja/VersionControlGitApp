@@ -3,27 +3,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VersionControlGitApp"
         mc:Ignorable="d"
         WindowStyle="SingleBorderWindow"
         Title="VersionControlGitApp" MinHeight="400" MinWidth="800" Closed="Window_Closed">
 
-    <Window.CommandBindings>
-        <CommandBinding Command="ApplicationCommands.Open"
-                        Executed="AddLocalRepository"/>
-        <CommandBinding Command="ApplicationCommands.Copy"
-                        Executed="CloneRepository"/>
-        <CommandBinding Command="ApplicationCommands.New"
-                        Executed="NewRepository"/>
-    </Window.CommandBindings>
     
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open" Executed="AddLocalRepository"/>
+        <CommandBinding Command="ApplicationCommands.Copy" Executed="CloneRepository"/>
+        <CommandBinding Command="ApplicationCommands.New" Executed="NewRepository"/>
+    </Window.CommandBindings>
+
     <Window.InputBindings>
-        <KeyBinding Command="ApplicationCommands.Open"
-                    Gesture="Ctrl+Shift+A"/>
-        <KeyBinding Command="ApplicationCommands.Copy"
-                    Gesture="Ctrl+Shift+C"/>
-        <KeyBinding Command="ApplicationCommands.New"
-                    Gesture="Ctrl+Shift+N"/>
+        <KeyBinding Command="ApplicationCommands.Open" Gesture="Ctrl+Shift+A"/>
+        <KeyBinding Command="ApplicationCommands.Copy" Gesture="Ctrl+Shift+C"/>
+        <KeyBinding Command="ApplicationCommands.New" Gesture="Ctrl+Shift+N"/>
     </Window.InputBindings>
 
     <Grid>
@@ -51,11 +45,15 @@
         </Grid.RowDefinitions>
 
         <DockPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" Margin="0,0,0.6,0">
+
+            <!-- Git menu -->
             <Menu DockPanel.Dock="Left" Padding="5">
                 <MenuItem Header="Git">
                     <MenuItem Header="Private Token" Padding="3"/>
                 </MenuItem>
             </Menu>
+
+            <!-- File menu -->
             <Menu DockPanel.Dock="Left">
                 <MenuItem Header="File" Padding="5">
                     <MenuItem InputGestureText="Ctrl+Shift+N" Click="NewRepository" Header="New Repository" Padding="3"/>
@@ -63,11 +61,15 @@
                     <MenuItem InputGestureText="Ctrl+Shift+C" Click="CloneRepository" Header="Clone Repository" Padding="3"/>
                 </MenuItem>
             </Menu>
+
+            <!-- Accounts menu -->
             <Menu DockPanel.Dock="Left">
                 <MenuItem Header="Accounts" Padding="5">
 
                 </MenuItem>
             </Menu>
+
+            <!-- Branch menu -->
             <Menu DockPanel.Dock="Left">
                 <MenuItem Header="Branch" Padding="5">
                     <MenuItem Header="New" Padding="3"/>
@@ -76,20 +78,26 @@
                     <MenuItem Header="Delete" Padding="3" Margin="0 3 0 0"/>
                 </MenuItem>
             </Menu>
+
+            <!-- Repository menu -->
             <Menu DockPanel.Dock="Left">
                 <MenuItem Header="Repository" Padding="5">
-                    <MenuItem Click="FetchExternalRepository"  Header="Fetch" Padding="3"/>
-                    <MenuItem Click="PushLocalRepository" Header="Push" Padding="3"/>
-                    <MenuItem Click="PullExternalRepository" Header="Pull" Padding="3"/>
-                    <MenuItem Header="Remove" Padding="3"/>
-                    <MenuItem Header="Delete" Padding="3" Margin="0 3 0 0"/>
+                    <MenuItem Header="Fetch" InputGestureText="Ctrl+Shift+F" Click="FetchExternalRepository" Padding="3"/>
+                    <MenuItem InputGestureText="Ctrl+P+O" Click="PushLocalRepository" Header="Push" Padding="3"/>
+                    <MenuItem InputGestureText="Ctrl+P+I" Click="PullExternalRepository" Header="Pull" Padding="3"/>
+                    <MenuItem InputGestureText="Shift+R" Header="Remove" Click="RemoveRepository" Padding="3"/>
+                    <MenuItem InputGestureText="Ctrl+Shift+R" Header="Delete" Click="DeleteRepository" Padding="3" Margin="0 3 0 0"/>
                 </MenuItem>
             </Menu>
+
+            <!-- Statistics menu -->
             <Menu DockPanel.Dock="Left">
                 <MenuItem Header="Statistics" Padding="5">
 
                 </MenuItem>
             </Menu>
+
+            <!-- Team menu -->
             <Menu DockPanel.Dock="Left">
                 <MenuItem Header="Team" Padding="5">
 
@@ -97,50 +105,84 @@
             </Menu>
         </DockPanel>
 
-        <Border Background="#3f3f46" Grid.Column="4" Grid.ColumnSpan="3" Grid.Row="0"/>
-        <Border Background="#3f3f4f" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="10" Grid.Row="1"/>
-        <Border Background="#222222" Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="10" Grid.Row="1"/>
+        <Border Background="{StaticResource GrayBackgroundColor}" Grid.Column="4" Grid.ColumnSpan="3" Grid.Row="0"/>
+        <Border Background="{StaticResource GrayBackgroundColor}" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="10" Grid.Row="1"/>
+        <Border Background="{StaticResource DarkBackgroundColor}" Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="10" Grid.Row="1"/>
 
-        <Border Background="#3f3f4f" 
+        <Border Background="{StaticResource GrayBackgroundColor}" 
                 Grid.Column="0" Grid.Row="7" Grid.RowSpan="3" Grid.ColumnSpan="2"
                 BorderThickness="3">
-            
+
             <StackPanel>
-                <Label Content="Summary" Foreground="White"/>
-                <TextBox x:Name="CommitSummary" Foreground="Black" HorizontalAlignment="Stretch" Padding="3" Margin="5 5 5 5" 
+                <Label Content="Summary" Foreground="{StaticResource WhiteTextColor}"/>
+                <TextBox x:Name="CommitSummary" Foreground="{StaticResource BlackColor}" HorizontalAlignment="Stretch" Padding="3" Margin="5 5 5 5" 
                          VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
-                
-                <Label Content="Description" Foreground="White"/>
-                <TextBox x:Name="CommitDescription" Foreground="Black" HorizontalAlignment="Stretch" Padding="10" Margin="5 5 5 5" 
+
+                <Label Content="Description" Foreground="{StaticResource WhiteTextColor}"/>
+                <TextBox x:Name="CommitDescription" Foreground="{StaticResource BlackColor}" HorizontalAlignment="Stretch" Padding="10" Margin="5 5 5 5" 
                          VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
-                
+
                 <Button Click="CommitRepository" Content="Commit" HorizontalAlignment="Center" Margin="0 8" Padding="15 5 15 5" FontSize="10"/>
             </StackPanel>
         </Border>
 
-        <Image x:Name="UserImage" Grid.Column="0" Grid.Row="1" Margin="0,0,0.4,25.273" Grid.RowSpan="2"/>
+        <!-- Github user image -->
+        <Image x:Name="UserImage" 
+            Grid.Column="0" Grid.Row="1" 
+            Margin="0,0,0.4,25.273" Grid.RowSpan="2"/>
 
-        <Label Foreground="White" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="15.6,13,14.8,9.4">
+        <!-- Github user nick -->
+        <Label 
+            Foreground="{StaticResource WhiteTextColor}" 
+            Grid.Column="1" Grid.Row="1" 
+            VerticalAlignment="Center" HorizontalAlignment="Center" 
+            Margin="15.6,13,14.8,9.4">
+
             <Label.Content>
                 <AccessText x:Name="UserName" FontSize="14" TextWrapping="Wrap" Text="Account name"/>
             </Label.Content>
         </Label>
 
-        <StackPanel Background="Black" Grid.Row="1" Grid.Column="2" Grid.RowSpan="5" Margin="0.2,0,0.6,41.873">
-            <Label Content="Files to Commit" Foreground="White" FontSize="10" HorizontalAlignment="Center"/>
-            <ListBox SelectionChanged="FilesToCommit_SelectionChanged" x:Name="FilesToCommit" Background="Black" Foreground="White" FontSize="12" HorizontalAlignment="Stretch" MinHeight="150"/>
+        <StackPanel 
+            Background="{StaticResource BlackColor}" 
+            Grid.Row="1" Grid.Column="2" Grid.RowSpan="5" 
+            Margin="0.2,0,0.6,41.873">
+
+            <Label Content="Files to Commit" 
+                   Foreground="{StaticResource WhiteTextColor}" 
+                   FontSize="10" HorizontalAlignment="Center"/>
+
+            <ListBox SelectionChanged="FilesToCommit_SelectionChanged" 
+                     x:Name="FilesToCommit" 
+                     Background="{StaticResource BlackColor}" 
+                     Foreground="{StaticResource WhiteTextColor}" 
+                     FontSize="12" HorizontalAlignment="Stretch" MinHeight="150"/>
+
         </StackPanel>
 
+        <!-- Current repository path -->
+        <TextBox x:Name="PathLabel" 
+               Foreground="{StaticResource WhiteTextColor}" 
+               Background="{StaticResource BlackColor}"
+               Grid.Column="3" Grid.Row="1" Margin="20.4,0,19.4,45.4" Grid.ColumnSpan="3"/>
 
-        <TextBox x:Name="PathLabel" Foreground="White" Background="Black"
-                 Grid.Column="3" Grid.Row="1" Margin="20.4,0,19.4,45.4" Grid.ColumnSpan="3"/>
+        <!-- Current selected file content -->
+        <TextBox 
+            x:Name="FileContent"
+            Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" Grid.RowSpan="7" 
+            Background="{StaticResource GrayBackgroundColor}" 
+            Foreground="{StaticResource WhiteTextColor}"/>
 
-        <TextBox x:Name="FileContent"
-                 Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" Grid.RowSpan="7" Background="#222222" Foreground="White"/>
-
+        <!-- Listbox with added repositories -->
         <ScrollViewer Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="4">
-            <ListBox Foreground="White" Background="#3f3f4f" x:Name="RepoListBox" SelectionChanged="RepoListBox_SelectionChanged" 
-                  MinHeight="30" FontSize="16" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <ListBox 
+                x:Name="RepoListBox" 
+                Foreground="{StaticResource WhiteTextColor}" 
+                Background="{StaticResource GrayBackgroundColor}" 
+                SelectionChanged="RepoListBox_SelectionChanged" 
+                MinHeight="30" FontSize="16" 
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
         </ScrollViewer>
     </Grid>
 </Window>

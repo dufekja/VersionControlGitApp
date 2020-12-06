@@ -4,6 +4,14 @@
              xmlns:local="clr-namespace:VersionControlGitApp"
              StartupUri="Windows/TokenWindow.xaml">
     <Application.Resources>
-
+        
+        <!-- App Colors -->
+        <ResourceDictionary>
+            <SolidColorBrush x:Key="WhiteTextColor">#fff</SolidColorBrush>
+            <SolidColorBrush x:Key="BlackColor">#000</SolidColorBrush>
+            <SolidColorBrush x:Key="DarkBackgroundColor">#222</SolidColorBrush>
+            <SolidColorBrush x:Key="GrayBackgroundColor">#3f3f4f</SolidColorBrush>
+        </ResourceDictionary>
+        
     </Application.Resources>
 </Application>

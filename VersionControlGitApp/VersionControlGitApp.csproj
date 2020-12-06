@@ -116,6 +116,7 @@
     </ApplicationDefinition>
     <Compile Include="Config.cs" />
     <Compile Include="Controllers\GitMethods.cs" />
+    <Compile Include="CustomCommands.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="UIelements\MainWindowUI.cs" />
     <Compile Include="UserRepository.cs" />

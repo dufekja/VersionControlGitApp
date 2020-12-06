@@ -52,3 +52,4 @@ C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windo
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windows\CloneRepoWindow.baml
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windows\MainWindow.baml
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windows\TokenWindow.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\App.baml

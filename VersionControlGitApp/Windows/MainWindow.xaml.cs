@@ -12,6 +12,7 @@ using VersionControlGitApp.Database;
 using VersionControlGitApp.UIelements;
 using VersionControlGitApp.Logging;
 using System.IO;
+using System.Windows.Input;
 
 namespace VersionControlGitApp {
     public partial class MainWindow : Window {
@@ -120,10 +121,29 @@ namespace VersionControlGitApp {
             CommitDescription.Text = "";   
         }
 
+        private void RemoveRepository(object sender, RoutedEventArgs e) {
+            string repoPath = PathLabel.Text.ToString();
+            if (repoPath != "") {
+                ConsoleLogger.Popup("MainWindow", $"Removerepo - {repoPath}");
+            }
+            
+        }
+
+        private void DeleteRepository(object sender, RoutedEventArgs e) {
+            string repoPath = PathLabel.Text.ToString();
+            if (repoPath != "") {
+                ConsoleLogger.Popup("MainWindow", $"DeleteRepo - {repoPath}");
+            }
+        }
+
+        // trigger when selection changed in RepoListBox
         private void RepoListBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+
+            // get new selected repo name
             string repoName = "";
             if ((ListBoxItem)RepoListBox.SelectedItem != null)
                 repoName = ((ListBoxItem)RepoListBox.SelectedItem).Content.ToString();
+
             if (repoName != "") {
                 // PathLabel change
                 List<Repo> repos = repoDB.FindByName(repoName);
@@ -133,11 +153,14 @@ namespace VersionControlGitApp {
 
                     // watch selected repo for changes
                     if (RunningThreadsList.Count > 0) {
+
+                        // delete all running threads
                         ConsoleLogger.Warning("MainWindow", "Mazání všech vláken");
                         foreach (Thread t in RunningThreadsList) {
                             t.Abort();
                         }
 
+                        // start new repo watching thread
                         Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                         repoChangesThread.Start();
                         ConsoleLogger.Success("MainWindow", "Start nového vlákna");
@@ -177,14 +200,14 @@ namespace VersionControlGitApp {
                             t.Abort();
                         }
                     } catch {
-
+                        ConsoleLogger.Error("MainWindow", "Abort všech vláken selhal");
                     } 
                 }
 
                 Dispatcher.Invoke((Action)(() => MainWindowUI.FilesToCommitRefresh(path)));
                 Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();
-                ConsoleLogger.Success("MainWindow", "start nového vlákna");
+                ConsoleLogger.Success("MainWindow", "Start nového vlákna");
                 RunningThreadsList.Add(repoChangesThread);
             }
         }
@@ -193,6 +216,7 @@ namespace VersionControlGitApp {
             while (true) {
                 Thread.Sleep(1000);
 
+                // If untracked files in currently watched repo -> track them
                 List<string> untrackedFiles = Cmd.UntrackedFiles(path);
                 if (untrackedFiles != null) {
                     Task.Run(() => AddTrackedFiles(path));
@@ -201,16 +225,15 @@ namespace VersionControlGitApp {
             }
         }
 
-        private void Window_Closed(object sender, EventArgs e) {
-            Environment.Exit(Environment.ExitCode);
+        private void FilesToCommit_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (FilesToCommit.SelectedItem != null) {
+                string fileName = FilesToCommit.SelectedItem.ToString();
+                FileContent.Text = File.ReadAllText($@"{PathLabel.Text}\{fileName}");
+            }
         }
 
-        private void FilesToCommit_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            string fileName = "";
-            if (FilesToCommit.SelectedItem != null) {
-                fileName = FilesToCommit.SelectedItem.ToString();
-                FileContent.Text = File.ReadAllText($@"{PathLabel.Text}\{fileName}");
-            } 
+        private void Window_Closed(object sender, EventArgs e) {
+            Environment.Exit(Environment.ExitCode);
         }
     }
 }
