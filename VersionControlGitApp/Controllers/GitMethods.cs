@@ -2,16 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
 using VersionControlGitApp.Database;
 using VersionControlGitApp.Logging;
-using VersionControlGitApp.UIelements;
 
 namespace VersionControlGitApp.Controllers {
     public static class GitMethods {
@@ -131,6 +124,7 @@ namespace VersionControlGitApp.Controllers {
 
                 bool state = Cmd.Run(command, path);
                 if (state)
+
                     ConsoleLogger.Success("GitMethods", "Files commited");
             }
         }

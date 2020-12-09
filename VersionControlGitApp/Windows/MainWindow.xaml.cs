@@ -60,6 +60,7 @@ namespace VersionControlGitApp {
             Task.Run(() => AsyncListener());
         }
 
+        // add already created repository to sqlite db
         private void AddLocalRepository(object sender, RoutedEventArgs e) {
             using FolderBrowserDialog fbd = new FolderBrowserDialog();
             DialogResult result = fbd.ShowDialog();
@@ -74,28 +75,22 @@ namespace VersionControlGitApp {
             }
         }
 
+        // clone repository window
         private void CloneRepository(object sender, RoutedEventArgs e) {
-            CloneRepoWindow window = new CloneRepoWindow(repoDB, client, this);
-            window.Show();   
+            new CloneRepoWindow(repoDB, client, this).Show();   
         }
 
+
         private void FetchExternalRepository(object sender, RoutedEventArgs e) {
-            Dispatcher.Invoke(() =>
-               GitMethods.Fetch(PathLabel.Text.ToString(), client)
-            );
+            Dispatcher.Invoke(() => GitMethods.Fetch(PathLabel.Text.ToString(), client));
         }
 
         private void PushLocalRepository(object sender, RoutedEventArgs e) {
-            Dispatcher.Invoke(() => 
-               GitMethods.Push(PathLabel.Text.ToString(), client)
-            );
-            
+            Dispatcher.Invoke(() => GitMethods.Push(PathLabel.Text.ToString(), client));      
         }
 
         private void PullExternalRepository(object sende, RoutedEventArgs e) {
-            Dispatcher.Invoke(() =>
-               GitMethods.Pull(PathLabel.Text.ToString(), client)
-            );
+            Dispatcher.Invoke(() => GitMethods.Pull(PathLabel.Text.ToString(), client));
         }
 
         private void NewRepository(object sender, RoutedEventArgs e) {
@@ -125,6 +120,12 @@ namespace VersionControlGitApp {
         private void RemoveRepository(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
             if (repoPath != "") {
+                repoDB.DeleteByPath(repoPath);
+
+                Dispatcher.Invoke((Action)(() => RepoListBox.Items.Clear()));
+                Dispatcher.Invoke((Action)(() => MainWindowUI.ListBoxLoad()));
+                PathLabel.Text = "";
+
                 ConsoleLogger.Popup("MainWindow", $"Removerepo - {repoPath}");
             }
             
@@ -132,27 +133,40 @@ namespace VersionControlGitApp {
 
         private void DeleteRepository(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
-            if (repoPath != "") {
-                ConsoleLogger.Popup("MainWindow", $"DeleteRepo - {repoPath}");
+            if (repoPath != "" && GitMethods.IsRepo(repoPath) && Directory.Exists(repoPath)) {
+                
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you want to delete {GitMethods.GetNameFromPath(repoPath)} ?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
+                if (messageBoxResult == MessageBoxResult.Yes) {
+                    Directory.Delete(repoPath);
+                    ConsoleLogger.UserPopup("Delete Confirmation", $"{GitMethods.GetNameFromPath(repoPath)} deleted");
+                }
             }
         }
 
         private void CreateNewBranch(object sender, RoutedEventArgs e) {
+            List<string> lines = GitMethods.GetBranches(PathLabel.Text.ToString());
 
-            List<string> lines = GitMethods.GetBranches(PathLabel.Text.ToString());        
-            BranchEditWindow window = new BranchEditWindow(lines, PathLabel.Text.ToString());
-            window.Show();
+            try {
+                if (lines[0] != null) {
+                    new BranchEditWindow(lines, PathLabel.Text.ToString()).Show();
+                }
+            } catch {
+
+            }
         }
 
         private void RenameCurrentBranch(object sender, RoutedEventArgs e) {
+            // TODO -> RenameCurrentBranch
             ConsoleLogger.Popup("MainWindow", "rename branch");
         }
 
         private void MergeCurrentBranch(object sender, RoutedEventArgs e) {
+            // TODO -> MergeCurrentBranch
             ConsoleLogger.Popup("MainWindow", "merge branch");
         }
 
         private void DeleteCurrentBranch(object sender, RoutedEventArgs e) {
+            // TODO -> DeleteCurrentBranch
             ConsoleLogger.Popup("MainWindow", "delete branch");
         }
 
