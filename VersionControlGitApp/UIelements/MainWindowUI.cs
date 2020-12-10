@@ -20,6 +20,7 @@ namespace VersionControlGitApp.UIelements {
             user = _user;
             repoDB = _repoDB;
 
+            win.PathLabel.Text = "";
             win.UserName.Text = user.Name;
 
             LoadUserAvatar();
@@ -50,6 +51,7 @@ namespace VersionControlGitApp.UIelements {
             bool isSelected = false;
 
             if (localRepos.Count > 0) {
+                win.RepoListBox.Items.Clear();
                 foreach (Repo repo in localRepos) {
                     ListBoxItem item = new ListBoxItem {
                         Content = repo.Name

@@ -82,15 +82,18 @@ namespace VersionControlGitApp {
 
 
         private void FetchExternalRepository(object sender, RoutedEventArgs e) {
-            Dispatcher.Invoke(() => GitMethods.Fetch(PathLabel.Text.ToString(), client));
+            if (GitMethods.IsRepo(PathLabel.Text.ToString()))
+                Dispatcher.Invoke(() => GitMethods.Fetch(PathLabel.Text.ToString(), client));
         }
 
         private void PushLocalRepository(object sender, RoutedEventArgs e) {
-            Dispatcher.Invoke(() => GitMethods.Push(PathLabel.Text.ToString(), client));      
+            if (GitMethods.IsRepo(PathLabel.Text.ToString()))
+                Dispatcher.Invoke(() => GitMethods.Push(PathLabel.Text.ToString(), client));      
         }
 
         private void PullExternalRepository(object sende, RoutedEventArgs e) {
-            Dispatcher.Invoke(() => GitMethods.Pull(PathLabel.Text.ToString(), client));
+            if (GitMethods.IsRepo(PathLabel.Text.ToString()))
+                Dispatcher.Invoke(() => GitMethods.Pull(PathLabel.Text.ToString(), client));
         }
 
         private void NewRepository(object sender, RoutedEventArgs e) {
@@ -98,28 +101,30 @@ namespace VersionControlGitApp {
             DialogResult result = fbd.ShowDialog();
 
             string res = $"{result}";
-            string path = fbd.SelectedPath;
+            string repoPath = fbd.SelectedPath;
 
-            if (res == "OK" && !GitMethods.IsRepo(path)) {
-                GitMethods.Init(path, repoDB);
-                MainWindowUI.LoadPathLabel(path);
+            if (res == "OK" && !GitMethods.IsRepo(repoPath)) {
+                GitMethods.Init(repoPath, repoDB);
+                MainWindowUI.LoadPathLabel(repoPath);
             }
         }
 
         private void CommitRepository(object sender, RoutedEventArgs e) {
-            string summary = CommitSummary.Text.ToString();
-            string desc = CommitDescription.Text.ToString();
-            string filePath = PathLabel.Text.ToString();
+            string repoPath = PathLabel.Text.ToString();
 
-            GitMethods.Commit(filePath, summary, desc);
+            if (repoPath != "" && GitMethods.IsRepo(repoPath)) {
+                string summary = CommitSummary.Text.ToString();
+                string desc = CommitDescription.Text.ToString();
+                GitMethods.Commit(repoPath, summary, desc);
 
-            CommitSummary.Text = "";
-            CommitDescription.Text = "";   
+                CommitSummary.Text = "";
+                CommitDescription.Text = "";
+            }
         }
 
         private void RemoveRepository(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
-            if (repoPath != "") {
+            if (repoPath != "" && GitMethods.IsRepo(repoPath)) {
                 repoDB.DeleteByPath(repoPath);
 
                 Dispatcher.Invoke((Action)(() => RepoListBox.Items.Clear()));
@@ -157,17 +162,38 @@ namespace VersionControlGitApp {
 
         private void RenameCurrentBranch(object sender, RoutedEventArgs e) {
             // TODO -> RenameCurrentBranch
-            ConsoleLogger.Popup("MainWindow", "rename branch");
+            string repoPath = PathLabel.Text.ToString();
+            string currentBranch = GitMethods.GetCurrentBranch(repoPath);
+
+            ConsoleLogger.Popup("MainWindow", $"rename branch {currentBranch}");
         }
 
         private void MergeCurrentBranch(object sender, RoutedEventArgs e) {
             // TODO -> MergeCurrentBranch
-            ConsoleLogger.Popup("MainWindow", "merge branch");
+
+            string repoPath = PathLabel.Text.ToString();
+            string currentBranch = GitMethods.GetCurrentBranch(repoPath);
+            ConsoleLogger.Popup("MainWindow", $"merge branch {currentBranch} to other branch");
         }
 
         private void DeleteCurrentBranch(object sender, RoutedEventArgs e) {
             // TODO -> DeleteCurrentBranch
-            ConsoleLogger.Popup("MainWindow", "delete branch");
+            string repoPath = PathLabel.Text.ToString();
+            string currentBranch = GitMethods.GetCurrentBranch(repoPath);
+            bool deleted = false;
+
+            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you want to delete {currentBranch} ?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
+            if (messageBoxResult == MessageBoxResult.Yes && currentBranch != "master") {
+                Cmd.Run("checkout master", repoPath);
+                bool success = Cmd.Run($"branch -D {currentBranch}", repoPath);
+                if (success)
+                    deleted = true;
+            }
+
+            if (deleted)
+                ConsoleLogger.UserPopup("Delete Confirmation", $"{currentBranch} deleted");
+            else
+                ConsoleLogger.UserPopup("Delete Confirmation", "Something goes brrrrrr");
         }
 
         // trigger when selection changed in RepoListBox

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         WindowStyle="SingleBorderWindow"
-        Title="VersionControlGitApp" MinHeight="400" MinWidth="800" Closed="Window_Closed">
+        Title="VersionControlGitApp" MinHeight="500" MinWidth="800" Height="500" Width="900" Closed="Window_Closed">
 
     
     <Window.CommandBindings>

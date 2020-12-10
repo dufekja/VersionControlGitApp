@@ -38,7 +38,7 @@ namespace VersionControlGitApp.Logging {
         }
 
         public static void UserPopup(string header, string text) {
-            MessageBox.Show(header, text);
+            MessageBox.Show(text, header);
         }
 
     }

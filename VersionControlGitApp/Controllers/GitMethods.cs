@@ -102,11 +102,6 @@ namespace VersionControlGitApp.Controllers {
             }
         }
 
-        public static void Status(string path) {
-            List<string> untrackedFiles = Cmd.UntrackedFiles(path);
-
-        }
-
         public static void Commit(string path, string msg, string desc) {
 
             List<string> lines = Cmd.RunAndRead("status --porcelain", path);
@@ -124,7 +119,6 @@ namespace VersionControlGitApp.Controllers {
 
                 bool state = Cmd.Run(command, path);
                 if (state)
-
                     ConsoleLogger.Success("GitMethods", "Files commited");
             }
         }
@@ -182,6 +176,8 @@ namespace VersionControlGitApp.Controllers {
                     output += line;
                 }
                 ConsoleLogger.Popup("GitMethods", $"{output}");
+            } else {
+                ConsoleLogger.UserPopup("Fetch", "Vybraný repozitář nebyl nalezen");
             }
 
         }
@@ -193,6 +189,16 @@ namespace VersionControlGitApp.Controllers {
                 return null;
 
             return lines;
+        }
+
+        public static string GetCurrentBranch(string path) {
+            List<string> lines = GetBranches(path);
+            foreach (string line in lines) {
+                if (line.Contains("*")) {
+                    return line.Replace("*", "").Trim();
+                }
+            }
+            return null;
         }
 
     }
