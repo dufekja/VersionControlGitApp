@@ -102,15 +102,19 @@ namespace VersionControlGitApp.Controllers {
             }
         }
 
-        public static void Commit(string path, string msg, string desc) {
+        public static void Commit(string path, string msg, string desc, MainWindow win) {
 
             List<string> lines = Cmd.RunAndRead("status --porcelain", path);
             bool uncommitedFiles = false;
 
             foreach (string line in lines) {
-                if (line.Contains("A  "))
+                if (line.Contains("A ") || line.Contains("M ")) {
                     uncommitedFiles = true;
+                }
+                    
             }
+
+            // TODO -> fix problem with description
 
             if (msg != "" && uncommitedFiles == true) {
                 if (desc != "")

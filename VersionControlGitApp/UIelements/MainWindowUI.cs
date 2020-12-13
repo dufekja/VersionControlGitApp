@@ -68,9 +68,9 @@ namespace VersionControlGitApp.UIelements {
             }
         }
 
-        public static void FilesToCommitRefresh(string path) {
+        public static void FilesToCommitRefresh(string path, MainWindow win) {
             win.FilesToCommit.Items.Clear();
-            List<string> filesForCommit = Cmd.FilesForCommit(path);
+            List<string> filesForCommit = Cmd.FilesForCommit(path, win);
             if (filesForCommit.Count > 0) {
                 foreach (string file in filesForCommit) {
                     win.FilesToCommit.Items.Add(file);

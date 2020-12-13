@@ -77,19 +77,73 @@ namespace VersionControlGitApp.Controllers {
         }
 
         public static List<string> UntrackedFiles(string path) {
-            List<string> output = Cmd.RunAndRead("ls-files . --exclude-standard --others", path);
+            List<string> output = RunAndRead("ls-files . --exclude-standard --others", path);
             return output;
         }
+        
+        public static List<string> ModifiedFiles(string path) {
+            List<string> files = RunAndRead("status --porcelain", path);
+            List<string> output = new List<string>();
+            bool wasModified = false;
 
-        public static List<string> FilesForCommit(string path) {
+            foreach (string line in files) {
+                if (line.Contains("M ")) {
+                    output.Add(line.Replace("M ","").Trim());
+                    wasModified = true;
+                }
+            }
+
+            if (wasModified)
+                return output;
+            else
+                return null;
+        }
+
+        public static void AddFile(List<string> files, string path) {
+            foreach (string file in files) {
+                ConsoleLogger.Info("Cmd", file);
+                Cmd.Run($"add {file}", path);
+            }
+        }
+
+        public static List<string> RemovedFiles(string path) {
+            List<string> files = Cmd.RunAndRead("status --porcelain", path);
+            List<string> output = new List<string>();
+            bool wasModified = false;
+
+            foreach (string line in files) {
+                if (line.Contains("D ")) {
+                    output.Add(line.Replace("D ", "").Trim());
+                    wasModified = true;
+                }
+            }
+
+            if (wasModified)
+                return output;
+            else
+                return null;
+        }
+
+        public static void RemoveFile(List<string> files, string path) {
+            foreach (string file in files) {
+                Cmd.Run($"rm {file}", path);
+            }
+        }
+
+        public static List<string> FilesForCommit(string path, MainWindow win) {
             List<string> output = Cmd.RunAndRead("status", path);
             List<string> files = new List<string>();
 
             if (output != null) {
                 foreach (string line in output) {
                     if (line.Contains("new file:   ")) {
-                        string file = Explode(line, "new file:   ", ".txt") + ".txt";
-                        files.Add(file);
+                        string file = line.Replace("new file:", "").Trim();
+
+                        ConsoleLogger.Info("Cmd", $"file: {file}");
+                        if (File.Exists($@"{win.PathLabel.Text}\{file}")) {
+                            files.Add(file);
+                        }
+                            
                     }
                 }
             }

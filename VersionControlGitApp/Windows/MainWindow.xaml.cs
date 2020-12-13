@@ -29,9 +29,7 @@ namespace VersionControlGitApp {
         public MainWindow(string token) {
             InitializeComponent();
 
-            // TODO -> předělat combobox s repos na list nebo vypsat změny pod
             // TODO -> barevné logování do externí konzole
-            // TODO -> větve
             // TODO -> porovnávání změn 
             // TODO -> podpora klávesových zkratek (settings)
             // TODO -> hezčí okno pro token
@@ -115,10 +113,11 @@ namespace VersionControlGitApp {
             if (repoPath != "" && GitMethods.IsRepo(repoPath)) {
                 string summary = CommitSummary.Text.ToString();
                 string desc = CommitDescription.Text.ToString();
-                GitMethods.Commit(repoPath, summary, desc);
+                GitMethods.Commit(repoPath, summary, desc, this);
 
                 CommitSummary.Text = "";
                 CommitDescription.Text = "";
+                FileContent.Text = "";
             }
         }
 
@@ -248,7 +247,8 @@ namespace VersionControlGitApp {
             bool state = true;
 
             foreach (string file in untrackedFiles) {
-                string command = $@"add {file.Trim()}";
+                ConsoleLogger.Info("MainWindow", file);
+                string command = "add " + '"' + file.Trim() + '"';
                 state = Cmd.Run(command, path);
                 ConsoleLogger.Success("MainWindow", $"File: {file} now tracked");
             }
@@ -264,11 +264,12 @@ namespace VersionControlGitApp {
                     } 
                 }
 
-                Dispatcher.Invoke((Action)(() => MainWindowUI.FilesToCommitRefresh(path)));
+                Dispatcher.Invoke((Action)(() => MainWindowUI.FilesToCommitRefresh(path, this)));
+
                 Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();
-                ConsoleLogger.Success("MainWindow", "Start nového vlákna");
                 RunningThreadsList.Add(repoChangesThread);
+                ConsoleLogger.Success("MainWindow", "Start nového vlákna pro hlídání změn");
             }
         }
 
@@ -278,17 +279,36 @@ namespace VersionControlGitApp {
 
                 // If untracked files in currently watched repo -> track them
                 List<string> untrackedFiles = Cmd.UntrackedFiles(path);
+                List<string> modifiedFiles = Cmd.ModifiedFiles(path);
+                List<string> removedFiles = Cmd.RemovedFiles(path);
+
+                if (modifiedFiles != null) {
+                    Task.Run(() => Cmd.AddFile(modifiedFiles, path));
+                }
+
+                if (removedFiles != null) {
+                    Task.Run(() => Cmd.RemoveFile(removedFiles, path));
+                }
+
                 if (untrackedFiles != null) {
                     Task.Run(() => AddTrackedFiles(path));
                     break;
                 }
+                
+
             }
         }
 
         private void FilesToCommit_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (FilesToCommit.SelectedItem != null) {
                 string fileName = FilesToCommit.SelectedItem.ToString();
-                FileContent.Text = File.ReadAllText($@"{PathLabel.Text}\{fileName}");
+
+                if (File.Exists($@"{PathLabel.Text}\{fileName}")) {
+                    FileContent.Text = File.ReadAllText($@"{PathLabel.Text}\{fileName}");
+                } else {
+                    ConsoleLogger.Popup("MainWindow", $"File: {fileName} no exists");
+                }
+                
             }
         }
 
