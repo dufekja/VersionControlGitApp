@@ -78,6 +78,14 @@ namespace VersionControlGitApp.Controllers {
 
         public static List<string> UntrackedFiles(string path) {
             List<string> output = RunAndRead("ls-files . --exclude-standard --others", path);
+            List<string> modifiedFiles = ModifiedFiles(path);
+            
+            if (modifiedFiles != null) {
+                foreach (string file in modifiedFiles) {
+                    output.Add(file);
+                }
+            }
+
             return output;
         }
         
@@ -89,6 +97,9 @@ namespace VersionControlGitApp.Controllers {
             foreach (string line in files) {
                 if (line.Contains("M ")) {
                     output.Add(line.Replace("M ","").Trim());
+                    wasModified = true;
+                } else if (line.Contains("MM ")) {
+                    output.Add(line.Replace("MM", "").Trim());
                     wasModified = true;
                 }
             }
@@ -114,6 +125,9 @@ namespace VersionControlGitApp.Controllers {
             foreach (string line in files) {
                 if (line.Contains("D ")) {
                     output.Add(line.Replace("D ", "").Trim());
+                    wasModified = true;
+                } else if (line.Contains("MD ")) {
+                    output.Add(line.Replace("MD ", "").Trim());
                     wasModified = true;
                 }
             }

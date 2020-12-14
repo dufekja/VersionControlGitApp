@@ -43,41 +43,32 @@ namespace VersionControlGitApp {
             // auth user using token
             client = GithubController.Authenticate(client, token);
             user = client.User.Current().Result;
-
             MainWindowUI.InitUIElements(this, user, repoDB);
 
+            // get path from pathlabel
             string path = PathLabel.Text.ToString();
+
+            // if there is repo then watch for changes
             if (path != null) {
+                ConsoleLogger.Success("MainWindow", $"Iniciace sledovacího vlákna pro {GitMethods.GetNameFromPath(path)}");
                 Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
-                repoChangesThread.Start();
-                ConsoleLogger.Success("MainWindow", "Iniciace vlákna");                
+                repoChangesThread.Start();              
                 RunningThreadsList.Add(repoChangesThread);
             }
 
-            // async task for deleting files
+            // async listener for changes in selected file
             Task.Run(() => AsyncListener());
         }
 
         // add already created repository to sqlite db
         private void AddLocalRepository(object sender, RoutedEventArgs e) {
-            using FolderBrowserDialog fbd = new FolderBrowserDialog();
-            DialogResult result = fbd.ShowDialog();
-
-            string res = $"{result}";
-            string path = fbd.SelectedPath;
-
-            if (res == "OK") {
-                bool ok = GitMethods.AddLocalRepo(path, repoDB);
-                if (ok == true)
-                    MainWindowUI.LoadPathLabel(path);
-            }
+            MainWindowController.AddLocalRepositoryCommand(repoDB);
         }
 
         // clone repository window
         private void CloneRepository(object sender, RoutedEventArgs e) {
             new CloneRepoWindow(repoDB, client, this).Show();   
         }
-
 
         private void FetchExternalRepository(object sender, RoutedEventArgs e) {
             if (GitMethods.IsRepo(PathLabel.Text.ToString()))
@@ -95,44 +86,17 @@ namespace VersionControlGitApp {
         }
 
         private void NewRepository(object sender, RoutedEventArgs e) {
-            using FolderBrowserDialog fbd = new FolderBrowserDialog();
-            DialogResult result = fbd.ShowDialog();
-
-            string res = $"{result}";
-            string repoPath = fbd.SelectedPath;
-
-            if (res == "OK" && !GitMethods.IsRepo(repoPath)) {
-                GitMethods.Init(repoPath, repoDB);
-                MainWindowUI.LoadPathLabel(repoPath);
-            }
+            MainWindowController.NewRepositoryCommand(repoDB);
         }
 
         private void CommitRepository(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
-
-            if (repoPath != "" && GitMethods.IsRepo(repoPath)) {
-                string summary = CommitSummary.Text.ToString();
-                string desc = CommitDescription.Text.ToString();
-                GitMethods.Commit(repoPath, summary, desc, this);
-
-                CommitSummary.Text = "";
-                CommitDescription.Text = "";
-                FileContent.Text = "";
-            }
+            Dispatcher.Invoke(() => MainWindowController.CommitRepositoryCommand(repoPath, this));
         }
 
         private void RemoveRepository(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
-            if (repoPath != "" && GitMethods.IsRepo(repoPath)) {
-                repoDB.DeleteByPath(repoPath);
-
-                Dispatcher.Invoke((Action)(() => RepoListBox.Items.Clear()));
-                Dispatcher.Invoke((Action)(() => MainWindowUI.ListBoxLoad()));
-                PathLabel.Text = "";
-
-                ConsoleLogger.Popup("MainWindow", $"Removerepo - {repoPath}");
-            }
-            
+            MainWindowController.RemoveRepositoryCommand(repoPath, repoDB, this);
         }
 
         private void DeleteRepository(object sender, RoutedEventArgs e) {
@@ -283,14 +247,18 @@ namespace VersionControlGitApp {
                 List<string> removedFiles = Cmd.RemovedFiles(path);
 
                 if (modifiedFiles != null) {
+                    ConsoleLogger.Info("MainWindow", "There are unstaged modified files");
                     Task.Run(() => Cmd.AddFile(modifiedFiles, path));
+
                 }
 
                 if (removedFiles != null) {
+                    ConsoleLogger.Info("MainWindow", "There are unstaged removed files");
                     Task.Run(() => Cmd.RemoveFile(removedFiles, path));
                 }
 
                 if (untrackedFiles != null) {
+                    ConsoleLogger.Info("MainWindow", "There are new untracked files");
                     Task.Run(() => AddTrackedFiles(path));
                     break;
                 }

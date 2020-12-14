@@ -108,7 +108,7 @@ namespace VersionControlGitApp.Controllers {
             bool uncommitedFiles = false;
 
             foreach (string line in lines) {
-                if (line.Contains("A ") || line.Contains("M ")) {
+                if (line.Contains("A ") || line.Contains("M ") || line.Contains("MM ")) {
                     uncommitedFiles = true;
                 }
                     

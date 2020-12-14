@@ -78,5 +78,11 @@ namespace VersionControlGitApp.UIelements {
             }
         }
 
+        public static void ClearCommitAndContext(MainWindow win) {
+            win.CommitSummary.Text = "";
+            win.CommitDescription.Text = "";
+            win.FileContent.Text = "";
+        }
+
     }
 }
