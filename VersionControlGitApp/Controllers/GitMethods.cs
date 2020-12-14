@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
 using VersionControlGitApp.Database;
 using VersionControlGitApp.Logging;
 
@@ -133,40 +135,17 @@ namespace VersionControlGitApp.Controllers {
             string name = GetNameFromPath(path);
             bool repoExists = GithubController.RepoExists(client, name);
 
-            if (!repoExists)
-                client.Repository.Create(new NewRepository(name));
-
-            User user = client.User.Current().Result;
-            string externalRepoPath = $"{Config.GetGithubPath()}{user.Login}/{name}.git";
-
-            // TODO -> delete time sleep - fix waiting on repo creation (while repo created and w8 like 10 sec)
-            Thread.Sleep(500);
-            Cmd.Run($"remote add origin {externalRepoPath}", path);
-            Cmd.Run($"push -u origin master", path);
-
-            ConsoleLogger.Success("GitMethods", $"Pushed from {path} to {externalRepoPath}");
-            ConsoleLogger.Popup("GitMethods", $"Pushed from {path} to {externalRepoPath}");
+            if (!repoExists) {
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"{name} not found. Would you like to create it ?", $"{name} not found", System.Windows.MessageBoxButton.YesNo);
+                if (messageBoxResult == MessageBoxResult.Yes) {
+                    client.Repository.Create(new NewRepository(name));
+                    Task.Run(() => Cmd.PushRepo(client, name, path));
+                }
+            }
         }
 
         public static void Pull(string path, GitHubClient client) {
-            string name = GetNameFromPath(path);
-
-            bool repoExists = GithubController.RepoExists(client, name);
-
-            if (repoExists) {
-                User user = client.User.Current().Result;
-                string externalRepoPath = $"{Config.GetGithubPath()}{user.Login}/{name}.git";
-
-                Cmd.Run("pull", path);
-
-                ConsoleLogger.Success("GitMethods", $"Pulled from {externalRepoPath} to {path}");
-                ConsoleLogger.Popup("GitMethods", $"Pulled from {externalRepoPath} to {path}");
-
-            } else {
-                ConsoleLogger.Popup("GitMethods", $"Repozitář neexistuje");
-            }
-                
-
+            Task.Run(() => Cmd.PullRepo(client, path));
         }
 
         public static void Fetch(string path, GitHubClient client) {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Octokit;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -163,6 +164,50 @@ namespace VersionControlGitApp.Controllers {
             }
             
             return files;
+        }
+
+        public static void PushRepo(GitHubClient client, string name, string path) {
+
+            int counter = 0;
+            while (true) {
+                Thread.Sleep(1000);
+                bool repoExists = GithubController.RepoExists(client, name);
+
+                if (repoExists || counter > 10)
+                    break;
+                else
+                    counter++;
+            }
+
+            
+            if (counter <= 10) {
+                User user = client.User.Current().Result;
+                string externalRepoPath = $"{Config.GetGithubPath()}{user.Login}/{name}.git";
+
+                Cmd.Run($"remote add origin {externalRepoPath}", path);
+                Cmd.Run($"push -u origin master", path);
+
+                ConsoleLogger.UserPopup("Repository push success", $"Data pushed from {path} to {externalRepoPath}");
+            } else {
+                ConsoleLogger.UserPopup("Repository push error", $"Failed to push data to external repository");
+            }
+        }
+
+        public static void PullRepo(GitHubClient client, string path) {
+
+            string name = GitMethods.GetNameFromPath(path);
+            bool repoExists = GithubController.RepoExists(client, name);
+
+            if (repoExists) {
+                User user = client.User.Current().Result;
+                string externalRepoPath = $"{Config.GetGithubPath()}{user.Login}/{name}.git";
+
+                Cmd.Run("pull", path);
+                ConsoleLogger.UserPopup("Repository pull", $"Pulled from {externalRepoPath} to {path}");
+
+            } else {
+                ConsoleLogger.UserPopup("Repository pull", $"Repozitář neexistuje");
+            }
         }
     }
 }
