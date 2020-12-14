@@ -7,6 +7,27 @@
         WindowStyle="SingleBorderWindow"
         Title="VersionControlGitApp" MinHeight="500" MinWidth="800" Height="500" Width="900" Closed="Window_Closed">
 
+    <!-- global design for mainwindow -->
+    <Window.Resources>
+        <Style TargetType="Menu">
+            <Setter Property="Background" Value="{StaticResource GrayBackgroundColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
+        </Style>
+        <Style TargetType="MenuItem">
+            <Setter Property="Background" Value="{StaticResource GrayBackgroundColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="{StaticResource AccentsColor}"></Setter>
+                    <Setter Property="Background" Value="{StaticResource BlackColor}"></Setter>
+                </Trigger>
+                <Trigger Property="IsMouseOver"  Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource AccentsColor}"></Setter>
+                    <Setter Property="Background" Value="{StaticResource GrayBackgroundColor}"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="AddLocalRepository"/>
@@ -44,68 +65,59 @@
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
 
-        <DockPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" Margin="0,0,0.6,0">
-
-            <!-- Git menu -->
-            <Menu DockPanel.Dock="Left" Padding="5">
+        <DockPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5" Margin="0,0,0.6,0" Background="Black">
+            <Menu IsMainMenu="True" DockPanel.Dock="Left" FontSize="18">
+                <!-- Git menu -->
                 <MenuItem Header="Git">
-                    <MenuItem Header="Private Token" Padding="3"/>
+                    <MenuItem Header="Private Token" Padding="3" FontSize="14"/>
                 </MenuItem>
-            </Menu>
 
-            <!-- File menu -->
-            <Menu DockPanel.Dock="Left">
-                <MenuItem Header="File" Padding="5">
-                    <MenuItem InputGestureText="Ctrl+Shift+N" Click="NewRepository" Header="New Repository" Padding="3"/>
-                    <MenuItem InputGestureText="Ctrl+Shift+A" Click="AddLocalRepository" Header="Add Local Repository" Padding="3"/>
-                    <MenuItem InputGestureText="Ctrl+Shift+C" Click="CloneRepository" Header="Clone Repository" Padding="3"/>
+                <!-- File menu -->
+                <MenuItem Header="File">
+                    <MenuItem InputGestureText="Ctrl+Shift+N" Click="NewRepository" Header="New Repository" Padding="3" FontSize="14"/>
+                    <MenuItem InputGestureText="Ctrl+Shift+A" Click="AddLocalRepository" Header="Add Local Repository" Padding="3" FontSize="14"/>
+                    <MenuItem InputGestureText="Ctrl+Shift+C" Click="CloneRepository" Header="Clone Repository" Padding="3" FontSize="14"/>
                 </MenuItem>
-            </Menu>
 
-            <!-- Accounts menu -->
-            <Menu DockPanel.Dock="Left">
-                <MenuItem Header="Accounts" Padding="5">
+                <!-- Accounts menu -->
+                <MenuItem Header="Accounts">
 
                 </MenuItem>
-            </Menu>
 
-            <!-- Branch menu -->
-            <Menu DockPanel.Dock="Left">
-                <MenuItem Header="Branch" Padding="5">
-                    <MenuItem Header="New" InputGestureText="Ctrl+B+N" Click="CreateNewBranch" Padding="3"/>
-                    <MenuItem Header="Rename" InputGestureText="Ctrl+B+R" Click="RenameCurrentBranch" Padding="3"/>
-                    <MenuItem Header="Merge selected" InputGestureText="Ctrl+B+M" Click="MergeCurrentBranch" Padding="3"/>
-                    <MenuItem Header="Delete" InputGestureText="Ctrl+B+D" Click="DeleteCurrentBranch" Padding="3" Margin="0 3 0 0"/>
+                <!-- Branch menu -->
+                <MenuItem Header="Branch">
+                    <MenuItem Header="New" InputGestureText="Ctrl+B+N" Click="CreateNewBranch" Padding="3" FontSize="14"/>
+                    <MenuItem Header="Change" InputGestureText="Ctrl+B+N"  Padding="3" FontSize="14">
+                        <MenuItem Header="master" Padding="3" FontSize="14"/>
+                        <MenuItem Header="new_branch" Padding="3" FontSize="14"/>
+                    </MenuItem>
+                    <MenuItem Header="Rename" InputGestureText="Ctrl+B+R" Click="RenameCurrentBranch" Padding="3" FontSize="14"/>
+                    <MenuItem Header="Merge selected" InputGestureText="Ctrl+B+M" Click="MergeCurrentBranch" Padding="3" FontSize="14"/>
+                    <MenuItem Header="Delete" InputGestureText="Ctrl+B+D" Click="DeleteCurrentBranch" Padding="3" FontSize="14" Margin="0 3 0 0"/>
                 </MenuItem>
-            </Menu>
 
-            <!-- Repository menu -->
-            <Menu DockPanel.Dock="Left">
-                <MenuItem Header="Repository" Padding="5">
-                    <MenuItem Header="Fetch" InputGestureText="Ctrl+Shift+F" Click="FetchExternalRepository" Padding="3"/>
-                    <MenuItem InputGestureText="Ctrl+P+O" Click="PushLocalRepository" Header="Push" Padding="3"/>
-                    <MenuItem InputGestureText="Ctrl+P+I" Click="PullExternalRepository" Header="Pull" Padding="3"/>
-                    <MenuItem InputGestureText="Shift+R" Header="Remove" Click="RemoveRepository" Padding="3"/>
-                    <MenuItem InputGestureText="Ctrl+Shift+R" Header="Delete" Click="DeleteRepository" Padding="3" Margin="0 3 0 0"/>
+                <!-- Repository menu -->
+                <MenuItem Header="Repository">
+                    <MenuItem Header="Fetch" InputGestureText="Ctrl+Shift+F" Click="FetchExternalRepository" Padding="3" FontSize="14"/>
+                    <MenuItem InputGestureText="Ctrl+P+O" Click="PushLocalRepository" Header="Push" Padding="3" FontSize="14"/>
+                    <MenuItem InputGestureText="Ctrl+P+I" Click="PullExternalRepository" Header="Pull" Padding="3" FontSize="14"/>
+                    <MenuItem InputGestureText="Shift+R" Header="Remove" Click="RemoveRepository" Padding="3" FontSize="14"/>
+                    <MenuItem InputGestureText="Ctrl+Shift+R" Header="Delete" Click="DeleteRepository" Padding="3" FontSize="14" Margin="0 3 0 0"/>
                 </MenuItem>
-            </Menu>
 
-            <!-- Statistics menu -->
-            <Menu DockPanel.Dock="Left">
-                <MenuItem Header="Statistics" Padding="5">
+                <!-- Statistics menu -->
+                <MenuItem Header="Statistics">
 
                 </MenuItem>
-            </Menu>
 
-            <!-- Team menu -->
-            <Menu DockPanel.Dock="Left">
-                <MenuItem Header="Team" Padding="5">
+                <!-- Team menu -->
+                <MenuItem Header="Team">
 
                 </MenuItem>
             </Menu>
         </DockPanel>
 
-        <Border Background="{StaticResource GrayBackgroundColor}" Grid.Column="4" Grid.ColumnSpan="3" Grid.Row="0"/>
+        <Border Background="{StaticResource GrayBackgroundColor}" Grid.Column="5" Grid.ColumnSpan="3" Grid.Row="0"/>
         <Border Background="{StaticResource GrayBackgroundColor}" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="10" Grid.Row="1"/>
         <Border Background="{StaticResource DarkBackgroundColor}" Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="10" Grid.Row="1"/>
 
@@ -115,7 +127,7 @@
 
             <StackPanel>
                 <Label Content="Summary" Foreground="{StaticResource WhiteTextColor}"/>
-                <TextBox x:Name="CommitSummary" Foreground="{StaticResource BlackColor}" HorizontalAlignment="Stretch" Padding="3" Margin="5 5 5 5" 
+                <TextBox x:Name="CommitSummary" Foreground="{StaticResource BlackColor}" HorizontalAlignment="Stretch" Padding="3" FontSize="14" Margin="5 5 5 5" 
                          VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
 
                 <Label Content="Description" Foreground="{StaticResource WhiteTextColor}"/>

@@ -11,6 +11,7 @@
             <SolidColorBrush x:Key="BlackColor">#000</SolidColorBrush>
             <SolidColorBrush x:Key="DarkBackgroundColor">#222</SolidColorBrush>
             <SolidColorBrush x:Key="GrayBackgroundColor">#3f3f4f</SolidColorBrush>
+            <SolidColorBrush x:Key="AccentsColor">#05055f</SolidColorBrush>
         </ResourceDictionary>
         
     </Application.Resources>
