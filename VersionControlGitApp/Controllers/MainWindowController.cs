@@ -68,5 +68,32 @@ namespace VersionControlGitApp.Controllers {
                 }
             }
         }
+
+        public static void ChangeBranchCommand(string branch, string path) {
+            string currentBranch = GitMethods.GetCurrentBranch(path);
+            bool state = false;
+            if (branch != "" || path != "") {
+                state = Cmd.Run($"checkout {branch}", path);
+            }
+
+            if (state && currentBranch != branch)
+                ConsoleLogger.UserPopup("Branch swap", $"Swapped to branch '{branch}'");
+            else
+                ConsoleLogger.UserPopup("Branch swap", $"Can't swap to same branch");
+        }
+
+        public static void MergeCurrentBranchCommand(string branch, string currentBranch, string path) {
+            bool state = false;
+
+            if (Cmd.Run($"checkout {branch}", path))
+                state = Cmd.Run($"merge {currentBranch}", path);
+
+            if (state)
+                ConsoleLogger.UserPopup("Branch merge", $"{currentBranch} merged to {branch}");
+            else
+                ConsoleLogger.UserPopup("Branch merge", $"Can't merge to {branch}");
+
+        }
+
     }
 }

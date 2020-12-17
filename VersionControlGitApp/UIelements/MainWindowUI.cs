@@ -6,6 +6,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Database;
+using VersionControlGitApp.Logging;
 
 namespace VersionControlGitApp.UIelements {
     public static class MainWindowUI {
@@ -46,17 +47,32 @@ namespace VersionControlGitApp.UIelements {
         }
 
         public static void LoadRepoBranches(string path, MainWindow win) {
+
+            win.MergeBranchMenuItem.Items.Clear();
+            win.ChangeBranchMenuItem.Items.Clear();
+
             List<string> lines = GitMethods.GetBranches(path);
+            string currentBranch = GitMethods.GetCurrentBranch(path);
 
-            foreach (string line in lines) {
-                MenuItem item = new MenuItem() {
-                    Header = line.Replace("*", "").Trim(),
-                    FontSize = 14.0,
+            if (lines != null) {
+                foreach (string line in lines) {
+                    if (line.Replace("*", "").Trim() != currentBranch) {
+                        MenuItem item = new MenuItem() {
+                            Header = line.Replace("*", "").Trim(),
+                            FontSize = 14.0,
 
-                };
-                win.ChangeBranchMenuItem.Items.Add(item);
-            };
+                        };
+                        win.ChangeBranchMenuItem.Items.Add(item);
 
+                        item = new MenuItem() {
+                            Header = line.Replace("*", "").Trim(),
+                            FontSize = 14.0,
+
+                        };
+                        win.MergeBranchMenuItem.Items.Add(item);
+                    }
+                }
+            }
         }
 
         public static void Lolce() {

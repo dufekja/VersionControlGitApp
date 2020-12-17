@@ -14,6 +14,7 @@ using VersionControlGitApp.Logging;
 using System.IO;
 using System.Windows.Input;
 using VersionControlGitApp.Windows;
+using MenuItem = System.Windows.Controls.MenuItem;
 
 namespace VersionControlGitApp {
     public partial class MainWindow : Window {
@@ -56,6 +57,7 @@ namespace VersionControlGitApp {
                 RunningThreadsList.Add(repoChangesThread);
             }
 
+            // load repo branches
             Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(path, this));
 
             // async listener for changes in selected file
@@ -114,51 +116,95 @@ namespace VersionControlGitApp {
         }
 
         private void CreateNewBranch(object sender, RoutedEventArgs e) {
-            List<string> lines = GitMethods.GetBranches(PathLabel.Text.ToString());
+            if (PathLabel.Text.ToString() != "") {
+                List<string> lines = GitMethods.GetBranches(PathLabel.Text.ToString());
 
-            try {
-                if (lines[0] != null) {
-                    new BranchEditWindow(lines, PathLabel.Text.ToString()).Show();
-                }
-            } catch {
+                try {
+                    if (lines[0] != null) {
+                        new BranchEditWindow(lines, PathLabel.Text.ToString(), "create").Show();
+                    }
+                } catch { }
+            } else {
+                ConsoleLogger.UserPopup("Branch", "Repository must be selected first");
+            }
+        }
 
+        private void ChangeBranch(object sender, RoutedEventArgs e) {
+            if (PathLabel.Text.ToString() != "") {
+                MenuItem item = sender as MenuItem;
+                string name = item.Header.ToString();
+                string path = PathLabel.Text.ToString();
+
+                MainWindowController.ChangeBranchCommand(name, path);
+            } else {
+                ConsoleLogger.UserPopup("Branch", "Repository must be selected first");
             }
         }
 
         private void RenameCurrentBranch(object sender, RoutedEventArgs e) {
-            // TODO -> RenameCurrentBranch
-            string repoPath = PathLabel.Text.ToString();
-            string currentBranch = GitMethods.GetCurrentBranch(repoPath);
+            if (PathLabel.Text.ToString() != "") {
+                string repoPath = PathLabel.Text.ToString();
+                string currentBranch = GitMethods.GetCurrentBranch(repoPath);
 
-            ConsoleLogger.Popup("MainWindow", $"rename branch {currentBranch}");
+                List<string> lines = GitMethods.GetBranches(PathLabel.Text.ToString());
+
+                try {
+                    if (lines[0] != null) {
+                        if (currentBranch != "master")
+                            new BranchEditWindow(lines, PathLabel.Text.ToString(), "rename").Show();
+                        else
+                            ConsoleLogger.UserPopup("Branch rename", "Can't rename branch master");
+                    }
+                } catch { }
+            } else {
+                ConsoleLogger.UserPopup("Branch", "Repository must be selected first");
+            }
         }
 
         private void MergeCurrentBranch(object sender, RoutedEventArgs e) {
             // TODO -> MergeCurrentBranch
 
-            string repoPath = PathLabel.Text.ToString();
-            string currentBranch = GitMethods.GetCurrentBranch(repoPath);
-            ConsoleLogger.Popup("MainWindow", $"merge branch {currentBranch} to other branch");
+            if (PathLabel.Text.ToString() != "") {
+                string repoPath = PathLabel.Text.ToString();
+                string currentBranch = GitMethods.GetCurrentBranch(repoPath);
+                List<string> lines = GitMethods.GetBranches(PathLabel.Text.ToString());
+                MenuItem item = sender as MenuItem;
+                string branch = item.Header.ToString();
+
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you want to merge {currentBranch} to {branch} ?", "Merge confirmation", MessageBoxButton.YesNo);
+                if (messageBoxResult == MessageBoxResult.Yes) {
+                    MainWindowController.MergeCurrentBranchCommand(branch, currentBranch, repoPath);
+                }
+            } else {
+                ConsoleLogger.UserPopup("Branch", "Repository must be selected first");
+            }
         }
 
         private void DeleteCurrentBranch(object sender, RoutedEventArgs e) {
-            // TODO -> DeleteCurrentBranch
-            string repoPath = PathLabel.Text.ToString();
-            string currentBranch = GitMethods.GetCurrentBranch(repoPath);
-            bool deleted = false;
+            if (PathLabel.Text.ToString() != "") {
+                string repoPath = PathLabel.Text.ToString();
+                string currentBranch = GitMethods.GetCurrentBranch(repoPath);
+                bool deleted = false;
 
-            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you want to delete {currentBranch} ?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
-            if (messageBoxResult == MessageBoxResult.Yes && currentBranch != "master") {
-                Cmd.Run("checkout master", repoPath);
-                bool success = Cmd.Run($"branch -D {currentBranch}", repoPath);
-                if (success)
-                    deleted = true;
+                if (currentBranch != "master") {
+                    MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you want to delete {currentBranch} ?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
+                    if (messageBoxResult == MessageBoxResult.Yes && currentBranch != "master") {
+                        Cmd.Run("checkout master", repoPath);
+                        bool success = Cmd.Run($"branch -D {currentBranch}", repoPath);
+                        if (success)
+                            deleted = true;
+                    }
+
+                    if (deleted)
+                        ConsoleLogger.UserPopup("Delete Confirmation", $"{currentBranch} deleted");
+                    else
+                        ConsoleLogger.UserPopup("Delete Confirmation", "There was an error");
+                } else {
+                    ConsoleLogger.UserPopup("Delete branch", "Can't delete branch master");
+                }
+            } else {
+                ConsoleLogger.UserPopup("Branch", "Repository must be selected first");
             }
-
-            if (deleted)
-                ConsoleLogger.UserPopup("Delete Confirmation", $"{currentBranch} deleted");
-            else
-                ConsoleLogger.UserPopup("Delete Confirmation", "Something goes brrrrrr");
         }
 
         // trigger when selection changed in RepoListBox
@@ -202,8 +248,8 @@ namespace VersionControlGitApp {
                 // delete removed folders from db
                 List<string> deletedRepos = repoDB.Refresh();
                 if (deletedRepos != null) {
-                    Dispatcher.Invoke((Action)(() => RepoListBox.Items.Clear()));
-                    Dispatcher.Invoke((Action)(() => MainWindowUI.ListBoxLoad()));
+                    Dispatcher.Invoke(() => RepoListBox.Items.Clear());
+                    Dispatcher.Invoke(() => MainWindowUI.ListBoxLoad());
                 }
             }
         }

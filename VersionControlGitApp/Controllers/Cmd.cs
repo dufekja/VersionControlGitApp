@@ -95,16 +95,18 @@ namespace VersionControlGitApp.Controllers {
             List<string> output = new List<string>();
             bool wasModified = false;
 
-            foreach (string line in files) {
-                if (line.Contains("M ")) {
-                    output.Add(line.Replace("M ","").Trim());
-                    wasModified = true;
-                } else if (line.Contains("MM ")) {
-                    output.Add(line.Replace("MM", "").Trim());
-                    wasModified = true;
-                } else if (line.Contains("AM ")) {
-                    output.Add(line.Replace("AM", "").Trim());
-                    wasModified = true;
+            if (files != null) {
+                foreach (string line in files) {
+                    if (line.Contains("M ")) {
+                        output.Add(line.Replace("M ", "").Trim());
+                        wasModified = true;
+                    } else if (line.Contains("MM ")) {
+                        output.Add(line.Replace("MM", "").Trim());
+                        wasModified = true;
+                    } else if (line.Contains("AM ")) {
+                        output.Add(line.Replace("AM", "").Trim());
+                        wasModified = true;
+                    }
                 }
             }
 

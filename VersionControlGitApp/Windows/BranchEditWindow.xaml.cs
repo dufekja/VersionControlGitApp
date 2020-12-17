@@ -19,13 +19,22 @@ namespace VersionControlGitApp.Windows {
 
         public static List<string> branches;
         public static string dirPath;
+        public static string operation;
 
-        public BranchEditWindow(List<string> _branches, string _dirPath) {
+        public BranchEditWindow(List<string> _branches, string _dirPath, string _operation) {
             InitializeComponent();
             branches = CleanBranches(_branches);
             dirPath = _dirPath;
+            operation = _operation;
 
-            BranchesComboBox.ItemsSource = branches;
+            string branch = GitMethods.GetCurrentBranch(dirPath);
+
+            if (operation == "create") {
+                BranchesLabel.Content = "Create new branch or swap to existing one";
+            } else if (operation == "rename") {
+                BranchesLabel.Content = $"Rename branch {branch}";
+            }
+
         }
 
         private List<string> CleanBranches(List<string> branches) {
@@ -36,18 +45,11 @@ namespace VersionControlGitApp.Windows {
             return newBranches;
         }
 
-        private void BranchesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            string branch = BranchesComboBox.SelectedItem.ToString();
-
-            if (branch != "") {
-                BranchesTextBox.Text = branch.Replace('*', ' ').Trim();
-            }
-
-        }
-
         private void CheckoutBranchButton_Clicked(object sender, RoutedEventArgs e) {
             string branch = BranchesTextBox.Text.ToString();
+            string currentBranch = GitMethods.GetCurrentBranch(dirPath);
             bool branchExists = false;
+            bool close = false;
             
             foreach (string br in branches) {
                 if (br.ToLower() == branch.ToLower()) {
@@ -57,14 +59,32 @@ namespace VersionControlGitApp.Windows {
             }
 
             if (branchExists) {
-                Cmd.Run($"checkout {branch}", dirPath);
-                ConsoleLogger.Popup("BranchEditWindow", $"Swapped to {branch}");
-            } else {
+                if (currentBranch != branch) {
+                    Cmd.Run($"checkout {branch}", dirPath);
+                    ConsoleLogger.UserPopup("Branch swap", $"Swapped from {branch} to {branch}");
+                    close = true;
+                } else {
+                    ConsoleLogger.UserPopup("Branch swap", $"Can't swap to same branch");
+                }
+            } else if (operation == "rename") {
+                if (currentBranch != "master") {
+                    Cmd.Run($"branch -m {branch}", dirPath);
+                    ConsoleLogger.UserPopup("Branch swap", $"Renamed to {branch}");
+                    close = true;
+                } else {
+                    ConsoleLogger.UserPopup("Branch swap", $"Can't rename branch master");
+                }
+            } else if (operation == "create") {
                 Cmd.Run($"checkout -b {branch}", dirPath);
-                ConsoleLogger.Popup("BranchEditWindow", $"Branch {branch} created");
+                ConsoleLogger.UserPopup("Branch create", $"Branch {branch} created");
+                close = true;
+            } else {
+                ConsoleLogger.UserPopup("Branch edit", $"There was an error");
+                close = true;
             }
 
-            this.Close();
+            if (close)
+                this.Close();
 
         }
     }

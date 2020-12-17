@@ -8,27 +8,29 @@
         Title="VersionControlGitApp" MinHeight="500" MinWidth="800" Height="500" Width="900" Closed="Window_Closed">
 
     <!-- global design for mainwindow -->
+    <!-- 
     <Window.Resources>
         <Style TargetType="Menu">
             <Setter Property="Background" Value="{StaticResource GrayBackgroundColor}"/>
-            <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
         </Style>
         <Style TargetType="MenuItem">
-            <Setter Property="Background" Value="{StaticResource GrayBackgroundColor}"/>
-            <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
             <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
+                <Trigger Property="IsEnabled" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"></Setter>
+                    <Setter Property="Background" Value="{StaticResource GrayBackgroundColor}"></Setter>
+                </Trigger>
+                <Trigger Property="IsMouseOver"  Value="True">
                     <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"></Setter>
                     <Setter Property="Background" Value="{StaticResource AccentsColor}"></Setter>
                 </Trigger>
-                <Trigger Property="IsMouseOver"  Value="True">
+                <Trigger Property="IsFocused"  Value="True">
                     <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"></Setter>
                     <Setter Property="Background" Value="{StaticResource AccentsColor}"></Setter>
                 </Trigger>
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    
+    -->
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="AddLocalRepository"/>
         <CommandBinding Command="ApplicationCommands.Copy" Executed="CloneRepository"/>
@@ -86,12 +88,22 @@
 
                 <!-- Branch menu -->
                 <MenuItem Header="Branch">
-                    <MenuItem Header="New" InputGestureText="Ctrl+B+N" Click="CreateNewBranch" Padding="3" FontSize="14"/>
-                    <MenuItem x:Name="ChangeBranchMenuItem" Header="Change" InputGestureText="Ctrl+B+N"  Padding="3" FontSize="14" >
-                        
+                    <MenuItem Focusable="False" IsCheckable="False" Header="New" InputGestureText="Ctrl+B+N" Click="CreateNewBranch" Padding="3" FontSize="14"/>
+                    <MenuItem x:Name="ChangeBranchMenuItem" Header="Change" Padding="3" FontSize="14" >
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="{x:Type MenuItem}">
+                                <EventSetter Event="Click" Handler="ChangeBranch"/>
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
                     </MenuItem>
                     <MenuItem Header="Rename" InputGestureText="Ctrl+B+R" Click="RenameCurrentBranch" Padding="3" FontSize="14"/>
-                    <MenuItem Header="Merge selected" InputGestureText="Ctrl+B+M" Click="MergeCurrentBranch" Padding="3" FontSize="14"/>
+                    <MenuItem x:Name="MergeBranchMenuItem" Header="Merge current to" Padding="3" FontSize="14">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="{x:Type MenuItem}">
+                            <EventSetter Event="Click" Handler="MergeCurrentBranch"/>
+                        </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
                     <MenuItem Header="Delete" InputGestureText="Ctrl+B+D" Click="DeleteCurrentBranch" Padding="3" FontSize="14" Margin="0 3 0 0"/>
                 </MenuItem>
 
