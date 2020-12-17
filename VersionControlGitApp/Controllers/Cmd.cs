@@ -102,6 +102,9 @@ namespace VersionControlGitApp.Controllers {
                 } else if (line.Contains("MM ")) {
                     output.Add(line.Replace("MM", "").Trim());
                     wasModified = true;
+                } else if (line.Contains("AM ")) {
+                    output.Add(line.Replace("AM", "").Trim());
+                    wasModified = true;
                 }
             }
 
@@ -139,20 +142,16 @@ namespace VersionControlGitApp.Controllers {
                 return null;
         }
 
-        public static void RemoveFile(List<string> files, string path) {
-            foreach (string file in files) {
-                Cmd.Run($"rm {file}", path);
-            }
-        }
-
         public static List<string> FilesForCommit(string path, MainWindow win) {
-            List<string> output = Cmd.RunAndRead("status", path);
+            List<string> output = Cmd.RunAndRead("status --porcelain", path);
             List<string> files = new List<string>();
 
             if (output != null) {
                 foreach (string line in output) {
-                    if (line.Contains("new file:   ")) {
-                        string file = line.Replace("new file:", "").Trim();
+                    if (line.Contains("M") || line.Contains("A") || line.Contains("D")) {
+                        //string file = line.Replace("new file:", "").Trim();
+
+                        string file = line;
 
                         ConsoleLogger.Info("Cmd", $"file: {file}");
                         if (File.Exists($@"{win.PathLabel.Text}\{file}")) {

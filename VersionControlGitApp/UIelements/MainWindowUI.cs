@@ -45,6 +45,21 @@ namespace VersionControlGitApp.UIelements {
             win.PathLabel.Text = path;
         }
 
+        /**
+        public static void LoadRepoBranches(string path, MainWindow win) {
+            List<string> lines = GitMethods.GetBranches(path);
+
+            MenuItem item = new MenuItem() {
+                Header = "master",
+                Padding = "3",
+                FontSize = "14"
+            }
+
+            win.ChangeBranchMenuItem.Items.Add()
+
+
+        }*/
+
         public static void ListBoxLoad() {
 
             List<Repo> localRepos = repoDB.ReadDB();
@@ -71,6 +86,7 @@ namespace VersionControlGitApp.UIelements {
         public static void FilesToCommitRefresh(string path, MainWindow win) {
             win.FilesToCommit.Items.Clear();
             List<string> filesForCommit = Cmd.FilesForCommit(path, win);
+
             if (filesForCommit.Count > 0) {
                 foreach (string file in filesForCommit) {
                     win.FilesToCommit.Items.Add(file);

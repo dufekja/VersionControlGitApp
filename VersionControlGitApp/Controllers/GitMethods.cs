@@ -108,25 +108,29 @@ namespace VersionControlGitApp.Controllers {
 
             List<string> lines = Cmd.RunAndRead("status --porcelain", path);
             bool uncommitedFiles = false;
+            bool state = false;
 
             foreach (string line in lines) {
                 if (line.Contains("A ") || line.Contains("M ") || line.Contains("MM ")) {
                     uncommitedFiles = true;
                 }
-                    
             }
 
             // TODO -> fix problem with description
 
-            if (msg != "" && uncommitedFiles == true) {
-                if (desc != "")
-                    msg += $" -m {desc}";
-                string command = $"commit -m {msg}";
+            if (msg != "" && uncommitedFiles) {
+                string command = "commit -m " + '"' + msg + '"';
 
-                bool state = Cmd.Run(command, path);
-                if (state)
-                    ConsoleLogger.Success("GitMethods", "Files commited");
+                if (desc != "")
+                    command += " -m " + '"' + desc + '"';
+                state = Cmd.Run(command, path);
             }
+
+            if (state)
+                ConsoleLogger.UserPopup("Commit", "Files commited");
+            else
+                ConsoleLogger.UserPopup("Commit", "Error");
+
         }
 
         
@@ -158,7 +162,7 @@ namespace VersionControlGitApp.Controllers {
                 foreach (string line in lines) {
                     output += line;
                 }
-                ConsoleLogger.Popup("GitMethods", $"{output}");
+                ConsoleLogger.UserPopup("Fetch", $"{output}");
             } else {
                 ConsoleLogger.UserPopup("Fetch", "Vybraný repozitář nebyl nalezen");
             }

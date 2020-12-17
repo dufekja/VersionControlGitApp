@@ -228,7 +228,7 @@ namespace VersionControlGitApp {
                     } 
                 }
 
-                Dispatcher.Invoke((Action)(() => MainWindowUI.FilesToCommitRefresh(path, this)));
+                Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(path, this));
 
                 Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();
@@ -254,7 +254,7 @@ namespace VersionControlGitApp {
 
                 if (removedFiles != null) {
                     ConsoleLogger.Info("MainWindow", "There are unstaged removed files");
-                    Task.Run(() => Cmd.RemoveFile(removedFiles, path));
+                    Task.Run(() => Cmd.AddFile(removedFiles, path));
                 }
 
                 if (untrackedFiles != null) {
@@ -262,7 +262,8 @@ namespace VersionControlGitApp {
                     Task.Run(() => AddTrackedFiles(path));
                     break;
                 }
-                
+
+                Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(path, this));
 
             }
         }
