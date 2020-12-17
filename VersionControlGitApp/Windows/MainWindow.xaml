@@ -87,9 +87,8 @@
                 <!-- Branch menu -->
                 <MenuItem Header="Branch">
                     <MenuItem Header="New" InputGestureText="Ctrl+B+N" Click="CreateNewBranch" Padding="3" FontSize="14"/>
-                    <MenuItem x:Name="ChangeBranchMenuItem" Header="Change" InputGestureText="Ctrl+B+N"  Padding="3" FontSize="14">
-                        <MenuItem Header="master" Padding="3" FontSize="14"/>
-                        <MenuItem Header="new_branch" Padding="3" FontSize="14"/>
+                    <MenuItem x:Name="ChangeBranchMenuItem" Header="Change" InputGestureText="Ctrl+B+N"  Padding="3" FontSize="14" >
+                        
                     </MenuItem>
                     <MenuItem Header="Rename" InputGestureText="Ctrl+B+R" Click="RenameCurrentBranch" Padding="3" FontSize="14"/>
                     <MenuItem Header="Merge selected" InputGestureText="Ctrl+B+M" Click="MergeCurrentBranch" Padding="3" FontSize="14"/>

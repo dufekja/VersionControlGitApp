@@ -45,20 +45,23 @@ namespace VersionControlGitApp.UIelements {
             win.PathLabel.Text = path;
         }
 
-        /**
         public static void LoadRepoBranches(string path, MainWindow win) {
             List<string> lines = GitMethods.GetBranches(path);
 
-            MenuItem item = new MenuItem() {
-                Header = "master",
-                Padding = "3",
-                FontSize = "14"
-            }
+            foreach (string line in lines) {
+                MenuItem item = new MenuItem() {
+                    Header = line.Replace("*", "").Trim(),
+                    FontSize = 14.0,
 
-            win.ChangeBranchMenuItem.Items.Add()
+                };
+                win.ChangeBranchMenuItem.Items.Add(item);
+            };
 
+        }
 
-        }*/
+        public static void Lolce() {
+
+        }
 
         public static void ListBoxLoad() {
 

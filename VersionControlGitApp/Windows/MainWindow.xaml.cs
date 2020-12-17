@@ -56,6 +56,8 @@ namespace VersionControlGitApp {
                 RunningThreadsList.Add(repoChangesThread);
             }
 
+            Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(path, this));
+
             // async listener for changes in selected file
             Task.Run(() => AsyncListener());
         }
