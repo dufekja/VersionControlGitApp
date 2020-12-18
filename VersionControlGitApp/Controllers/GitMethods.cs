@@ -105,32 +105,29 @@ namespace VersionControlGitApp.Controllers {
         }
 
         public static void Commit(string path, string msg, string desc, MainWindow win) {
-
-            List<string> lines = Cmd.RunAndRead("status --porcelain", path);
-            bool uncommitedFiles = false;
             bool state = false;
+            bool tooShort = false;
+            List<string> lines = Cmd.RunAndRead("status --porcelain", path);
 
-            foreach (string line in lines) {
-                if (line.Contains("A ") || line.Contains("M ") || line.Contains("MM ")) {
-                    uncommitedFiles = true;
+            if (lines != null) {
+                if (msg.Length > 0) {
+                    string command = "commit -m ";
+                    command += '"' + msg;
+
+                    if (desc.Length > 0)
+                        command += '\n' + desc + '"';
+                    else
+                        command += '"';
+                    state = Cmd.Run(command, path);
                 }
-            }
 
-            // TODO -> fix problem with description
-
-            if (msg != "" && uncommitedFiles) {
-                string command = "commit -m " + '"' + msg + '"';
-
-                if (desc != "")
-                    command += " -m " + '"' + desc + '"';
-                state = Cmd.Run(command, path);
-            }
-
-            if (state)
-                ConsoleLogger.UserPopup("Commit", "Files commited");
-            else
-                ConsoleLogger.UserPopup("Commit", "Error");
-
+                if (state)
+                    ConsoleLogger.UserPopup("Commit", "Commit successful");
+                else
+                    ConsoleLogger.UserPopup("Commit", "There was an error");
+            } else {
+                ConsoleLogger.UserPopup("Commit", "There are no files to commit");
+            }  
         }
 
         

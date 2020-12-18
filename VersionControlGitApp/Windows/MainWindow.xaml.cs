@@ -50,18 +50,18 @@ namespace VersionControlGitApp {
             string path = PathLabel.Text.ToString();
 
             // if there is repo then watch for changes
-            if (path != null) {
+            if (path != "") {
                 ConsoleLogger.Success("MainWindow", $"Iniciace sledovacího vlákna pro {GitMethods.GetNameFromPath(path)}");
                 Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();              
                 RunningThreadsList.Add(repoChangesThread);
-            }
 
-            // load repo branches
-            Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(path, this));
+                // load repo branches
+                Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(path, this));
 
-            // async listener for changes in selected file
-            Task.Run(() => AsyncListener());
+                // async listener for changes in selected file
+                Task.Run(() => AsyncListener());
+            }   
         }
 
         // add already created repository to sqlite db
@@ -227,20 +227,23 @@ namespace VersionControlGitApp {
 
                         // delete all running threads
                         ConsoleLogger.Warning("MainWindow", "Mazání všech vláken");
-                        foreach (Thread t in RunningThreadsList) {
-                            t.Abort();
-                        }
+                        try {
+                            foreach (Thread t in RunningThreadsList) {
+                                t.Abort();
+                            }
+                        } catch {}
 
                         // start new repo watching thread
                         Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                         repoChangesThread.Start();
-                        ConsoleLogger.Success("MainWindow", "Start nového vlákna");
+                        ConsoleLogger.Success("MainWindow", "Start nového vlákna pro sledování repozitáře");
                         RunningThreadsList.Add(repoChangesThread);
                     }
                 }
             }
         }
 
+        // thread watching repositories
         private void AsyncListener() {
             while (true) {
                 Thread.Sleep(1000);
@@ -254,12 +257,10 @@ namespace VersionControlGitApp {
             }
         }
 
-        private void AddTrackedFiles(string path) {
-            List<string> untrackedFiles = Cmd.UntrackedFiles(path);
+        private void AddTrackedFiles(string path, List<string> untrackedFiles) {
             bool state = true;
 
             foreach (string file in untrackedFiles) {
-                ConsoleLogger.Info("MainWindow", file);
                 string command = "add " + '"' + file.Trim() + '"';
                 state = Cmd.Run(command, path);
                 ConsoleLogger.Success("MainWindow", $"File: {file} now tracked");
@@ -281,37 +282,22 @@ namespace VersionControlGitApp {
                 Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();
                 RunningThreadsList.Add(repoChangesThread);
-                ConsoleLogger.Success("MainWindow", "Start nového vlákna pro hlídání změn");
+
+                ConsoleLogger.Success("MainWindow", "Modified files watcher thread start");
             }
         }
 
+        // thread watching files in selected repo
         private void WaitForChangesOnRepo(string path) {
             while (true) {
                 Thread.Sleep(1000);
 
                 // If untracked files in currently watched repo -> track them
                 List<string> untrackedFiles = Cmd.UntrackedFiles(path);
-                List<string> modifiedFiles = Cmd.ModifiedFiles(path);
-                List<string> removedFiles = Cmd.RemovedFiles(path);
-
-                if (modifiedFiles != null) {
-                    ConsoleLogger.Info("MainWindow", "There are unstaged modified files");
-                    Task.Run(() => Cmd.AddFile(modifiedFiles, path));
-
-                }
-
-                if (removedFiles != null) {
-                    ConsoleLogger.Info("MainWindow", "There are unstaged removed files");
-                    Task.Run(() => Cmd.AddFile(removedFiles, path));
-                }
-
                 if (untrackedFiles != null) {
-                    ConsoleLogger.Info("MainWindow", "There are new untracked files");
-                    Task.Run(() => AddTrackedFiles(path));
+                    Task.Run(() => AddTrackedFiles(path, untrackedFiles));
                     break;
                 }
-
-                Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(path, this));
 
             }
         }

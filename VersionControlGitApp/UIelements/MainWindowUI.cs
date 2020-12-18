@@ -104,11 +104,11 @@ namespace VersionControlGitApp.UIelements {
 
         public static void FilesToCommitRefresh(string path, MainWindow win) {
             win.FilesToCommit.Items.Clear();
-            List<string> filesForCommit = Cmd.FilesForCommit(path, win);
+            List<string> modifiedFiles = Cmd.RunAndRead("status --porcelain", path);
 
-            if (filesForCommit.Count > 0) {
-                foreach (string file in filesForCommit) {
-                    win.FilesToCommit.Items.Add(file);
+            if (modifiedFiles != null) {
+                foreach (string file in modifiedFiles) {
+                    win.FilesToCommit.Items.Add(file.Substring(3));
                 }
             }
         }

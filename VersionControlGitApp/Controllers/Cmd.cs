@@ -78,13 +78,11 @@ namespace VersionControlGitApp.Controllers {
         }
 
         public static List<string> UntrackedFiles(string path) {
-            List<string> output = RunAndRead("ls-files . --exclude-standard --others", path);
-            List<string> modifiedFiles = ModifiedFiles(path);
-            
-            if (modifiedFiles != null) {
-                foreach (string file in modifiedFiles) {
-                    output.Add(file);
-                }
+            List<string> modifiedFiles = RunAndRead("status --porcelain", path);
+            List<string> output = new List<string>();
+
+            foreach (string line in modifiedFiles) {
+                output.Add(line.Substring(3));
             }
 
             return output;
@@ -118,7 +116,6 @@ namespace VersionControlGitApp.Controllers {
 
         public static void AddFile(List<string> files, string path) {
             foreach (string file in files) {
-                ConsoleLogger.Info("Cmd", file);
                 Cmd.Run($"add {file}", path);
             }
         }
@@ -142,29 +139,6 @@ namespace VersionControlGitApp.Controllers {
                 return output;
             else
                 return null;
-        }
-
-        public static List<string> FilesForCommit(string path, MainWindow win) {
-            List<string> output = Cmd.RunAndRead("status --porcelain", path);
-            List<string> files = new List<string>();
-
-            if (output != null) {
-                foreach (string line in output) {
-                    if (line.Contains("M") || line.Contains("A") || line.Contains("D")) {
-                        //string file = line.Replace("new file:", "").Trim();
-
-                        string file = line;
-
-                        ConsoleLogger.Info("Cmd", $"file: {file}");
-                        if (File.Exists($@"{win.PathLabel.Text}\{file}")) {
-                            files.Add(file);
-                        }
-                            
-                    }
-                }
-            }
-            
-            return files;
         }
 
         public static void PushRepo(GitHubClient client, string name, string path) {
