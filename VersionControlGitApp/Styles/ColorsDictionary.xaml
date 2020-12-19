@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:VersionControlGitApp.Styles">
+    
+    <!-- App Colors -->
+    <SolidColorBrush x:Key="WhiteTextColor">#fff</SolidColorBrush>
+    <SolidColorBrush x:Key="BlackColor">#313131</SolidColorBrush>
+    <SolidColorBrush x:Key="DarkBackgroundColor">#414141</SolidColorBrush>
+    <SolidColorBrush x:Key="GrayBackgroundColor">#525252</SolidColorBrush>
+    <SolidColorBrush x:Key="AccentsColor">#ec625f</SolidColorBrush>
+
+
+</ResourceDictionary>

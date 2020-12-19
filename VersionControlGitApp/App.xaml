@@ -6,18 +6,11 @@
     <Application.Resources>
         <ResourceDictionary>
             
-            <!-- App Colors -->
-            <SolidColorBrush x:Key="WhiteTextColor">#fff</SolidColorBrush>
-            <SolidColorBrush x:Key="BlackColor">#313131</SolidColorBrush>
-            <SolidColorBrush x:Key="DarkBackgroundColor">#414141</SolidColorBrush>
-            <SolidColorBrush x:Key="GrayBackgroundColor">#525252</SolidColorBrush>
-            <SolidColorBrush x:Key="AccentsColor">#ec625f</SolidColorBrush>
-
-            <!-- Menu style -->
-            <Style TargetType="Menu">
-                <Setter Property="Background" Value="{StaticResource GrayBackgroundColor}"/>
-                <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
-            </Style>
+            <!-- Import styles -->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/ColorsDictionary.xaml"/>
+                <ResourceDictionary Source="Styles/ToolbarMenuDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
             <!-- ScrollBar style -->
             <Style TargetType="ScrollBar">
@@ -25,7 +18,7 @@
                 <Setter Property="Foreground" Value="{StaticResource AccentsColor}"/>
                 <Setter Property="BorderBrush" Value="{StaticResource AccentsColor}"/>
             </Style>
-            
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

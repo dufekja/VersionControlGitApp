@@ -100,3 +100,4 @@ C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Versi
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\VersionControlGitApp.exe
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\VersionControlGitApp.pdb
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\VersionControlGitApp.csprojAssemblyReference.cache
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\Colors.baml

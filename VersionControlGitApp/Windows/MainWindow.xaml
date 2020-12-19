@@ -175,25 +175,26 @@
         </StackPanel>
 
         <!-- Current repository path -->
-        <TextBox x:Name="PathLabel" 
+        <TextBox x:Name="PathLabel"
                Foreground="{StaticResource WhiteTextColor}" 
                Background="{StaticResource BlackColor}"
-               VerticalAlignment="Top"
-               Height="20"
-               Margin="0,8,0,0"
-               Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="3"/>
+               VerticalAlignment="Center"
+               Height="25"
+               Margin="8,0,8,0"
+               Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="4"/>
 
         <!-- Current selected file content -->
         <TextBox x:Name="FileContent" IsReadOnly="True" Focusable="False"
+            HorizontalContentAlignment="Left" VerticalContentAlignment="Top"
             Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="4" Grid.RowSpan="8" 
-            Foreground="{StaticResource WhiteTextColor}" Margin="8,8,8,8">
-            <TextBox.Template>
+            Foreground="{StaticResource DarkBackgroundColor}" Margin="8,8,8,8">
+            <!--<TextBox.Template>
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <Border BorderBrush="{StaticResource AccentsColor}" BorderThickness="2" 
                             Background="{StaticResource BlackColor}"
                             CornerRadius="15"/>
                 </ControlTemplate>
-            </TextBox.Template>
+            </TextBox.Template>-->
         </TextBox>
 
         <!-- Listbox with added repositories -->
