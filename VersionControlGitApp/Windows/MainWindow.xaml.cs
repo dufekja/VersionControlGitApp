@@ -36,6 +36,7 @@ namespace VersionControlGitApp {
             // TODO -> hezčí okno pro token
             // TODO -> synchonizace více pc pomocí stejného tokenu
             // TODO -> do async all methods
+            // TODO -> udělat brutální oprtimalizaci
 
             RunningThreadsList = new List<Thread>();
 

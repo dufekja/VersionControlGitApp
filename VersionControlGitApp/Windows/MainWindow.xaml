@@ -130,15 +130,15 @@
                          HorizontalAlignment="Stretch" Height="40" Padding="4" Margin="8,0,8,0" 
                          VerticalAlignment="Center" TextWrapping="Wrap"/>
 
+                <!-- Commit button -->
                 <Button Click="CommitRepository" 
-                        Content="Commit to {currentBranch}" 
+                        Content="Commit to {branchName}"
                         Foreground="{StaticResource BlackColor}"
                         Background="{StaticResource AccentsColor}"
                         BorderThickness="0"
                         HorizontalAlignment="Stretch" 
                         FontWeight="ExtraBold"
                         Padding="15,5,15,5" Margin="8,8,8,0" FontSize="12"/>
-                
             </StackPanel>
         </Border>
 
@@ -186,10 +186,15 @@
         <!-- Current selected file content -->
         <TextBox x:Name="FileContent" IsReadOnly="True" Focusable="False"
             Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="4" Grid.RowSpan="8" 
-            Background="{StaticResource BlackColor}" 
-            Foreground="{StaticResource WhiteTextColor}"
-            BorderBrush="{StaticResource AccentsColor}"
-            BorderThickness="2" Margin="8,8,8,8"/>
+            Foreground="{StaticResource WhiteTextColor}" Margin="8,8,8,8">
+            <TextBox.Template>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Border BorderBrush="{StaticResource AccentsColor}" BorderThickness="2" 
+                            Background="{StaticResource BlackColor}"
+                            CornerRadius="15"/>
+                </ControlTemplate>
+            </TextBox.Template>
+        </TextBox>
 
         <!-- Listbox with added repositories -->
         <ScrollViewer Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="5">
