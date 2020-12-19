@@ -305,9 +305,12 @@ namespace VersionControlGitApp {
         private void FilesToCommit_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (FilesToCommit.SelectedItem != null) {
                 string fileName = FilesToCommit.SelectedItem.ToString();
+                string path = PathLabel.Text.ToString();
 
-                if (File.Exists($@"{PathLabel.Text}\{fileName}")) {
-                    FileContent.Text = File.ReadAllText($@"{PathLabel.Text}\{fileName}");
+                if (File.Exists($@"{path}\{fileName}")) {
+                    string text = GitMethods.GetAllFileChanges(fileName, path);
+                    FileContent.Text = text;
+                    //FileContent.Text = File.ReadAllText($@"{path}\{fileName}");
                 } else {
                     ConsoleLogger.Popup("MainWindow", $"File: {fileName} no exists");
                 }

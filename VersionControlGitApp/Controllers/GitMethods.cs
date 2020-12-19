@@ -106,7 +106,6 @@ namespace VersionControlGitApp.Controllers {
 
         public static void Commit(string path, string msg, string desc, MainWindow win) {
             bool state = false;
-            bool tooShort = false;
             List<string> lines = Cmd.RunAndRead("status --porcelain", path);
 
             if (lines != null) {
@@ -183,6 +182,23 @@ namespace VersionControlGitApp.Controllers {
                 }
             }
             return null;
+        }
+
+        public static string GetAllFileChanges(string file, string path) {
+            List<string> list = Cmd.RunAndRead($"diff HEAD~2 HEAD -- {file}", path);
+
+            string output = "";
+            bool read = false;
+            foreach (string line in list) {
+                if (read) {
+                    if (!line.Contains("newline")) {
+                        output += line + "\n";
+                    }
+                } else if (line.Contains("@@")) {
+                    read = true;
+                }   
+            }
+            return output;
         }
 
     }
