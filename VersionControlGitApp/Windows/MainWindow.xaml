@@ -5,32 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         WindowStyle="SingleBorderWindow"
-        Title="VersionControlGitApp" MinHeight="500" MinWidth="800" Height="500" Width="900" Closed="Window_Closed">
+        Title="VersionControlGitApp" MinHeight="550" MinWidth="800" Height="500" Width="900" 
+        Closed="Window_Closed" Background="{StaticResource DarkBackgroundColor}">
 
-    <!-- global design for mainwindow -->
-    <!-- 
-    <Window.Resources>
-        <Style TargetType="Menu">
-            <Setter Property="Background" Value="{StaticResource GrayBackgroundColor}"/>
-        </Style>
-        <Style TargetType="MenuItem">
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="True">
-                    <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"></Setter>
-                    <Setter Property="Background" Value="{StaticResource GrayBackgroundColor}"></Setter>
-                </Trigger>
-                <Trigger Property="IsMouseOver"  Value="True">
-                    <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"></Setter>
-                    <Setter Property="Background" Value="{StaticResource AccentsColor}"></Setter>
-                </Trigger>
-                <Trigger Property="IsFocused"  Value="True">
-                    <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"></Setter>
-                    <Setter Property="Background" Value="{StaticResource AccentsColor}"></Setter>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Window.Resources>
-    -->
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="AddLocalRepository"/>
         <CommandBinding Command="ApplicationCommands.Copy" Executed="CloneRepository"/>
@@ -55,7 +32,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition MinHeight="30" Height="15*"/>
-            <RowDefinition MinHeight="70"/>
+            <RowDefinition MinHeight="60"/>
             <RowDefinition Height="25*"/>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="40*"/>
@@ -100,8 +77,8 @@
                     <MenuItem x:Name="MergeBranchMenuItem" Header="Merge current to" Padding="3" FontSize="14">
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="{x:Type MenuItem}">
-                            <EventSetter Event="Click" Handler="MergeCurrentBranch"/>
-                        </Style>
+                                <EventSetter Event="Click" Handler="MergeCurrentBranch"/>
+                            </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
                     <MenuItem Header="Delete" InputGestureText="Ctrl+B+D" Click="DeleteCurrentBranch" Padding="3" FontSize="14" Margin="0 3 0 0"/>
@@ -128,41 +105,55 @@
             </Menu>
         </DockPanel>
 
-        <Border Background="{StaticResource GrayBackgroundColor}" Grid.Column="5" Grid.ColumnSpan="3" Grid.Row="0"/>
-        <Border Background="{StaticResource GrayBackgroundColor}" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="10" Grid.Row="1"/>
-        <Border Background="{StaticResource DarkBackgroundColor}" Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="10" Grid.Row="1"/>
-
-        <Border Background="{StaticResource GrayBackgroundColor}" 
-                Grid.Column="0" Grid.Row="7" Grid.RowSpan="3" Grid.ColumnSpan="2"
-                BorderThickness="3">
+        <Border Grid.Column="0" Grid.Row="8" Grid.RowSpan="3" Grid.ColumnSpan="2"
+                BorderThickness="3"
+                Background="{StaticResource BlackColor}">
 
             <StackPanel>
-                <Label Content="Summary" Foreground="{StaticResource WhiteTextColor}"/>
-                <TextBox x:Name="CommitSummary" Foreground="{StaticResource BlackColor}" HorizontalAlignment="Stretch" Padding="3" FontSize="14" Margin="5 5 5 5" 
+                <Label Content="Summary" 
+                       Foreground="{StaticResource WhiteTextColor}"
+                       Margin="8,0,0,0"/>
+                <TextBox x:Name="CommitSummary" 
+                         Foreground="{StaticResource WhiteTextColor}"
+                         Background="{StaticResource DarkBackgroundColor}"
+                         BorderBrush="{StaticResource AccentsColor}"
+                         HorizontalAlignment="Stretch" Padding="3" FontSize="14" Margin="8,0,8,0" 
                          VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
 
-                <Label Content="Description" Foreground="{StaticResource WhiteTextColor}"/>
-                <TextBox x:Name="CommitDescription" Foreground="{StaticResource BlackColor}" HorizontalAlignment="Stretch" Padding="10" Margin="5 5 5 5" 
-                         VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                <Label Content="Description" 
+                       Foreground="{StaticResource WhiteTextColor}"
+                       Margin="8,0,0,0"/>
+                <TextBox x:Name="CommitDescription" 
+                         Foreground="{StaticResource WhiteTextColor}"
+                         Background="{StaticResource DarkBackgroundColor}"
+                         BorderBrush="{StaticResource AccentsColor}"
+                         HorizontalAlignment="Stretch" Height="40" Padding="4" Margin="8,0,8,0" 
+                         VerticalAlignment="Center" TextWrapping="Wrap"/>
 
-                <Button Click="CommitRepository" Content="Commit" HorizontalAlignment="Center" Margin="0 8" Padding="15 5 15 5" FontSize="10"/>
+                <Button Click="CommitRepository" 
+                        Content="Commit to {currentBranch}" 
+                        Foreground="{StaticResource BlackColor}"
+                        Background="{StaticResource AccentsColor}"
+                        BorderThickness="0"
+                        HorizontalAlignment="Stretch" 
+                        FontWeight="ExtraBold"
+                        Padding="15,5,15,5" Margin="8,8,8,0" FontSize="12"/>
+                
             </StackPanel>
         </Border>
 
         <!-- Github user image -->
         <Image x:Name="UserImage" 
-            Grid.Column="0" Grid.Row="1" 
-            Margin="0,0,0.4,25.273" Grid.RowSpan="2"/>
+            Grid.Column="0" Grid.Row="1" Grid.RowSpan="1"/>
 
         <!-- Github user nick -->
         <Label 
             Foreground="{StaticResource WhiteTextColor}" 
             Grid.Column="1" Grid.Row="1" 
-            VerticalAlignment="Center" HorizontalAlignment="Center" 
-            Margin="15.6,13,14.8,9.4">
+            VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 
             <Label.Content>
-                <AccessText x:Name="UserName" FontSize="14" TextWrapping="Wrap" Text="Account name"/>
+                <AccessText x:Name="UserName" FontSize="12" TextWrapping="Wrap" Text="Account name placeholder"/>
             </Label.Content>
         </Label>
 
@@ -187,17 +178,21 @@
         <TextBox x:Name="PathLabel" 
                Foreground="{StaticResource WhiteTextColor}" 
                Background="{StaticResource BlackColor}"
-               Grid.Column="3" Grid.Row="1" Margin="20.4,0,19.4,45.4" Grid.ColumnSpan="3"/>
+               VerticalAlignment="Top"
+               Height="20"
+               Margin="0,8,0,0"
+               Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="3"/>
 
         <!-- Current selected file content -->
-        <TextBox 
-            x:Name="FileContent"
-            Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" Grid.RowSpan="7" 
-            Background="{StaticResource GrayBackgroundColor}" 
-            Foreground="{StaticResource WhiteTextColor}"/>
+        <TextBox x:Name="FileContent" IsReadOnly="True" Focusable="False"
+            Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="4" Grid.RowSpan="8" 
+            Background="{StaticResource BlackColor}" 
+            Foreground="{StaticResource WhiteTextColor}"
+            BorderBrush="{StaticResource AccentsColor}"
+            BorderThickness="2" Margin="8,8,8,8"/>
 
         <!-- Listbox with added repositories -->
-        <ScrollViewer Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="4">
+        <ScrollViewer Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="5">
             <ListBox 
                 x:Name="RepoListBox" 
                 Foreground="{StaticResource WhiteTextColor}" 

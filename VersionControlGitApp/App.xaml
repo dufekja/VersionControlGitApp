@@ -4,15 +4,28 @@
              xmlns:local="clr-namespace:VersionControlGitApp"
              StartupUri="Windows/TokenWindow.xaml">
     <Application.Resources>
-        
-        <!-- App Colors -->
         <ResourceDictionary>
+            
+            <!-- App Colors -->
             <SolidColorBrush x:Key="WhiteTextColor">#fff</SolidColorBrush>
-            <SolidColorBrush x:Key="BlackColor">#000</SolidColorBrush>
-            <SolidColorBrush x:Key="DarkBackgroundColor">#222</SolidColorBrush>
-            <SolidColorBrush x:Key="GrayBackgroundColor">#3f3f4f</SolidColorBrush>
-            <SolidColorBrush x:Key="AccentsColor">#003d7a</SolidColorBrush>
+            <SolidColorBrush x:Key="BlackColor">#313131</SolidColorBrush>
+            <SolidColorBrush x:Key="DarkBackgroundColor">#414141</SolidColorBrush>
+            <SolidColorBrush x:Key="GrayBackgroundColor">#525252</SolidColorBrush>
+            <SolidColorBrush x:Key="AccentsColor">#ec625f</SolidColorBrush>
+
+            <!-- Menu style -->
+            <Style TargetType="Menu">
+                <Setter Property="Background" Value="{StaticResource GrayBackgroundColor}"/>
+                <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
+            </Style>
+
+            <!-- ScrollBar style -->
+            <Style TargetType="ScrollBar">
+                <Setter Property="Background" Value="{StaticResource DarkBackgroundColor}"/>
+                <Setter Property="Foreground" Value="{StaticResource AccentsColor}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource AccentsColor}"/>
+            </Style>
+            
         </ResourceDictionary>
-        
     </Application.Resources>
 </Application>

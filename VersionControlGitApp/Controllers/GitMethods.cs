@@ -186,7 +186,9 @@ namespace VersionControlGitApp.Controllers {
 
         public static string GetAllFileChanges(string file, string path) {
             List<string> list = Cmd.RunAndRead($"diff HEAD~2 HEAD -- {file}", path);
+            string fileContent = File.ReadAllText($@"{path}\{file}");
 
+            // filter changed lines
             string output = "";
             bool read = false;
             foreach (string line in list) {

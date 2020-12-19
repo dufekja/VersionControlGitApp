@@ -35,6 +35,7 @@ namespace VersionControlGitApp {
             // TODO -> podpora klávesových zkratek (settings)
             // TODO -> hezčí okno pro token
             // TODO -> synchonizace více pc pomocí stejného tokenu
+            // TODO -> do async all methods
 
             RunningThreadsList = new List<Thread>();
 
@@ -310,7 +311,6 @@ namespace VersionControlGitApp {
                 if (File.Exists($@"{path}\{fileName}")) {
                     string text = GitMethods.GetAllFileChanges(fileName, path);
                     FileContent.Text = text;
-                    //FileContent.Text = File.ReadAllText($@"{path}\{fileName}");
                 } else {
                     ConsoleLogger.Popup("MainWindow", $"File: {fileName} no exists");
                 }

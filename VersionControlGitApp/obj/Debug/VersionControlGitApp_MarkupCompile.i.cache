@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-R:\MP\VersionControlGitApp\VersionControlGitApp\obj\Debug\
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\
 VersionControlGitApp
 none
 false
 DEBUG;TRACE
-R:\MP\VersionControlGitApp\VersionControlGitApp\App.xaml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\App.xaml
 41532129747
-3330144007
+3-1124523197
 2060768373
-32-1718145622
+321307562096
 Windows\BranchEditWindow.xaml;Windows\CloneRepoWindow.xaml;Windows\MainWindow.xaml;Windows\TokenWindow.xaml;
 
 True
