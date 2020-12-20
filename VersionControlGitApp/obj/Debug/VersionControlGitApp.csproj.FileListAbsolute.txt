@@ -102,3 +102,5 @@ C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Versi
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\VersionControlGitApp.csprojAssemblyReference.cache
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\ColorsDictionary.baml
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\ToolbarMenuDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\ComboBoxDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\FontsDictionary.baml

@@ -11,6 +11,7 @@
                 <ResourceDictionary Source="Styles/ColorsDictionary.xaml"/>
                 <ResourceDictionary Source="Styles/ToolbarMenuDictionary.xaml"/>
                 <ResourceDictionary Source="Styles/ComboBoxDictionary.xaml"/>
+                <ResourceDictionary Source="Styles/FontsDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!-- ScrollBar style -->

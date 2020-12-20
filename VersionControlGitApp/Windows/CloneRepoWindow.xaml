@@ -29,12 +29,13 @@
         </Grid.RowDefinitions>
         
         <Label Content="Select repository or insert URL:" FontSize="12" 
-               Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2"
-               HorizontalAlignment="Center" VerticalAlignment="Center"
+               Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="4,0,0,0"
+               HorizontalAlignment="Left" VerticalAlignment="Center"
                Foreground="{StaticResource WhiteTextColor}"/>
 
         <ComboBox x:Name="ExternalRepoComboBox" SelectionChanged="ExternalRepoComboBox_SelectionChanged" 
-                  FontSize="16" Margin="8,4,8,4"
+                  FontSize="16" Margin="8,4,8,4" Width="170"
+                  HorizontalAlignment="Right" VerticalAlignment="Center"
                   Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="2"/>
 
         <TextBox x:Name="URL" FontSize="16" 
