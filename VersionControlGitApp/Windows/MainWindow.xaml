@@ -112,7 +112,7 @@
             <StackPanel>
                 <Label Content="Summary" 
                        Foreground="{StaticResource WhiteTextColor}"
-                       Margin="8,0,0,0"/>
+                       Margin="4,0,0,0"/>
                 <TextBox x:Name="CommitSummary" 
                          Foreground="{StaticResource WhiteTextColor}"
                          Background="{StaticResource DarkBackgroundColor}"
@@ -122,7 +122,7 @@
 
                 <Label Content="Description" 
                        Foreground="{StaticResource WhiteTextColor}"
-                       Margin="8,0,0,0"/>
+                       Margin="4,0,0,0"/>
                 <TextBox x:Name="CommitDescription" 
                          Foreground="{StaticResource WhiteTextColor}"
                          Background="{StaticResource DarkBackgroundColor}"
