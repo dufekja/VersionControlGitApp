@@ -8,16 +8,17 @@ namespace VersionControlGitApp {
     public static class Config {
 
         private const string GITHUB_PATH = "https://github.com/";
-        private const string NEWFILE_SYMBOL = "?? ";
-        private const string MODIFIED_SYMBOL = "?? ";
-        private const string NECO = "?? ";
+        public const string GITEXE = "git.exe";
+
+        public const string NEWFILE = "?? ";
+        public const string MODIFIEDNEW = "M ";
+        public const string MODIFIED = "MM ";
+        public const string ADDMODIFIED = "AM ";
+        public const string DELETED = "D ";
+        public const string DELETEDMODIFIED = "DM ";
 
         public static string GetGithubPath() {
             return GITHUB_PATH;
-        }
-
-        public static string GetNewfileSymbol() {
-            return NEWFILE_SYMBOL;
         }
 
     }

@@ -126,7 +126,7 @@
     <Compile Include="CustomCommands.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="UIelements\MainWindowUI.cs" />
-    <Compile Include="UserRepository.cs" />
+    <Compile Include="Controllers\UserRepository.cs" />
     <Compile Include="Windows\BranchEditWindow.xaml.cs">
       <DependentUpon>BranchEditWindow.xaml</DependentUpon>
     </Compile>

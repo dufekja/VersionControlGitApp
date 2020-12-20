@@ -10,6 +10,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/ColorsDictionary.xaml"/>
                 <ResourceDictionary Source="Styles/ToolbarMenuDictionary.xaml"/>
+                <ResourceDictionary Source="Styles/ComboBoxDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!-- ScrollBar style -->

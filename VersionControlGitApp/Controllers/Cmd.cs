@@ -19,7 +19,7 @@ namespace VersionControlGitApp.Controllers {
             if (command != "")
                 try {
                     ProcessStartInfo startInfo = new ProcessStartInfo {
-                        FileName = "git.exe",
+                        FileName = Config.GITEXE,
                         Arguments = command,
                         CreateNoWindow = true,
                         WorkingDirectory = dir,
@@ -41,7 +41,7 @@ namespace VersionControlGitApp.Controllers {
                 try {
 
                     ProcessStartInfo startInfo = new ProcessStartInfo() {
-                        FileName = "git.exe",
+                        FileName = Config.GITEXE,
                         CreateNoWindow = true,
                         WindowStyle = ProcessWindowStyle.Hidden,
                         UseShellExecute = false,
