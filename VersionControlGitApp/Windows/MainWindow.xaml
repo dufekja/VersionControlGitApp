@@ -137,7 +137,7 @@
                         Background="{StaticResource AccentsColor}"
                         BorderThickness="0"
                         HorizontalAlignment="Stretch" 
-                        FontWeight="ExtraBold"
+                        FontWeight="SemiBold"
                         Padding="15,5,15,5" Margin="8,8,8,0" FontSize="12"/>
             </StackPanel>
         </Border>
