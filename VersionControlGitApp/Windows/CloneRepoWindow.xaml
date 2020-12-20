@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VersionControlGitApp"
         mc:Ignorable="d"
         Title="CloneRepoWindow" WindowStyle="ToolWindow"
-        MinHeight="200" MinWidth="400" Height="200" Width="400" 
+        MinHeight="300" MinWidth="500" Height="300" Width="500" MaxHeight="400" MaxWidth="600"
         WindowStartupLocation="CenterOwner" Background="{StaticResource BlackColor}">
 
     <Grid>
@@ -28,18 +28,18 @@
             <RowDefinition Height="12"/>
         </Grid.RowDefinitions>
         
-        <Label Content="Select repository or insert URL:" FontSize="12" 
+        <Label Content="Select repository or insert URL:" FontSize="16" 
                Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="4,0,0,0"
                HorizontalAlignment="Left" VerticalAlignment="Center"
                Foreground="{StaticResource WhiteTextColor}"/>
 
         <ComboBox x:Name="ExternalRepoComboBox" SelectionChanged="ExternalRepoComboBox_SelectionChanged" 
-                  FontSize="16" Margin="8,4,8,4" Width="170"
+                  FontSize="16" Margin="8,4,8,4" Width="220"
                   HorizontalAlignment="Right" VerticalAlignment="Center"
                   Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="2"/>
 
         <TextBox x:Name="URL" FontSize="16" 
-                 Margin="8,4,8,4" BorderThickness="1"
+                 Margin="8,12,8,12" BorderThickness="1"
                  Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="4"
                  Background="{StaticResource DarkBackgroundColor}"  
                  Foreground="{StaticResource WhiteTextColor}"
@@ -50,7 +50,7 @@
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                 FontSize="14" FontWeight="SemiBold"
-                Margin="8,4,8,4"
+                Margin="24,8,24,8"
                 Background="{StaticResource AccentsColor}" 
                 Foreground="{StaticResource BlackColor}"/>
     </Grid>
