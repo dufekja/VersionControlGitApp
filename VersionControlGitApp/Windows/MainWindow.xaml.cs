@@ -323,6 +323,10 @@ namespace VersionControlGitApp {
             }
         }
 
+        private void OpenStatistics(object sender, RoutedEventArgs e) {
+            new StatisticsWindow(this, client, repoDB).Show();
+        }
+
         private void Window_Minimized(object sender, RoutedEventArgs e) {
             WindowState = WindowState.Minimized;
         }

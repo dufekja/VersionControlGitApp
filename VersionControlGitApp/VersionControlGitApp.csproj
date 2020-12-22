@@ -136,6 +136,9 @@
     <Compile Include="Controllers\Cmd.cs" />
     <Compile Include="Database\LocalRepoDB.cs" />
     <Compile Include="Database\PrivateTokenDB.cs" />
+    <Compile Include="Windows\StatisticsWindow.xaml.cs">
+      <DependentUpon>StatisticsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\TokenWindow.xaml.cs">
       <DependentUpon>TokenWindow.xaml</DependentUpon>
     </Compile>
@@ -180,6 +183,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Windows\StatisticsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\TokenWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

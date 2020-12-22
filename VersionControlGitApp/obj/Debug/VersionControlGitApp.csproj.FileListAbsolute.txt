@@ -105,3 +105,5 @@ C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Style
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\ComboBoxDictionary.baml
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\FontsDictionary.baml
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\ButtonsDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windows\StatisticsWindow.g.cs
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windows\StatisticsWindow.baml

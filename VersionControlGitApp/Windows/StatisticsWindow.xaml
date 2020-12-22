@@ -31,7 +31,7 @@
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
 
-        <DockPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="7">
+        <DockPanel MouseDown="DragWindownOnMouseDown" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="7">
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="{StaticResource GrayBackgroundColor}">
                 <Grid>
                     <Grid.ColumnDefinitions>

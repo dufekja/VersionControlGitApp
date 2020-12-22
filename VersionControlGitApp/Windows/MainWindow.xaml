@@ -96,7 +96,7 @@
                     </MenuItem>
 
                     <!-- Statistics menu -->
-                    <MenuItem Header="Statistics">
+                    <MenuItem Click="OpenStatistics" Header="Statistics">
 
                     </MenuItem>
 
