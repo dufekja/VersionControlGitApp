@@ -110,7 +110,7 @@
             <StackPanel Orientation="Horizontal" Background="{StaticResource GrayBackgroundColor}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="325"/>
+                        <ColumnDefinition Width="327"/>
                         <ColumnDefinition Width="35"/>
                         <ColumnDefinition Width="35"/>
                         <ColumnDefinition Width="35"/>

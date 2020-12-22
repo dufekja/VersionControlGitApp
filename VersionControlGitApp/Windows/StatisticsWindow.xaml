@@ -5,12 +5,54 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VersionControlGitApp.Windows"
         mc:Ignorable="d"
-        Title="StatisticsWindow" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" AllowsTransparency="True"
+        Title="StatisticsWindow" WindowStyle="None" WindowStartupLocation="CenterScreen" AllowsTransparency="True"
         MinHeight="550" MinWidth="800" Height="500" Width="900" 
         Background="{StaticResource DarkBackgroundColor}">
+    
     <Grid>
-        <Label HorizontalAlignment="Center" VerticalAlignment="Center" 
-               Foreground="{StaticResource WhiteTextColor}" FontSize="24"
-               >Statistics Page</Label>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition MinHeight="30"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="7">
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="{StaticResource GrayBackgroundColor}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="795"/>
+                        <ColumnDefinition Width="35"/>
+                        <ColumnDefinition Width="35"/>
+                        <ColumnDefinition Width="35"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Click="Window_Minimized" Content="-" 
+                            FontSize="16" FontWeight="SemiBold" 
+                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                            Grid.Column="2"/>
+
+                    <Button Click="Window_Closed" Content="x" 
+                            FontSize="16" FontWeight="SemiBold" 
+                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                            Grid.Column="3"/>
+                </Grid>
+            </StackPanel>
+        </DockPanel>
+
     </Grid>
 </Window>
