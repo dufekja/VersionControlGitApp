@@ -107,3 +107,4 @@ C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Style
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\ButtonsDictionary.baml
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windows\StatisticsWindow.g.cs
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windows\StatisticsWindow.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\ListBoxDictionary.baml

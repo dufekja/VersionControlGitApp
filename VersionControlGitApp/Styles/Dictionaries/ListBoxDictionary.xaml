@@ -2,13 +2,21 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:VersionControlGitApp.Styles">
     
-    <!-- ListBox && ListBoxItem Styles -->
+    <!-- ListBox style  -->
     <Style TargetType="{x:Type ListBox}">
         
     </Style>
 
+    <!-- ListBoxItem style -->
     <Style TargetType="{x:Type ListBoxItem}">
         
     </Style>
-    
+
+    <!-- ScrollBar style -->
+    <Style TargetType="ScrollBar">
+        <Setter Property="Background" Value="{StaticResource DarkBackgroundColor}"/>
+        <Setter Property="Foreground" Value="{StaticResource AccentsColor}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AccentsColor}"/>
+    </Style>
+
 </ResourceDictionary>

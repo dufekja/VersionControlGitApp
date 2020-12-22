@@ -8,19 +8,13 @@
             
             <!-- Import styles -->
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/ColorsDictionary.xaml"/>
-                <ResourceDictionary Source="Styles/ToolbarMenuDictionary.xaml"/>
-                <ResourceDictionary Source="Styles/ComboBoxDictionary.xaml"/>
-                <ResourceDictionary Source="Styles/FontsDictionary.xaml"/>
-                <ResourceDictionary Source="Styles/ButtonsDictionary.xaml"/>
+                <ResourceDictionary Source="Styles/Dictionaries/ColorsDictionary.xaml"/>
+                <ResourceDictionary Source="Styles/Dictionaries/ToolbarMenuDictionary.xaml"/>
+                <ResourceDictionary Source="Styles/Dictionaries/ComboBoxDictionary.xaml"/>
+                <ResourceDictionary Source="Styles/Dictionaries/FontsDictionary.xaml"/>
+                <ResourceDictionary Source="Styles/Dictionaries/ButtonsDictionary.xaml"/>
+                <ResourceDictionary Source="Styles/Dictionaries/ListBoxDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
-            <!-- ScrollBar style -->
-            <Style TargetType="ScrollBar">
-                <Setter Property="Background" Value="{StaticResource DarkBackgroundColor}"/>
-                <Setter Property="Foreground" Value="{StaticResource AccentsColor}"/>
-                <Setter Property="BorderBrush" Value="{StaticResource AccentsColor}"/>
-            </Style>
 
         </ResourceDictionary>
     </Application.Resources>
