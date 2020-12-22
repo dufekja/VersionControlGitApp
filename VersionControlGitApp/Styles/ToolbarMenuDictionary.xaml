@@ -4,8 +4,10 @@
 
     <!-- Dockpanel, Menu, MenuItems style -->
     <Style TargetType="Menu">
-        <Setter Property="Background" Value="{StaticResource GrayBackgroundColor}"/>
-        <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
+        <!-- Property="Background" Value="{StaticResource GrayBackgroundColor}"/>
+        <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>-->
+        <Setter Property="Padding" Value="3"/>
+        <Setter Property="FontSize" Value="14"/>
     </Style>
 
 </ResourceDictionary>

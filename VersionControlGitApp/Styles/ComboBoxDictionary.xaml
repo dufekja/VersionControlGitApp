@@ -3,7 +3,7 @@
                     xmlns:local="clr-namespace:VersionControlGitApp.Styles">
      
     <!-- ComboBox & ComboBoxItems styles -->
-
+    
     <!-- TargetType="{x:Type ComboBoxItem}">
         <Setter Property="Background" Value="{StaticResource DarkBackgroundColor}"/>
         <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>

@@ -30,18 +30,6 @@ namespace VersionControlGitApp {
         public MainWindow(string token) {
             InitializeComponent();
 
-            // TOOD -> opravit onko pro porovnávání změn (design)
-            // TODO -> udělat brutální oprtimalizaci vláken
-            // TODO -> porovnávání změn 
-            // TODO -> files to commit předělat na dropdown
-            // TODO -> statisctics
-            // TODO -> barevné logování do externí konzole
-            // TODO -> podpora klávesových zkratek (settings)
-            // TODO -> hezčí okno pro token
-            // TODO -> synchonizace více pc pomocí stejného tokenu
-            // TODO -> do async all methods
-
-
             RunningThreadsList = new List<Thread>();
 
             repoDB = new LocalRepoDB();
