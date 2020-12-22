@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Database;
 using Octokit;
+using VersionControlGitApp.Logging;
 
 namespace VersionControlGitApp {
     public partial class CloneRepoWindow : Window {
@@ -38,23 +39,28 @@ namespace VersionControlGitApp {
         private void CloneRepository(object sender, RoutedEventArgs e) {
             string url = URL.Text.ToString();
 
-            using (var fbd = new FolderBrowserDialog()) {
-                DialogResult result = fbd.ShowDialog();
-                string res = $"{result}";
-                string path = fbd.SelectedPath;
+            if (url != "") {
+                using (var fbd = new FolderBrowserDialog()) {
+                    DialogResult result = fbd.ShowDialog();
+                    string res = $"{result}";
+                    string path = fbd.SelectedPath;
 
-                if (res == "OK" && url != "" && path != "") {
-                    Task.Run(() => GitMethods.Clone(url, path, repoDB));
-                    ComboBoxItem item = new ComboBoxItem {
-                        Content = GitMethods.GetNameFromURL(url),
-                        IsSelected = true
-                    };
+                    if (res == "OK" && url != "" && path != "") {
+                        Task.Run(() => GitMethods.Clone(url, path, repoDB));
+                        ComboBoxItem item = new ComboBoxItem {
+                            Content = GitMethods.GetNameFromURL(url),
+                            IsSelected = true
+                        };
 
-                    win.RepoListBox.Items.Add(item);
-                    win.PathLabel.Text = path + @"\" + GitMethods.GetNameFromURL(url);
-                    this.Close();
+                        win.RepoListBox.Items.Add(item);
+                        win.PathLabel.Text = path + @"\" + GitMethods.GetNameFromURL(url);
+                        this.Close();
+                    }
                 }
+            } else {
+                ConsoleLogger.UserPopup("Clone", "You must select repository first");
             }
+           
         }
 
         private void ExternalRepoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {

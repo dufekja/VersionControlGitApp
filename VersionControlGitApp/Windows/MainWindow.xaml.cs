@@ -326,5 +326,11 @@ namespace VersionControlGitApp {
         private void Window_Closed(object sender, EventArgs e) {
             Environment.Exit(Environment.ExitCode);
         }
+
+        private void DragWindownOnMouseDown(object sender, MouseButtonEventArgs e) {
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+                this.DragMove();
+        }
+    
     }
 }

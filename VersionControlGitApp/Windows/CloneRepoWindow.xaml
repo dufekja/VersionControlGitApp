@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="CloneRepoWindow" WindowStyle="ToolWindow"
         MinHeight="300" MinWidth="500" Height="300" Width="500" MaxHeight="400" MaxWidth="600"
-        WindowStartupLocation="CenterOwner" Background="{StaticResource DarkBackgroundColor}">
+        WindowStartupLocation="CenterScreen" Background="{StaticResource DarkBackgroundColor}">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -34,7 +34,8 @@
                Foreground="{StaticResource WhiteTextColor}"/>
 
         <ComboBox x:Name="ExternalRepoComboBox" SelectionChanged="ExternalRepoComboBox_SelectionChanged" 
-                  FontSize="16" Margin="8,4,8,4" Width="220"
+                  Text="Default"
+                  FontSize="18" Margin="8,4,8,4" Width="220"
                   HorizontalAlignment="Right" VerticalAlignment="Center"
                   Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="2"/>
 
@@ -46,12 +47,8 @@
                  BorderBrush="{StaticResource AccentsColor}"/>
 
         <Button Click="CloneRepository" Content="Clone" 
-                Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="2"
-                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                FontSize="14" FontWeight="SemiBold"
-                Margin="24,8,24,8"
-                Background="{StaticResource AccentsColor}" 
-                Foreground="{StaticResource BlackColor}"/>
+                Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="2" 
+                BorderThickness="1" FontSize="18"
+                Margin="24,8,24,8"/>
     </Grid>
 </Window>

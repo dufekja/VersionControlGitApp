@@ -3,11 +3,8 @@
                     xmlns:local="clr-namespace:VersionControlGitApp.Styles">
      
     <!-- ComboBox & ComboBoxItems styles -->
-    <Style TargetType="ComboBox">
-        <Setter Property="Background" Value="{StaticResource AccentsColor}"/>
-    </Style>
 
-    <Style TargetType="{x:Type ComboBoxItem}">
+    <!-- TargetType="{x:Type ComboBoxItem}">
         <Setter Property="Background" Value="{StaticResource DarkBackgroundColor}"/>
         <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
         <Setter Property="BorderBrush" Value="{StaticResource DarkBackgroundColor}"/>
@@ -33,6 +30,6 @@
                 <Setter Property="Background" Value="{StaticResource AccentsColor}" />
             </Trigger>
         </Style.Triggers>
-    </Style>
+    </>-->
         
 </ResourceDictionary>

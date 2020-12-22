@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        WindowStyle="SingleBorderWindow"
+        WindowStyle="None" WindowStartupLocation="CenterScreen" AllowsTransparency="True"
         Title="VersionControlGitApp" MinHeight="550" MinWidth="800" Height="500" Width="900" 
         Closed="Window_Closed" Background="{StaticResource DarkBackgroundColor}">
 
@@ -44,65 +44,83 @@
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
 
-        <DockPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5" Margin="0,0,0.6,0" Background="Black">
-            <Menu IsMainMenu="True" DockPanel.Dock="Left" FontSize="18">
-                <!-- Git menu -->
-                <MenuItem Header="Git">
-                    <MenuItem Header="Private Token" Padding="3" FontSize="14"/>
-                </MenuItem>
+        <DockPanel MouseDown="DragWindownOnMouseDown" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="7">
 
-                <!-- File menu -->
-                <MenuItem Header="File">
-                    <MenuItem InputGestureText="Ctrl+Shift+N" Click="NewRepository" Header="New Repository" Padding="3" FontSize="14"/>
-                    <MenuItem InputGestureText="Ctrl+Shift+A" Click="AddLocalRepository" Header="Add Local Repository" Padding="3" FontSize="14"/>
-                    <MenuItem InputGestureText="Ctrl+Shift+C" Click="CloneRepository" Header="Clone Repository" Padding="3" FontSize="14"/>
-                </MenuItem>
-
-                <!-- Accounts menu -->
-                <MenuItem Header="Accounts">
-
-                </MenuItem>
-
-                <!-- Branch menu -->
-                <MenuItem Header="Branch">
-                    <MenuItem Focusable="False" IsCheckable="False" Header="New" InputGestureText="Ctrl+B+N" Click="CreateNewBranch" Padding="3" FontSize="14"/>
-                    <MenuItem x:Name="ChangeBranchMenuItem" Header="Change" Padding="3" FontSize="14" >
-                        <MenuItem.ItemContainerStyle>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <EventSetter Event="Click" Handler="ChangeBranch"/>
-                            </Style>
-                        </MenuItem.ItemContainerStyle>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                <Menu IsMainMenu="True"  FontSize="18">
+                    <!-- Git menu -->
+                    <MenuItem Header="Git">
+                        <MenuItem Header="Private Token" Padding="3" FontSize="14"/>
                     </MenuItem>
-                    <MenuItem Header="Rename" InputGestureText="Ctrl+B+R" Click="RenameCurrentBranch" Padding="3" FontSize="14"/>
-                    <MenuItem x:Name="MergeBranchMenuItem" Header="Merge current to" Padding="3" FontSize="14">
-                        <MenuItem.ItemContainerStyle>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <EventSetter Event="Click" Handler="MergeCurrentBranch"/>
-                            </Style>
-                        </MenuItem.ItemContainerStyle>
+
+                    <!-- File menu -->
+                    <MenuItem Header="File">
+                        <MenuItem InputGestureText="Ctrl+Shift+N" Click="NewRepository" Header="New Repository" Padding="3" FontSize="14"/>
+                        <MenuItem InputGestureText="Ctrl+Shift+A" Click="AddLocalRepository" Header="Add Local Repository" Padding="3" FontSize="14"/>
+                        <MenuItem InputGestureText="Ctrl+Shift+C" Click="CloneRepository" Header="Clone Repository" Padding="3" FontSize="14"/>
                     </MenuItem>
-                    <MenuItem Header="Delete" InputGestureText="Ctrl+B+D" Click="DeleteCurrentBranch" Padding="3" FontSize="14" Margin="0 3 0 0"/>
-                </MenuItem>
 
-                <!-- Repository menu -->
-                <MenuItem Header="Repository">
-                    <MenuItem Header="Fetch" InputGestureText="Ctrl+Shift+F" Click="FetchExternalRepository" Padding="3" FontSize="14"/>
-                    <MenuItem InputGestureText="Ctrl+P+O" Click="PushLocalRepository" Header="Push" Padding="3" FontSize="14"/>
-                    <MenuItem InputGestureText="Ctrl+P+I" Click="PullExternalRepository" Header="Pull" Padding="3" FontSize="14"/>
-                    <MenuItem InputGestureText="Shift+R" Header="Remove" Click="RemoveRepository" Padding="3" FontSize="14"/>
-                    <MenuItem InputGestureText="Ctrl+Shift+R" Header="Delete" Click="DeleteRepository" Padding="3" FontSize="14" Margin="0 3 0 0"/>
-                </MenuItem>
+                    <!-- Accounts menu -->
+                    <MenuItem Header="Accounts">
 
-                <!-- Statistics menu -->
-                <MenuItem Header="Statistics">
+                    </MenuItem>
 
-                </MenuItem>
+                    <!-- Branch menu -->
+                    <MenuItem Header="Branch">
+                        <MenuItem Focusable="False" IsCheckable="False" Header="New" InputGestureText="Ctrl+B+N" Click="CreateNewBranch" Padding="3" FontSize="14"/>
+                        <MenuItem x:Name="ChangeBranchMenuItem" Header="Change" Padding="3" FontSize="14" >
+                            <MenuItem.ItemContainerStyle>
+                                <Style TargetType="{x:Type MenuItem}">
+                                    <EventSetter Event="Click" Handler="ChangeBranch"/>
+                                </Style>
+                            </MenuItem.ItemContainerStyle>
+                        </MenuItem>
+                        <MenuItem Header="Rename" InputGestureText="Ctrl+B+R" Click="RenameCurrentBranch" Padding="3" FontSize="14"/>
+                        <MenuItem x:Name="MergeBranchMenuItem" Header="Merge current to" Padding="3" FontSize="14">
+                            <MenuItem.ItemContainerStyle>
+                                <Style TargetType="{x:Type MenuItem}">
+                                    <EventSetter Event="Click" Handler="MergeCurrentBranch"/>
+                                </Style>
+                            </MenuItem.ItemContainerStyle>
+                        </MenuItem>
+                        <MenuItem Header="Delete" InputGestureText="Ctrl+B+D" Click="DeleteCurrentBranch" Padding="3" FontSize="14" Margin="0 3 0 0"/>
+                    </MenuItem>
 
-                <!-- Team menu -->
-                <MenuItem Header="Team">
+                    <!-- Repository menu -->
+                    <MenuItem Header="Repository">
+                        <MenuItem Header="Fetch" InputGestureText="Ctrl+Shift+F" Click="FetchExternalRepository" Padding="3" FontSize="14"/>
+                        <MenuItem InputGestureText="Ctrl+P+O" Click="PushLocalRepository" Header="Push" Padding="3" FontSize="14"/>
+                        <MenuItem InputGestureText="Ctrl+P+I" Click="PullExternalRepository" Header="Pull" Padding="3" FontSize="14"/>
+                        <MenuItem InputGestureText="Shift+R" Header="Remove" Click="RemoveRepository" Padding="3" FontSize="14"/>
+                        <MenuItem InputGestureText="Ctrl+Shift+R" Header="Delete" Click="DeleteRepository" Padding="3" FontSize="14" Margin="0 3 0 0"/>
+                    </MenuItem>
 
-                </MenuItem>
-            </Menu>
+                    <!-- Statistics menu -->
+                    <MenuItem Header="Statistics">
+
+                    </MenuItem>
+
+                    <!-- Team menu -->
+                    <MenuItem Header="Team">
+
+                    </MenuItem>
+                </Menu>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Background="{StaticResource GrayBackgroundColor}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="325"/>
+                        <ColumnDefinition Width="35"/>
+                        <ColumnDefinition Width="35"/>
+                        <ColumnDefinition Width="35"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Content="Min" Grid.Column="1"/>
+                    <Button Content="Max" Grid.Column="2"/>
+                    <Button Content="Cls" Grid.Column="3"/>
+                </Grid>
+            </StackPanel>
+        
         </DockPanel>
 
         <Border Grid.Column="0" Grid.Row="8" Grid.RowSpan="3" Grid.ColumnSpan="2"
@@ -131,14 +149,8 @@
                          VerticalAlignment="Center" TextWrapping="Wrap"/>
 
                 <!-- Commit button -->
-                <Button Click="CommitRepository" 
-                        Content="Commit to {branchName}"
-                        Foreground="{StaticResource BlackColor}"
-                        Background="{StaticResource AccentsColor}"
-                        BorderThickness="0"
-                        HorizontalAlignment="Stretch" 
-                        FontWeight="SemiBold"
-                        Padding="15,5,15,5" Margin="8,8,8,0" FontSize="12"/>
+                <Button Click="CommitRepository" Content="Commit to {branchName}"
+                        Margin="8,8,8,0" Height="30" FontSize="14"/>
             </StackPanel>
         </Border>
 
