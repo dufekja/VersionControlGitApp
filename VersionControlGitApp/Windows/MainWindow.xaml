@@ -115,8 +115,16 @@
                         <ColumnDefinition Width="35"/>
                         <ColumnDefinition Width="35"/>
                     </Grid.ColumnDefinitions>
-                    <Button Click="Window_Minimized" Content="Min" Grid.Column="2"/>
-                    <Button Click="Window_Closed" Content="Cls" Grid.Column="3"/>
+                    
+                    <Button Click="Window_Minimized" Content="-" 
+                            FontSize="16" FontWeight="SemiBold" 
+                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                            Grid.Column="2"/>
+                    
+                    <Button Click="Window_Closed" Content="x" 
+                            FontSize="16" FontWeight="SemiBold" 
+                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                            Grid.Column="3"/>
                 </Grid>
             </StackPanel>
         
