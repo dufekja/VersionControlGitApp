@@ -47,7 +47,7 @@
         <DockPanel MouseDown="DragWindownOnMouseDown" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="7">
 
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                <Menu IsMainMenu="True" FontSize="18">
+                <Menu IsMainMenu="True">
                     <!-- Git menu -->
                     <MenuItem Header="Git">
                         <MenuItem Header="Private Token" Padding="3" FontSize="14"/>
@@ -110,7 +110,7 @@
             <StackPanel Orientation="Horizontal" Background="{StaticResource GrayBackgroundColor}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="327"/>
+                        <ColumnDefinition Width="321"/>
                         <ColumnDefinition Width="35"/>
                         <ColumnDefinition Width="35"/>
                         <ColumnDefinition Width="35"/>
