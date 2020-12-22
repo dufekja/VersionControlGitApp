@@ -142,27 +142,27 @@
     <Compile Include="Windows\TokenWindow.xaml.cs">
       <DependentUpon>TokenWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Styles\ButtonsDictionary.xaml">
+    <Page Include="Styles\Dictionaries\ButtonsDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\ColorsDictionary.xaml">
+    <Page Include="Styles\Dictionaries\ColorsDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\ComboBoxDictionary.xaml">
+    <Page Include="Styles\Dictionaries\ComboBoxDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\FontsDictionary.xaml">
+    <Page Include="Styles\Dictionaries\FontsDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\ListBoxDictionary.xaml">
+    <Page Include="Styles\Dictionaries\ListBoxDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\ToolbarMenuDictionary.xaml">
+    <Page Include="Styles\Dictionaries\ToolbarMenuDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -219,9 +219,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Resource Include="Styles\Fonts\Montserrat-Light.ttf" />
-    <Resource Include="Styles\Fonts\Montserrat-SemiBold.ttf" />
-    <Resource Include="Styles\Fonts\Montserrat-Medium.ttf" />
+    <Resource Include="Styles\Fonts\Montserrat\Montserrat-Light.ttf" />
+    <Resource Include="Styles\Fonts\Montserrat\Montserrat-SemiBold.ttf" />
+    <Resource Include="Styles\Fonts\Montserrat\Montserrat-Medium.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
