@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="CloneRepoWindow" WindowStyle="ToolWindow"
         MinHeight="300" MinWidth="500" Height="300" Width="500" MaxHeight="400" MaxWidth="600"
-        WindowStartupLocation="CenterOwner" Background="{StaticResource BlackColor}">
+        WindowStartupLocation="CenterOwner" Background="{StaticResource DarkBackgroundColor}">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -41,7 +41,7 @@
         <TextBox x:Name="URL" FontSize="16" 
                  Margin="8,12,8,12" BorderThickness="1"
                  Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="4"
-                 Background="{StaticResource DarkBackgroundColor}"  
+                 Background="{StaticResource BlackColor}"  
                  Foreground="{StaticResource WhiteTextColor}"
                  BorderBrush="{StaticResource AccentsColor}"/>
 

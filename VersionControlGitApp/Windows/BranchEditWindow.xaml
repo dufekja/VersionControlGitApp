@@ -5,10 +5,44 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VersionControlGitApp.Windows"
         mc:Ignorable="d"
-        Title="BranchEditWindow" Height="450" Width="800" Background="{StaticResource DarkBackgroundColor}">
-    <StackPanel Margin="100">
-        <Label x:Name="BranchesLabel" Margin="15,0,0,0" FontSize="18" Foreground="{StaticResource WhiteTextColor}"/>
-        <TextBox x:Name="BranchesTextBox" FontSize="25" Margin="15,15,15,15"/>
-        <Button Click="CheckoutBranchButton_Clicked" FontSize="18" Content="Submit" HorizontalAlignment="Stretch" Margin="200,15,200,15"/>
-    </StackPanel>
+        Title="BranchEditWindow" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow"
+        Height="450" Width="800" MinHeight="450" MaxWidth="800"
+        Background="{StaticResource DarkBackgroundColor}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="32"/>
+            <ColumnDefinition Width="70*"/>
+            <ColumnDefinition Width="30*"/>
+            <ColumnDefinition Width="32"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="32"/>
+        </Grid.RowDefinitions>
+        <Label x:Name="BranchesLabel" Content="Create new branch or swap to existing one:"
+               Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="8"
+               VerticalContentAlignment="Center" HorizontalAlignment="Left"
+               FontSize="24" Foreground="{StaticResource WhiteTextColor}"/>
+        
+        <TextBox x:Name="BranchesTextBox" FontSize="24"
+                 Grid.Column="1" Grid.Row="3" 
+                 Margin="8" BorderThickness="1"
+                 Foreground="{StaticResource WhiteTextColor}"
+                 Background="{StaticResource BlackColor}"
+                 BorderBrush="{StaticResource AccentsColor}"/>
+        
+        <Button Click="CheckoutBranchButton_Clicked"  Content="Submit" 
+                Grid.Column="2" Grid.Row="3"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="8" 
+                FontSize="24" BorderThickness="0" FontWeight="SemiBold"
+                Background="{StaticResource AccentsColor}"
+                Foreground="{StaticResource BlackColor}"/>
+        
+    </Grid>
 </Window>
