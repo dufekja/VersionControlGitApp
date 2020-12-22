@@ -323,7 +323,11 @@ namespace VersionControlGitApp {
             }
         }
 
-        private void Window_Closed(object sender, EventArgs e) {
+        private void Window_Minimized(object sender, RoutedEventArgs e) {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void Window_Closed(object sender, RoutedEventArgs e) {
             Environment.Exit(Environment.ExitCode);
         }
 

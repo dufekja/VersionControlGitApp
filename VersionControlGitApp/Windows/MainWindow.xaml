@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         WindowStyle="None" WindowStartupLocation="CenterScreen" AllowsTransparency="True"
         Title="VersionControlGitApp" MinHeight="550" MinWidth="800" Height="500" Width="900" 
-        Closed="Window_Closed" Background="{StaticResource DarkBackgroundColor}">
+        Background="{StaticResource DarkBackgroundColor}">
 
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="AddLocalRepository"/>
@@ -115,9 +115,8 @@
                         <ColumnDefinition Width="35"/>
                         <ColumnDefinition Width="35"/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Min" Grid.Column="1"/>
-                    <Button Content="Max" Grid.Column="2"/>
-                    <Button Content="Cls" Grid.Column="3"/>
+                    <Button Click="Window_Minimized" Content="Min" Grid.Column="2"/>
+                    <Button Click="Window_Closed" Content="Cls" Grid.Column="3"/>
                 </Grid>
             </StackPanel>
         
