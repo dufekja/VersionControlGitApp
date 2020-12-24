@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace VersionControlGitApp {
-    
-    #region CustomCommands
     public static class CustomCommands {
-        public static readonly RoutedUICommand FetchCommand = new
-            RoutedUICommand("Fetch Command", "FetchCommand", typeof(CustomCommands));
+
+        public static readonly RoutedUICommand FetchCommand = new RoutedUICommand
+            (
+                "Fetch Command",
+                "FetchCommand",
+                typeof(CustomCommands),
+                new InputGestureCollection() {
+                    new KeyGesture(Key.F, ModifierKeys.Alt)
+                }
+            );
     }
-    #endregion
 }

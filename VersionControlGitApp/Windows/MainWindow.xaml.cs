@@ -14,6 +14,7 @@ using VersionControlGitApp.Logging;
 using System.IO;
 using System.Windows.Input;
 using VersionControlGitApp.Windows;
+
 using MenuItem = System.Windows.Controls.MenuItem;
 
 namespace VersionControlGitApp {

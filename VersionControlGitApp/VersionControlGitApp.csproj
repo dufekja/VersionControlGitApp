@@ -221,7 +221,7 @@
     </None>
     <Resource Include="Styles\Fonts\Montserrat\Montserrat-Light.ttf" />
     <Resource Include="Styles\Fonts\Montserrat\Montserrat-SemiBold.ttf" />
-    <Resource Include="Styles\Fonts\Montserrat\Montserrat-Medium.ttf" />
+    <Resource Include="Styles\Fonts\Montserrat\MontserratMedium.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

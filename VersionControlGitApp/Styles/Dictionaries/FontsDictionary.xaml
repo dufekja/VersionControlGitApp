@@ -3,8 +3,8 @@
                     xmlns:local="clr-namespace:VersionControlGitApp.Styles.Fonts">
     
     <!-- Fonts styles -->
-    <Style TargetType="Label">
-        <Setter Property="FontFamily" Value="Fonts/Montserrat-Medium.ttf"/>
+    <Style x:Key="Montserrat">
+        <Setter Property="TextElement.FontFamily" Value="Styles/Fonts/Montserrat/#MONTSERRAT-LIGHT"/>
     </Style>
     
     

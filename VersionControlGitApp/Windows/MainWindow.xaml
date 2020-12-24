@@ -138,7 +138,7 @@
                 Background="{StaticResource BlackColor}">
 
             <StackPanel>
-                <Label Content="Summary" 
+                <Label Content="Summary"
                        Foreground="{StaticResource WhiteTextColor}"
                        Margin="4,0,0,0"/>
                 
