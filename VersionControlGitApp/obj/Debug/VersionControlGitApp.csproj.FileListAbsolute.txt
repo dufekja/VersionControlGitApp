@@ -100,11 +100,11 @@ C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Versi
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\VersionControlGitApp.exe
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\VersionControlGitApp.pdb
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\VersionControlGitApp.csprojAssemblyReference.cache
-C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\ColorsDictionary.baml
-C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\ToolbarMenuDictionary.baml
-C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\ComboBoxDictionary.baml
-C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\FontsDictionary.baml
-C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\ButtonsDictionary.baml
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windows\StatisticsWindow.g.cs
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Windows\StatisticsWindow.baml
-C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\ListBoxDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\Dictionaries\ButtonsDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\Dictionaries\ColorsDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\Dictionaries\ComboBoxDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\Dictionaries\FontsDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\Dictionaries\ListBoxDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\Styles\Dictionaries\ToolbarMenuDictionary.baml

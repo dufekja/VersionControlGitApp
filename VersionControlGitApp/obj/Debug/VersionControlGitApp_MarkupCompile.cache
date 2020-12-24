@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\App.xaml
-11-229908436
+11-266418666
 3-1124523197
 201700833639
 321307562096
-Styles\ButtonsDictionary.xaml;Styles\ColorsDictionary.xaml;Styles\ComboBoxDictionary.xaml;Styles\FontsDictionary.xaml;Styles\ListBoxDictionary.xaml;Styles\ToolbarMenuDictionary.xaml;Windows\BranchEditWindow.xaml;Windows\CloneRepoWindow.xaml;Windows\MainWindow.xaml;Windows\StatisticsWindow.xaml;Windows\TokenWindow.xaml;
+Styles\Dictionaries\ButtonsDictionary.xaml;Styles\Dictionaries\ColorsDictionary.xaml;Styles\Dictionaries\ComboBoxDictionary.xaml;Styles\Dictionaries\FontsDictionary.xaml;Styles\Dictionaries\ListBoxDictionary.xaml;Styles\Dictionaries\ToolbarMenuDictionary.xaml;Windows\BranchEditWindow.xaml;Windows\CloneRepoWindow.xaml;Windows\MainWindow.xaml;Windows\StatisticsWindow.xaml;Windows\TokenWindow.xaml;
 
 False
 

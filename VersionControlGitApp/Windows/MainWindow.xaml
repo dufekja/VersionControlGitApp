@@ -45,9 +45,11 @@
         </Grid.RowDefinitions>
 
         <DockPanel MouseDown="DragWindownOnMouseDown" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="7">
-
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                <Menu IsMainMenu="True">
+                <Menu VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                VerticalContentAlignment="Center" HorizontalContentAlignment="Left"
+                IsMainMenu="True" Grid.Column="0">
+
                     <!-- Git menu -->
                     <MenuItem Header="Git">
                         <MenuItem Header="Private Token" Padding="3" FontSize="14"/>
@@ -107,29 +109,30 @@
                 </Menu>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Background="{StaticResource GrayBackgroundColor}">
-                <Grid>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" 
+                        Background="{StaticResource GrayBackgroundColor}">
+                <Grid DockPanel.Dock="Right">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="407"/>
-                        <ColumnDefinition Width="35"/>
-                        <ColumnDefinition Width="35"/>
-                        <ColumnDefinition Width="35"/>
+                        <ColumnDefinition Width="438"/>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="30"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <Button Click="Window_Minimized" Content="-" 
-                            FontSize="16" FontWeight="SemiBold" 
-                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                            Grid.Column="2"/>
-                    
+                        FontSize="16" FontWeight="SemiBold" 
+                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                        Grid.Column="1"/>
+
                     <Button Click="Window_Closed" Content="x" 
-                            FontSize="16" FontWeight="SemiBold" 
-                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                            Grid.Column="3"/>
+                        FontSize="16" FontWeight="SemiBold" 
+                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                        Grid.Column="2"/>
                 </Grid>
             </StackPanel>
-        
+ 
         </DockPanel>
 
+        <!-- Commit submit section -->
         <Border Grid.Column="0" Grid.Row="8" Grid.RowSpan="3" Grid.ColumnSpan="2"
                 BorderThickness="3"
                 Background="{StaticResource BlackColor}">
@@ -138,6 +141,7 @@
                 <Label Content="Summary" 
                        Foreground="{StaticResource WhiteTextColor}"
                        Margin="4,0,0,0"/>
+                
                 <TextBox x:Name="CommitSummary" 
                          Foreground="{StaticResource WhiteTextColor}"
                          Background="{StaticResource DarkBackgroundColor}"
@@ -148,6 +152,7 @@
                 <Label Content="Description" 
                        Foreground="{StaticResource WhiteTextColor}"
                        Margin="4,0,0,0"/>
+                
                 <TextBox x:Name="CommitDescription" 
                          Foreground="{StaticResource WhiteTextColor}"
                          Background="{StaticResource DarkBackgroundColor}"
@@ -158,6 +163,7 @@
                 <!-- Commit button -->
                 <Button Click="CommitRepository" Content="Commit to {branchName}"
                         Margin="8,8,8,0" Height="30" FontSize="14"/>
+                
             </StackPanel>
         </Border>
 
