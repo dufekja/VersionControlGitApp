@@ -272,11 +272,14 @@ namespace VersionControlGitApp {
             }
 
             if (state == true) {
-                if (RunningThreadsList[0] != null) {
+                if (RunningThreadsList.Count > 2) {
                     try {
                         foreach (Thread t in RunningThreadsList) {
+                            t.Interrupt();
                             t.Abort();
+                            RunningThreadsList.Clear();
                         }
+                        ConsoleLogger.Success("MainWindow", "Abort všech vláken úspěšný");
                     } catch {
                         ConsoleLogger.Error("MainWindow", "Abort všech vláken selhal");
                     } 
@@ -286,9 +289,11 @@ namespace VersionControlGitApp {
 
                 Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();
-                RunningThreadsList.Add(repoChangesThread);
-
                 ConsoleLogger.Success("MainWindow", "Modified files watcher thread start");
+
+
+                RunningThreadsList.Add(repoChangesThread);
+                ConsoleLogger.Info("MainWindow", $"Running threads count: {RunningThreadsList.Count}");  
             }
         }
 
