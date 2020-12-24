@@ -44,6 +44,9 @@ namespace VersionControlGitApp {
             // get path from pathlabel
             string path = PathLabel.Text.ToString();
 
+            // set branch
+            MainWindowUI.ChangeCommitButtonBranch(path);
+
             // if there is repo then watch for changes
             if (path != "") {
                 ConsoleLogger.Success("MainWindow", $"Iniciace sledovacího vlákna pro {GitMethods.GetNameFromPath(path)}");
@@ -111,12 +114,13 @@ namespace VersionControlGitApp {
         }
 
         private void CreateNewBranch(object sender, RoutedEventArgs e) {
-            if (PathLabel.Text.ToString() != "") {
-                List<string> lines = GitMethods.GetBranches(PathLabel.Text.ToString());
+            string repoPath = PathLabel.Text.ToString();
+            if (repoPath != "") {
+                List<string> lines = GitMethods.GetBranches(repoPath);
 
                 try {
                     if (lines[0] != null) {
-                        new BranchEditWindow(lines, PathLabel.Text.ToString(), "create").Show();
+                        new BranchEditWindow(lines, repoPath, "create", this).Show();
                     }
                 } catch { }
             } else {
@@ -128,9 +132,11 @@ namespace VersionControlGitApp {
             if (PathLabel.Text.ToString() != "") {
                 MenuItem item = sender as MenuItem;
                 string name = item.Header.ToString();
-                string path = PathLabel.Text.ToString();
+                string repoPath = PathLabel.Text.ToString();
 
-                MainWindowController.ChangeBranchCommand(name, path);
+                MainWindowController.ChangeBranchCommand(name, repoPath);
+                Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, this));
+                Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath));
             } else {
                 ConsoleLogger.UserPopup("Branch", "Repository must be selected first");
             }
@@ -145,9 +151,9 @@ namespace VersionControlGitApp {
 
                 try {
                     if (lines[0] != null) {
-                        if (currentBranch != "master")
-                            new BranchEditWindow(lines, PathLabel.Text.ToString(), "rename").Show();
-                        else
+                        if (currentBranch != "master") {
+                            new BranchEditWindow(lines, PathLabel.Text.ToString(), "rename", this).Show();
+                        } else
                             ConsoleLogger.UserPopup("Branch rename", "Can't rename branch master");
                     }
                 } catch { }
@@ -157,7 +163,6 @@ namespace VersionControlGitApp {
         }
 
         private void MergeCurrentBranch(object sender, RoutedEventArgs e) {
-            // TODO -> MergeCurrentBranch
 
             if (PathLabel.Text.ToString() != "") {
                 string repoPath = PathLabel.Text.ToString();
@@ -169,6 +174,8 @@ namespace VersionControlGitApp {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you want to merge {currentBranch} to {branch} ?", "Merge confirmation", MessageBoxButton.YesNo);
                 if (messageBoxResult == MessageBoxResult.Yes) {
                     MainWindowController.MergeCurrentBranchCommand(branch, currentBranch, repoPath);
+                    Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, this));
+                    Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath));
                 }
             } else {
                 ConsoleLogger.UserPopup("Branch", "Repository must be selected first");
@@ -197,6 +204,9 @@ namespace VersionControlGitApp {
                 } else {
                     ConsoleLogger.UserPopup("Delete branch", "Can't delete branch master");
                 }
+
+                Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, this));
+                Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath));
             } else {
                 ConsoleLogger.UserPopup("Branch", "Repository must be selected first");
             }

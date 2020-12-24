@@ -161,7 +161,7 @@
                          VerticalAlignment="Center" TextWrapping="Wrap"/>
 
                 <!-- Commit button -->
-                <Button Click="CommitRepository" Content="Commit to {branchName}"
+                <Button x:Name="CommitButton" Click="CommitRepository" Content="Commit to {branchName}"
                         Margin="8,8,8,0" Height="30" FontSize="14"/>
                 
             </StackPanel>

@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Logging;
+using VersionControlGitApp.UIelements;
 
 namespace VersionControlGitApp.Windows {
     public partial class BranchEditWindow : Window {
@@ -20,12 +21,14 @@ namespace VersionControlGitApp.Windows {
         public static List<string> branches;
         public static string dirPath;
         public static string operation;
+        public static MainWindow win;
 
-        public BranchEditWindow(List<string> _branches, string _dirPath, string _operation) {
+        public BranchEditWindow(List<string> _branches, string _dirPath, string _operation, MainWindow _win) {
             InitializeComponent();
             branches = CleanBranches(_branches);
             dirPath = _dirPath;
             operation = _operation;
+            win = _win;
 
             string branch = GitMethods.GetCurrentBranch(dirPath);
 
@@ -83,8 +86,11 @@ namespace VersionControlGitApp.Windows {
                 close = true;
             }
 
-            if (close)
+            if (close) {
+                Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(dirPath, win));
+                Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(dirPath));
                 this.Close();
+            }
 
         }
     }

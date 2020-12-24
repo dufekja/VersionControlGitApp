@@ -3,6 +3,7 @@
                     xmlns:local="clr-namespace:VersionControlGitApp.Styles">
 
     <!-- Dockpanel, Menu, MenuItems style -->
+    <!--
     <Style TargetType="{x:Type Menu}">
         <Setter Property="Background" Value="{StaticResource GrayBackgroundColor}"/>
         <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
@@ -29,6 +30,6 @@
         <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
         <Setter Property="BorderBrush" Value="{StaticResource GrayBackgroundColor}"/>
         <Setter Property="BorderThickness" Value="0"/>
-    </Style>
+    </Style> -->
 
 </ResourceDictionary>

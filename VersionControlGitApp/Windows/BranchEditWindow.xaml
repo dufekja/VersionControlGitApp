@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VersionControlGitApp.Windows"
         mc:Ignorable="d"
         Title="BranchEditWindow" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow"
-        Height="450" Width="800" MinHeight="450" MaxWidth="800"
+        Height="500" Width="800" MinHeight="500" MaxWidth="800"
         Background="{StaticResource DarkBackgroundColor}">
 
     <Grid>
@@ -36,13 +36,11 @@
                  Foreground="{StaticResource WhiteTextColor}"
                  Background="{StaticResource BlackColor}"
                  BorderBrush="{StaticResource AccentsColor}"/>
-        
+
         <Button Click="CheckoutBranchButton_Clicked"  Content="Submit" 
                 Grid.Column="2" Grid.Row="3"
-                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="8" 
-                FontSize="24" BorderThickness="0" FontWeight="SemiBold"
-                Background="{StaticResource AccentsColor}"
-                Foreground="{StaticResource BlackColor}"/>
-        
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                Margin="8" FontSize="24"/>
+
     </Grid>
 </Window>

@@ -75,8 +75,8 @@ namespace VersionControlGitApp.UIelements {
             }
         }
 
-        public static void Lolce() {
-
+        public static void ChangeCommitButtonBranch(string path) {
+            win.CommitButton.Content = "Commit to " + GitMethods.GetCurrentBranch(path);
         }
 
         public static void ListBoxLoad() {
