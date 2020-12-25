@@ -16,6 +16,7 @@ using System.Windows.Input;
 using VersionControlGitApp.Windows;
 
 using MenuItem = System.Windows.Controls.MenuItem;
+using System.Collections.ObjectModel;
 
 namespace VersionControlGitApp {
     public partial class MainWindow : Window {

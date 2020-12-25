@@ -1,6 +1,7 @@
 ﻿using Octokit;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -104,30 +105,29 @@ namespace VersionControlGitApp.UIelements {
 
         public static void FilesToCommitRefresh(string path, MainWindow win) {
 
-            string selectedItemContent = "";
-            ComboBoxItem selectedItem = new ComboBoxItem() {
-                IsSelected = true
-            };
-
-            if (win.FilesToCommit.SelectedItem != null) {
-                selectedItem = (ComboBoxItem)win.FilesToCommit.SelectedItem;
-                selectedItemContent = selectedItem.Content.ToString();
-            }
-
-            win.FilesToCommit.Items.Clear();
             List<string> modifiedFiles = Cmd.RunAndRead("status --porcelain", path);
 
-            win.FilesToCommit.Text = selectedItemContent;
+            if (modifiedFiles != null) {
 
-            /*if (modifiedFiles != null) {
-                foreach (string file in modifiedFiles) {
-                    string text = file.Substring(3);
-                    ComboBoxItem item = new ComboBoxItem() {
-                        Content = text
-                    };
-                    win.FilesToCommit.Items.Add(item);
+                string selected = "";
+                if (win.FilesToCommit.SelectedItem != null) {
+                    selected = ((ComboBoxItem)win.FilesToCommit.SelectedItem).Content.ToString();
                 }
-            }*/
+
+                win.FilesToCommit.Items.Clear();
+
+                foreach (string name in modifiedFiles) {
+                    bool isSelected = false;
+                    if (name == selected) {
+                        isSelected = true;
+                    }
+                    win.FilesToCommit.Items.Add(new ComboBoxItem() {
+                        Content = name,
+                        IsSelected = isSelected
+                    });
+                }
+            }
+
         }
 
         public static void ClearCommitAndContext(MainWindow win) {
