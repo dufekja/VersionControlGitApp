@@ -8,6 +8,7 @@ using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Database;
 using Octokit;
 using VersionControlGitApp.Logging;
+using System.Windows.Input;
 
 namespace VersionControlGitApp {
     public partial class CloneRepoWindow : Window {
@@ -66,6 +67,19 @@ namespace VersionControlGitApp {
         private void ExternalRepoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             string selectedRepo = ((ComboBoxItem)ExternalRepoComboBox.SelectedItem).Tag.ToString() + ".git";
             URL.Text = selectedRepo;
+        }
+
+        private void Window_Minimized(object sender, RoutedEventArgs e) {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void Window_Closed(object sender, RoutedEventArgs e) {
+            this.Close();
+        }
+
+        private void DragWindownOnMouseDown(object sender, MouseButtonEventArgs e) {
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+                this.DragMove();
         }
     }
 }

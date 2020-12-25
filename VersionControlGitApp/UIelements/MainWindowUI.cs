@@ -55,6 +55,7 @@ namespace VersionControlGitApp.UIelements {
             List<string> lines = GitMethods.GetBranches(path);
             string currentBranch = GitMethods.GetCurrentBranch(path);
 
+            // fill rename and merge items
             if (lines != null) {
                 foreach (string line in lines) {
                     if (line.Replace("*", "").Trim() != currentBranch) {
@@ -74,6 +75,19 @@ namespace VersionControlGitApp.UIelements {
                     }
                 }
             }
+
+            //disable with one branch
+            if (win.ChangeBranchMenuItem.Items.Count > 0)
+                win.ChangeBranchMenuItem.IsEnabled = true;
+            else
+                win.ChangeBranchMenuItem.IsEnabled = false;
+
+            if (win.MergeBranchMenuItem.Items.Count > 0)
+                win.MergeBranchMenuItem.IsEnabled = true;
+            else
+                win.MergeBranchMenuItem.IsEnabled = false;
+
+
         }
 
         public static void ChangeCommitButtonBranch(string path) {

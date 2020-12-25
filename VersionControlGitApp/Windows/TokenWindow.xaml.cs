@@ -56,5 +56,19 @@ namespace VersionControlGitApp {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
         }
+
+        private void Window_Minimized(object sender, RoutedEventArgs e) {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void Window_Closed(object sender, RoutedEventArgs e) {
+            this.Close();
+        }
+
+        private void DragWindownOnMouseDown(object sender, MouseButtonEventArgs e) {
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+                this.DragMove();
+        }
+
     }
 }

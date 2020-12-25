@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VersionControlGitApp"
         mc:Ignorable="d"
-        Title="CloneRepoWindow" WindowStyle="ToolWindow"
+        Title="CloneRepoWindow" 
+        WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" WindowStartupLocation="CenterScreen"
         MinHeight="300" MinWidth="500" Height="300" Width="500" MaxHeight="400" MaxWidth="600"
-        WindowStartupLocation="CenterScreen" Background="{StaticResource DarkBackgroundColor}">
+        Background="{StaticResource DarkBackgroundColor}">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -19,6 +20,7 @@
             <ColumnDefinition Width="12"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="12"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -27,9 +29,35 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="12"/>
         </Grid.RowDefinitions>
-        
+
+        <DockPanel MouseDown="DragWindownOnMouseDown" Background="{StaticResource GrayBackgroundColor}"
+                   Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6">
+
+            <Grid DockPanel.Dock="Top" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="440"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <Button Click="Window_Minimized" Content="-" 
+                        FontSize="16" FontWeight="SemiBold" 
+                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                        Grid.Column="1"/>
+
+                <Button Click="Window_Closed" Content="x" 
+                        FontSize="16" FontWeight="SemiBold" 
+                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                        Grid.Column="2"/>
+            </Grid>
+
+        </DockPanel>
+
         <Label Content="Select repository or insert URL:" FontSize="16" 
-               Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="4,0,0,0"
+               Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" Margin="4,0,0,0"
                HorizontalAlignment="Left" VerticalAlignment="Center"
                Foreground="{StaticResource WhiteTextColor}"/>
 
@@ -37,14 +65,14 @@
                   Text="Default"
                   FontSize="18" Margin="8,4,8,4" Width="220"
                   HorizontalAlignment="Right" VerticalAlignment="Center"
-                  Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="2"/>
+                  Grid.Column="3" Grid.Row="3" Grid.ColumnSpan="2"/>
 
         <TextBox x:Name="URL" 
                  FontSize="16" Margin="8,12,8,12"
-                 Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="4"/>
+                 Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="4"/>
 
         <Button Click="CloneRepository" Content="Clone" 
-                Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="2" 
+                Grid.Column="2" Grid.Row="5" Grid.ColumnSpan="2" 
                 BorderThickness="1" FontSize="18"
                 Margin="24,8,24,8"/>
     </Grid>
