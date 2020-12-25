@@ -103,14 +103,31 @@ namespace VersionControlGitApp.UIelements {
         }
 
         public static void FilesToCommitRefresh(string path, MainWindow win) {
+
+            string selectedItemContent = "";
+            ComboBoxItem selectedItem = new ComboBoxItem() {
+                IsSelected = true
+            };
+
+            if (win.FilesToCommit.SelectedItem != null) {
+                selectedItem = (ComboBoxItem)win.FilesToCommit.SelectedItem;
+                selectedItemContent = selectedItem.Content.ToString();
+            }
+
             win.FilesToCommit.Items.Clear();
             List<string> modifiedFiles = Cmd.RunAndRead("status --porcelain", path);
 
-            if (modifiedFiles != null) {
+            win.FilesToCommit.Text = selectedItemContent;
+
+            /*if (modifiedFiles != null) {
                 foreach (string file in modifiedFiles) {
-                    win.FilesToCommit.Items.Add(file.Substring(3));
+                    string text = file.Substring(3);
+                    ComboBoxItem item = new ComboBoxItem() {
+                        Content = text
+                    };
+                    win.FilesToCommit.Items.Add(item);
                 }
-            }
+            }*/
         }
 
         public static void ClearCommitAndContext(MainWindow win) {

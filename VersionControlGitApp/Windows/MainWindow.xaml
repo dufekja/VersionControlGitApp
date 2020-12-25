@@ -184,18 +184,17 @@
 
         <StackPanel 
             Background="{StaticResource BlackColor}" 
-            Grid.Row="1" Grid.Column="2" Grid.RowSpan="4" 
+            Grid.Row="1" Grid.Column="2" Grid.RowSpan="7" 
             Margin="0.2,0,0.6,41.873">
 
             <Label Content="Files to Commit" 
                    Foreground="{StaticResource WhiteTextColor}" 
                    FontSize="10" HorizontalAlignment="Center"/>
 
-            <ListBox SelectionChanged="FilesToCommit_SelectionChanged" 
+            <ComboBox SelectionChanged="FilesToCommit_SelectionChanged" 
                      x:Name="FilesToCommit" 
-                     Background="{StaticResource BlackColor}" 
-                     Foreground="{StaticResource WhiteTextColor}" 
-                     FontSize="12" HorizontalAlignment="Stretch" MinHeight="150"/>
+                     FontSize="12" HorizontalAlignment="Stretch" MinHeight="25">
+            </ComboBox>
 
         </StackPanel>
 
