@@ -316,7 +316,7 @@ namespace VersionControlGitApp {
         private void FilesToCommit_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 
             if (FilesToCommit.SelectedItem != null) {
-                string fileName = FilesToCommit.Text.ToString();
+                string fileName = ((ComboBoxItem)FilesToCommit.SelectedItem).Content.ToString();
                 string path = PathLabel.Text.ToString();
 
                 if (File.Exists($@"{path}\{fileName}")) {
