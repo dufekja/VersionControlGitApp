@@ -114,18 +114,23 @@ namespace VersionControlGitApp.UIelements {
                     selected = ((ComboBoxItem)win.FilesToCommit.SelectedItem).Content.ToString();
                 }
 
-                win.FilesToCommit.Items.Clear();
-
+                List<ComboBoxItem> newComboBoxItems = new List<ComboBoxItem>();
                 foreach (string name in modifiedFiles) {
                     bool isSelected = false;
                     if (name == selected) {
                         isSelected = true;
                     }
-                    win.FilesToCommit.Items.Add(new ComboBoxItem() {
+                    newComboBoxItems.Add(new ComboBoxItem() {
                         Content = name,
                         IsSelected = isSelected
                     });
                 }
+
+                win.FilesToCommit.Items.Clear();
+                foreach (ComboBoxItem newItem in newComboBoxItems) {
+                    win.FilesToCommit.Items.Add(newItem);
+                }
+
             }
 
         }
