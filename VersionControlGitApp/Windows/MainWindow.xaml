@@ -184,7 +184,7 @@
 
         <StackPanel 
             Background="{StaticResource BlackColor}" 
-            Grid.Row="1" Grid.Column="2" Grid.RowSpan="5" 
+            Grid.Row="1" Grid.Column="2" Grid.RowSpan="4" 
             Margin="0.2,0,0.6,41.873">
 
             <Label Content="Files to Commit" 
