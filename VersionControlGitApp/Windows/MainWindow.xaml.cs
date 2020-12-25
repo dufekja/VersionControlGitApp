@@ -315,9 +315,6 @@ namespace VersionControlGitApp {
 
         private void FilesToCommit_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 
-            //ConsoleLogger.UserPopup("lol", (ComboBoxItem)sender);
-
-            /*
             if (FilesToCommit.SelectedItem != null) {
                 string fileName = FilesToCommit.Text.ToString();
                 string path = PathLabel.Text.ToString();
@@ -329,7 +326,7 @@ namespace VersionControlGitApp {
                     ConsoleLogger.Popup("MainWindow", $"File: {fileName} no exists");
                 }
                 
-            }*/
+            }
         }
 
         private void OpenStatistics(object sender, RoutedEventArgs e) {

@@ -105,7 +105,7 @@ namespace VersionControlGitApp.UIelements {
 
         public static void FilesToCommitRefresh(string path, MainWindow win) {
 
-            List<string> modifiedFiles = Cmd.RunAndRead("status --porcelain", path);
+            List<string> modifiedFiles = Cmd.UntrackedFiles(path);
 
             if (modifiedFiles != null) {
 
