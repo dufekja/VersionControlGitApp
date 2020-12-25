@@ -182,19 +182,16 @@
             </Label.Content>
         </Label>
 
-        <StackPanel 
-            Background="{StaticResource BlackColor}" 
-            Grid.Row="1" Grid.Column="2" Grid.RowSpan="7" 
-            Margin="0.2,0,0.6,41.873">
-
-            <Label Content="Files to Commit" 
+        <StackPanel Grid.Row="1" Grid.Column="2" Grid.RowSpan="1"
+                    VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                    Background="{StaticResource BlackColor}" Margin="2">
+            
+            <Label Content="Modified Files" 
                    Foreground="{StaticResource WhiteTextColor}" 
-                   FontSize="10" HorizontalAlignment="Center"/>
+                   FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center"/>
 
-            <ComboBox SelectionChanged="FilesToCommit_SelectionChanged" 
-                     x:Name="FilesToCommit" 
-                     FontSize="12" HorizontalAlignment="Stretch" MinHeight="25">
-            </ComboBox>
+            <ComboBox x:Name="FilesToCommit" SelectionChanged="FilesToCommit_SelectionChanged" 
+                     FontSize="12" HorizontalAlignment="Stretch" MinHeight="25"/>
 
         </StackPanel>
 
@@ -205,13 +202,13 @@
                BorderBrush="{StaticResource AccentsColor}"
                VerticalAlignment="Center"
                Height="25"
-               Margin="8,0,8,0"
+               Margin="8,0,12,0"
                Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="4"/>
 
         <!-- Current selected file content -->
-        <TextBox x:Name="FileContent" IsReadOnly="True" Focusable="False" Margin="8,8,8,8"
+        <TextBox x:Name="FileContent" IsReadOnly="True" Focusable="False" Margin="12"
             HorizontalContentAlignment="Left" VerticalContentAlignment="Top"
-            Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="4" Grid.RowSpan="8" 
+            Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="8" 
             Foreground="{StaticResource WhiteTextColor}"
             Background="{StaticResource BlackColor}"
             BorderBrush="{StaticResource AccentsColor}">
