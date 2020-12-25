@@ -4,26 +4,33 @@
 
     <!-- ComboBox & ComboBoxItems styles -->
     <Style x:Key="ComboBoxStyle1" TargetType="{x:Type ComboBox}">
-        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AccentsColor}"/>
+        <Setter Property="Background" Value="{StaticResource BlackColor}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
-                    <Border Background="{TemplateBinding Background}">
-                        
+                    <Border x:Name="Bd" BorderThickness="1"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}">
                     </Border>
+
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsDropDownOpen" Value="true">
                             <Setter Property="Foreground" Value="White"/>
                         </Trigger>
+                        <Trigger Property="IsDropDownOpen" Value="False">
+                            <Setter Property="Background" TargetName="Bd" Value="Red"/>
+                        </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-                            <Setter Property="Background" Value="#FFF4F4F4"/>
+                            <Setter Property="Background" TargetName="Bd" Value="red"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
+    
     <Style TargetType="{x:Type ComboBoxItem}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{Binding Foreground,RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type ComboBox}}}"/>
@@ -42,11 +49,12 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Background" TargetName="Bd" Value="LightBlue"/>
+                            <Setter Property="Background" TargetName="Bd" Value="#414141"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="true">
-                            <Setter Property="Background" TargetName="Bd" Value="#414141"/>
-                            <Setter Property="Foreground" Value="#fff"/>
+                            <Setter Property="Background" TargetName="Bd" Value="#ec625f"/>
+                            <Setter Property="Foreground" Value="#313131"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="false">
                             <Setter Property="Background" Value="#313131"/>

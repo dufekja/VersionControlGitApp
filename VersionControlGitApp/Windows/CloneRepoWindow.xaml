@@ -37,21 +37,7 @@
                   Text="Default"
                   FontSize="18" Margin="8,4,8,4" Width="220"
                   HorizontalAlignment="Right" VerticalAlignment="Center"
-                  Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="2">
-            <ComboBox.ItemContainerStyle>
-                <Style TargetType="ComboBoxItem">
-                    <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
-                    <Setter Property="Background" Value="{StaticResource BlackColor}"/>
-                    <Setter Property="BorderBrush" Value="{StaticResource BlackColor}"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{StaticResource AccentsColor}"/>
-                            <Setter Property="BorderBrush" Value="{StaticResource BlackColor}"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </ComboBox.ItemContainerStyle>
-        </ComboBox>
+                  Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="2"/>
 
         <TextBox x:Name="URL" 
                  FontSize="16" Margin="8,12,8,12"
