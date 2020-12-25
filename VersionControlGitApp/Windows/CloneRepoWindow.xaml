@@ -53,12 +53,9 @@
             </ComboBox.ItemContainerStyle>
         </ComboBox>
 
-        <TextBox x:Name="URL" FontSize="16" 
-                 Margin="8,12,8,12" BorderThickness="1"
-                 Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="4"
-                 Background="{StaticResource BlackColor}"  
-                 Foreground="{StaticResource WhiteTextColor}"
-                 BorderBrush="{StaticResource AccentsColor}"/>
+        <TextBox x:Name="URL" 
+                 FontSize="16" Margin="8,12,8,12"
+                 Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="4"/>
 
         <Button Click="CloneRepository" Content="Clone" 
                 Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="2" 

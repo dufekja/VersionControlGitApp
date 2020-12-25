@@ -113,7 +113,7 @@
                         Background="{StaticResource GrayBackgroundColor}">
                 <Grid DockPanel.Dock="Right">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="438"/>
+                        <ColumnDefinition Width="493.5"/>
                         <ColumnDefinition Width="30"/>
                         <ColumnDefinition Width="30"/>
                     </Grid.ColumnDefinitions>
