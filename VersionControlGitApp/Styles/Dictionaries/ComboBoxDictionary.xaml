@@ -4,29 +4,51 @@
 
     <!-- ComboBox & ComboBoxItems styles -->
 
-    <!--<Style TargetType="{x:Type ComboBoxItem}">
-        <Setter Property="OverridesDefaultStyle" Value="True"/>
+    <Style TargetType="{x:Type ComboBox}">
+        <Style.Triggers>
+            
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type ComboBoxItem}">
         <Setter Property="BorderBrush" Value="{StaticResource AccentsColor}"/>
-        <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
+        <Setter Property="Foreground" Value="{Binding Foreground,RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type ComboBox}}}"/>
         <Setter Property="Background" Value="{StaticResource BlackColor}"/>
         <Setter Property="Height" Value="20"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBoxItem}">
-                    <Border BorderThickness="1"
+                    <Border x:Name="Border" BorderThickness="1"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             Background="{TemplateBinding Background}">
 
                         <ContentPresenter>
-                            
+
                             <ContentPresenter.Content>
-                                <TextBlock Foreground="{TemplateBinding Foreground}"/>
+                                <TextBlock Foreground="#fff"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                             </ContentPresenter.Content>
                         </ContentPresenter>
                     </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="Border" Value="LightBlue"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="true">
+                            <Setter Property="Background" TargetName="Border" Value="#414141"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>-->
+    </Style>
 
 </ResourceDictionary>
