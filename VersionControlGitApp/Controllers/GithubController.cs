@@ -15,8 +15,8 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="client">Github client object</param>
         /// <param name="token">User private token</param>
         /// <returns>Return authenticated Github client object</returns>
-        public static GitHubClient Authenticate(GitHubClient client, string token) {
-            ConsoleLogger.Info("GithubController", "Authenticating client");
+        public static GitHubClient Authenticate(GitHubClient client, string token, MainWindow win) {
+            ConsoleLogger.StatusBarUpdate("Authenticating user", win);
             var tokenAuth = new Credentials(token, AuthenticationType.Oauth);
             client.Credentials = tokenAuth;
             return client;
@@ -27,8 +27,8 @@ namespace VersionControlGitApp.Controllers {
         /// </summary>
         /// <param name="client">Authenticated Github client object</param>
         /// <returns>Return List of UserRepository objects</returns>
-        public static List<UserRepository> GetAllRepos(GitHubClient client) {
-            ConsoleLogger.Info("GithubController", "Retrieving client repositories");
+        public static List<UserRepository> GetAllRepos(GitHubClient client, MainWindow win) {
+            ConsoleLogger.StatusBarUpdate("Loading repositories", win);
             List<UserRepository> userRepos = new List<UserRepository>();
             var repoList = client.Repository.GetAllForCurrent().Result;
 
@@ -39,6 +39,12 @@ namespace VersionControlGitApp.Controllers {
             return userRepos;
         }
 
+        /// <summary>
+        /// Method to check if repository exists
+        /// </summary>
+        /// <param name="client">GitHubClient authenticated object</param>
+        /// <param name="name">Repository name</param>
+        /// <returns></returns>
         public static bool RepoExists(GitHubClient client, string name) {
             IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
             foreach (Repository repo in repos) {
