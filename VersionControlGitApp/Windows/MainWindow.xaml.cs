@@ -29,6 +29,7 @@ namespace VersionControlGitApp {
         public static List<UserRepository> userRepos;
 
         public Collection<Thread> RunningThreadsCollection { get; set; }
+        public static bool abortThread = false;
 
         public MainWindow(string token) {
             InitializeComponent();
@@ -229,9 +230,15 @@ namespace VersionControlGitApp {
                 if (repos != null && repos.Count > 0) {
                     string path = repos[0].Path.ToString();
                     PathLabel.Text = path;
+                    FileContent.Text = "";
+
+                    Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(path, this));
+                    Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(path));
+                    Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(path, this));
 
                     // delete all running threads
                     AbortWasteThreads();
+
 
                     // start new repo watching thread
                     Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
@@ -257,24 +264,18 @@ namespace VersionControlGitApp {
         }
 
         private void AddTrackedFiles(string path, List<string> untrackedFiles) {
-            bool state = true;
-
+            bool state = false;
             foreach (string file in untrackedFiles) {
                 string command = "add " + '"' + file.Trim() + '"';
                 state = Cmd.Run(command, path);
             }
 
-            if (state == true) {
-
-                AbortWasteThreads();
+            if (state) {
 
                 Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(path, this));
 
-                Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
-                repoChangesThread.Start();
-                RunningThreadsCollection.Add(repoChangesThread);
-
-                ConsoleLogger.Success("MainWindow.AddTrackedFiles", "WaitForChangesOnRepo thread started");
+                WaitForChangesOnRepo(path);
+                ConsoleLogger.StatusBarUpdate("Waiting on changes in repository", this);
             }
 
         }
@@ -287,7 +288,8 @@ namespace VersionControlGitApp {
                 // If untracked files in currently watched repo -> track them
                 List<string> untrackedFiles = Cmd.UntrackedFiles(path);
                 if (untrackedFiles != null) {
-                    Task.Run(() => AddTrackedFiles(path, untrackedFiles));
+                    if (!abortThread)
+                        AddTrackedFiles(path, untrackedFiles);
                     break;
                 }
             }
@@ -315,6 +317,8 @@ namespace VersionControlGitApp {
                 foreach (Thread t in RunningThreadsCollection) {
                     if (t.ThreadState == System.Threading.ThreadState.Stopped) {
                         try {
+                            abortThread = true;
+                            t.Interrupt();
                             t.Abort();
                         } catch {
 
