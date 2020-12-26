@@ -120,16 +120,10 @@ namespace VersionControlGitApp {
 
         private void CreateNewBranch(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
-            if (repoPath != "") {
-                List<string> lines = GitMethods.GetBranches(repoPath);
-
-                try {
-                    if (lines[0] != null) {
-                        new BranchEditWindow(lines, repoPath, "create", this).Show();
-                    }
-                } catch { }
+            if (GitMethods.IsRepo(repoPath)) {
+                Dispatcher.Invoke(() => MainWindowController.CreateNewBranchCommand(repoPath, this));
             } else {
-                ConsoleLogger.UserPopup("Branch", "Repository must be selected first");
+                ConsoleLogger.UserPopup("Branch", Config.USERMSG_SELECTREPO);
             }
         }
 
@@ -143,7 +137,7 @@ namespace VersionControlGitApp {
                 Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, this));
                 Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath));
             } else {
-                ConsoleLogger.UserPopup("Branch", "Repository must be selected first");
+                ConsoleLogger.UserPopup("Branch", Config.USERMSG_SELECTREPO);
             }
         }
 
@@ -163,7 +157,7 @@ namespace VersionControlGitApp {
                     }
                 } catch { }
             } else {
-                ConsoleLogger.UserPopup("Branch", "Repository must be selected first");
+                ConsoleLogger.UserPopup("Branch", Config.USERMSG_SELECTREPO);
             }
         }
 
@@ -183,7 +177,7 @@ namespace VersionControlGitApp {
                     Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath));
                 }
             } else {
-                ConsoleLogger.UserPopup("Branch", "Repository must be selected first");
+                ConsoleLogger.UserPopup("Branch", Config.USERMSG_SELECTREPO);
             }
         }
 
@@ -213,7 +207,7 @@ namespace VersionControlGitApp {
                 Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, this));
                 Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath));
             } else {
-                ConsoleLogger.UserPopup("Branch", "Repository must be selected first");
+                ConsoleLogger.UserPopup("Branch", Config.USERMSG_SELECTREPO);
             }
         }
 
@@ -326,6 +320,7 @@ namespace VersionControlGitApp {
                         }
                     }
                 }
+                RunningThreadsCollection = new Collection<Thread>();
 
                 ConsoleLogger.Info("MainWindow.AbortWasteThreads", "Count: " + RunningThreadsCollection.Count.ToString());
 

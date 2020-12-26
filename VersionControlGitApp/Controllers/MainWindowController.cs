@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using VersionControlGitApp.Database;
 using VersionControlGitApp.Logging;
 using VersionControlGitApp.UIelements;
+using VersionControlGitApp.Windows;
 
 namespace VersionControlGitApp.Controllers {
     public static class MainWindowController {
@@ -108,6 +109,15 @@ namespace VersionControlGitApp.Controllers {
                     ConsoleLogger.UserPopup("Delete Confirmation", $"{GitMethods.GetNameFromPath(repoPath)} deleted");
                 }
             }
+        }
+
+        public static void CreateNewBranchCommand(string repoPath, MainWindow win) {
+            List<string> lines = GitMethods.GetBranches(repoPath);
+
+            if (lines != null) {
+                new BranchEditWindow(lines, repoPath, "create", win).Show();
+            }
+
         }
 
     }
