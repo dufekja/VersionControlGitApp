@@ -29,7 +29,13 @@ namespace VersionControlGitApp {
         public static List<UserRepository> userRepos;
 
         public static Thread repoChangesThread;
-        public static string newThreadState = "0";
+
+        public static ThreadState newThreadState = ThreadState.New;
+        public enum ThreadState {
+            New,
+            Repeating,
+            Aborting
+        }
 
         public MainWindow(string token) {
             InitializeComponent();
@@ -221,7 +227,7 @@ namespace VersionControlGitApp {
                 string repoName = ((ListBoxItem)RepoListBox.SelectedItem).Content.ToString();
                 if (repoName != "") {
                     // let running thread execute remaining code
-                    newThreadState = "2";
+                    newThreadState = ThreadState.Aborting;
                     Task.Run(() => ChangeThreadWithNewRepo(repoName));
                 }   
             }
@@ -242,7 +248,7 @@ namespace VersionControlGitApp {
                 ConsoleLogger.StatusBarUpdate($"Changed to repository: {repoName}", this);
 
                 // start new thread which will watch new repo
-                newThreadState = "0";
+                newThreadState = ThreadState.New;
                 repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();
 
@@ -255,7 +261,7 @@ namespace VersionControlGitApp {
             while (true) {
                 Thread.Sleep(2500);
 
-                ConsoleLogger.Info("MainWindow.AllReposListener.State", newThreadState);
+                ConsoleLogger.Info("MainWindow.AllReposListener.State", newThreadState.ToString());
 
                 // refresh lisbox if there are deleted repositories
                 List<string> deletedRepos = repoDB.Refresh();
@@ -280,10 +286,10 @@ namespace VersionControlGitApp {
 
         // thread watching files in selected repo
         private void WaitForChangesOnRepo(string path) {
-            if (newThreadState == "0")
-                newThreadState = "1";
+            if (newThreadState == ThreadState.New)
+                newThreadState = ThreadState.Repeating;
 
-            while (newThreadState == "1") {
+            while (newThreadState == ThreadState.Repeating) {
                 Thread.Sleep(2500);
 
                 // If there are untracked files in currently watched repo -> track them
