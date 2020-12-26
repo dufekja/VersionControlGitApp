@@ -39,10 +39,11 @@
             <RowDefinition Height="40*"/>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="40*"/>
+            <RowDefinition Height="10*"/>
             <RowDefinition Height="40*"/>
-            <RowDefinition Height="30*"/>
             <RowDefinition MinHeight="110"/>
-            <RowDefinition Height="20*"/>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="8"/>
         </Grid.RowDefinitions>
 
         <DockPanel MouseDown="DragWindownOnMouseDown" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="7">
@@ -134,7 +135,7 @@
         </DockPanel>
 
         <!-- Commit submit section -->
-        <Border Grid.Column="0" Grid.Row="8" Grid.RowSpan="3" Grid.ColumnSpan="2"
+        <Border Grid.Column="0" Grid.Row="7" Grid.RowSpan="3" Grid.ColumnSpan="2"
                 BorderThickness="3"
                 Background="{StaticResource BlackColor}">
 
@@ -207,7 +208,7 @@
                Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="4"/>
 
         <!-- Current selected file content -->
-        <TextBox x:Name="FileContent" IsReadOnly="True" Focusable="False" Margin="12"
+        <TextBox x:Name="FileContent" IsReadOnly="True" Focusable="False" Margin="12,12,12,4"
             HorizontalContentAlignment="Left" VerticalContentAlignment="Top"
             Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="8" 
             Foreground="{StaticResource WhiteTextColor}"
@@ -216,15 +217,33 @@
         </TextBox>
 
         <!-- Listbox with added repositories -->
-        <ScrollViewer Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="5">
+        <ScrollViewer 
+            Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="4"
+            Margin="4">
+            
             <ListBox 
                 x:Name="RepoListBox" 
                 Foreground="{StaticResource WhiteTextColor}" 
                 Background="{StaticResource GrayBackgroundColor}" 
+                BorderBrush="{StaticResource AccentsColor}"
                 SelectionChanged="RepoListBox_SelectionChanged" 
-                MinHeight="30" FontSize="16" 
+                MinHeight="30" FontSize="16"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
         </ScrollViewer>
+
+        <!-- Status bar label -->
+        <Border Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="7"
+                Margin="4,4,12,0" BorderThickness="1"
+                Background="{StaticResource BlackColor}"
+                BorderBrush="{StaticResource AccentsColor}">
+
+            <Label x:Name="ActionStatusBarLabel"
+                   Margin="1"
+                   Foreground="{StaticResource WhiteTextColor}">
+            </Label>
+
+        </Border>
+
     </Grid>
 </Window>

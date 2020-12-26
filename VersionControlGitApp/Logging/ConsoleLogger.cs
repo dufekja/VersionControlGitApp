@@ -33,13 +33,15 @@ namespace VersionControlGitApp.Logging {
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public static void Popup(string file, string text) {
-            MessageBox.Show($"Popup.Info.{file} - {text}");
-        }
-
         public static void UserPopup(string header, string text) {
             MessageBox.Show(text, header);
         }
+
+
+        public static void StatusBarUpdate(string text, MainWindow win) {
+            win.ActionStatusBarLabel.Content = text.ToString();
+        }
+
 
     }
 }
