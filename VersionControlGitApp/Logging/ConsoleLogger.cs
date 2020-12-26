@@ -40,7 +40,7 @@ namespace VersionControlGitApp.Logging {
 
 
         public static void StatusBarUpdate(string text, MainWindow win) {
-            win.ActionStatusBarLabel.Content = text.ToString();
+            win.Dispatcher.Invoke(() => win.ActionStatusBarLabel.Content = text.ToString());
         }
 
 

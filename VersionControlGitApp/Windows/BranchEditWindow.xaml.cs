@@ -88,7 +88,7 @@ namespace VersionControlGitApp.Windows {
 
             if (close) {
                 Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(dirPath, win));
-                Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(dirPath));
+                Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(dirPath, win));
                 this.Close();
             }
 

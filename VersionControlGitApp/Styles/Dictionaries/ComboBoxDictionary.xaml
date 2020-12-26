@@ -32,9 +32,11 @@
     
     <Style TargetType="{x:Type ComboBoxItem}">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="{Binding Foreground,RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type ComboBox}}}"/>
+        <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="4"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBoxItem}">
@@ -44,7 +46,9 @@
                             Background="{TemplateBinding Background}" 
                             Padding="{TemplateBinding Padding}" 
                             SnapsToDevicePixels="true">
-                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
@@ -60,7 +64,7 @@
                             <Setter Property="Foreground" Value="#fff"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            <Setter Property="Foreground" Value="#414141"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

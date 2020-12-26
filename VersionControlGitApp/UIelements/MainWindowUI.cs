@@ -90,7 +90,7 @@ namespace VersionControlGitApp.UIelements {
 
         }
 
-        public static void ChangeCommitButtonBranch(string path) {
+        public static void ChangeCommitButtonBranch(string path, MainWindow win) {
             win.CommitButton.Content = "Commit to " + GitMethods.GetCurrentBranch(path);
         }
 
@@ -117,7 +117,10 @@ namespace VersionControlGitApp.UIelements {
             }
         }
 
-        public static void FilesToCommitRefresh(string path, MainWindow win) {
+        public static void FilesToCommitRefresh(MainWindow win) {
+
+            string path = "";
+            win.Dispatcher.Invoke(() => path = win.PathLabel.Text.ToString());
 
             List<string> modifiedFiles = Cmd.UntrackedFiles(path);
 

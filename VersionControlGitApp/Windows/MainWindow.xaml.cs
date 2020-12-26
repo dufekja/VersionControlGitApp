@@ -50,15 +50,15 @@ namespace VersionControlGitApp {
             string path = PathLabel.Text.ToString();
 
             // set branch
-            MainWindowUI.ChangeCommitButtonBranch(path);
+            MainWindowUI.ChangeCommitButtonBranch(path, this);
 
             // if there is repo then watch for changes
             if (path != "") {
-                Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
+                Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo());
                 repoChangesThread.Start();              
                 RunningThreadsCollection.Add(repoChangesThread);
 
-                Dispatcher.Invoke(() => ConsoleLogger.StatusBarUpdate($"{GitMethods.GetNameFromPath(path)} is now watched for changes", this));
+                ConsoleLogger.StatusBarUpdate($"{GitMethods.GetNameFromPath(path)} is now watched for changes", this);
 
                 // load repo branches
                 Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(path, this));
@@ -139,7 +139,7 @@ namespace VersionControlGitApp {
 
                 MainWindowController.ChangeBranchCommand(name, repoPath);
                 Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, this));
-                Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath));
+                Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath, this));
             } else {
                 ConsoleLogger.UserPopup("Branch", Config.USERMSG_SELECTREPO);
             }
@@ -178,7 +178,7 @@ namespace VersionControlGitApp {
                 if (messageBoxResult == MessageBoxResult.Yes) {
                     MainWindowController.MergeCurrentBranchCommand(branch, currentBranch, repoPath);
                     Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, this));
-                    Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath));
+                    Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath, this));
                 }
             } else {
                 ConsoleLogger.UserPopup("Branch", Config.USERMSG_SELECTREPO);
@@ -209,7 +209,7 @@ namespace VersionControlGitApp {
                 }
 
                 Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, this));
-                Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath));
+                Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath, this));
             } else {
                 ConsoleLogger.UserPopup("Branch", Config.USERMSG_SELECTREPO);
             }
@@ -225,23 +225,24 @@ namespace VersionControlGitApp {
 
             if (repoName != "") {
 
+                ConsoleLogger.StatusBarUpdate($"Changed to repository: {repoName}", this);
+
                 // PathLabel change
                 List<Repo> repos = repoDB.FindByName(repoName);
-                if (repos != null && repos.Count > 0) {
+                if (repos != null) {
                     string path = repos[0].Path.ToString();
                     PathLabel.Text = path;
                     FileContent.Text = "";
 
-                    Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(path, this));
-                    Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(path));
+                    Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(this));
+                    Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(path, this));
                     Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(path, this));
 
                     // delete all running threads
                     AbortWasteThreads();
 
-
                     // start new repo watching thread
-                    Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
+                    Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo());
                     repoChangesThread.Start();
                     RunningThreadsCollection.Add(repoChangesThread);
                     ConsoleLogger.Success("MainWindow.RepoListBox_SelectionChanged", "WaitForChangesOnRepo thread started");
@@ -263,8 +264,11 @@ namespace VersionControlGitApp {
             }
         }
 
-        private void AddTrackedFiles(string path, List<string> untrackedFiles) {
+        private void AddTrackedFiles(List<string> untrackedFiles) {
             bool state = false;
+            string path = "";
+            Dispatcher.Invoke(() => path = PathLabel.Text.ToString());
+
             foreach (string file in untrackedFiles) {
                 string command = "add " + '"' + file.Trim() + '"';
                 state = Cmd.Run(command, path);
@@ -272,24 +276,34 @@ namespace VersionControlGitApp {
 
             if (state) {
 
-                Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(path, this));
+                Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(this));
+                AbortWasteThreads();
 
-                WaitForChangesOnRepo(path);
+                Thread t = new Thread(() => WaitForChangesOnRepo());
+                t.Start();
+                RunningThreadsCollection.Add(t);
+
                 ConsoleLogger.StatusBarUpdate("Waiting on changes in repository", this);
             }
 
         }
 
         // thread watching files in selected repo
-        private void WaitForChangesOnRepo(string path) {
+        private void WaitForChangesOnRepo() {
             while (true) {
                 Thread.Sleep(2500);
+
+                string path = "";
+                Dispatcher.Invoke(() => path = PathLabel.Text.ToString());
 
                 // If untracked files in currently watched repo -> track them
                 List<string> untrackedFiles = Cmd.UntrackedFiles(path);
                 if (untrackedFiles != null) {
-                    if (!abortThread)
-                        AddTrackedFiles(path, untrackedFiles);
+                    if (abortThread == false) {
+                        Task.Run(() => AddTrackedFiles(untrackedFiles));
+                        abortThread = true;
+                    }
+                       
                     break;
                 }
             }
@@ -315,16 +329,15 @@ namespace VersionControlGitApp {
             if (RunningThreadsCollection != null) {
                 ConsoleLogger.Info("MainWindow.AbortWasteThreads", "Count: " + RunningThreadsCollection.Count.ToString());
                 foreach (Thread t in RunningThreadsCollection) {
-                    if (t.ThreadState == System.Threading.ThreadState.Stopped) {
-                        try {
-                            abortThread = true;
-                            t.Interrupt();
-                            t.Abort();
-                        } catch {
+                    try {
+                        
+                        t.Interrupt();
+                        t.Abort();
+                    } catch {
 
-                        }
                     }
                 }
+                abortThread = false;
                 RunningThreadsCollection = new Collection<Thread>(); 
 
             }
