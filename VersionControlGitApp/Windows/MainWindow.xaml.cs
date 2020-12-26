@@ -78,21 +78,21 @@ namespace VersionControlGitApp {
             if (GitMethods.IsRepo(PathLabel.Text.ToString()))
                 Dispatcher.Invoke(() => GitMethods.Fetch(PathLabel.Text.ToString(), client));
             else
-                ConsoleLogger.UserPopup("Fetch repository", "You must select repository first");
+                ConsoleLogger.UserPopup("Fetch repository", Config.USERMSG_SELECTREPO);
         }
 
         private void PushLocalRepository(object sender, RoutedEventArgs e) {
             if (GitMethods.IsRepo(PathLabel.Text.ToString()))
                 Dispatcher.Invoke(() => GitMethods.Push(PathLabel.Text.ToString(), client));
             else
-                ConsoleLogger.UserPopup("Push repository", "You must select repository first");
+                ConsoleLogger.UserPopup("Push repository", Config.USERMSG_SELECTREPO);
         }
 
         private void PullExternalRepository(object sende, RoutedEventArgs e) {
             if (GitMethods.IsRepo(PathLabel.Text.ToString()))
                 Dispatcher.Invoke(() => GitMethods.Pull(PathLabel.Text.ToString(), client));
             else
-                ConsoleLogger.UserPopup("Pull repository", "You must select repository first");
+                ConsoleLogger.UserPopup("Pull repository", Config.USERMSG_SELECTREPO);
         }
 
         private void NewRepository(object sender, RoutedEventArgs e) {
@@ -100,7 +100,10 @@ namespace VersionControlGitApp {
         }
 
         private void CommitRepository(object sender, RoutedEventArgs e) {
-            Dispatcher.Invoke(() => MainWindowController.CommitRepositoryCommand(PathLabel.Text.ToString(), this));
+            if (GitMethods.IsRepo(PathLabel.Text.ToString()))
+                Dispatcher.Invoke(() => MainWindowController.CommitRepositoryCommand(PathLabel.Text.ToString(), this));
+            else
+                ConsoleLogger.UserPopup("Commit repository", Config.USERMSG_SELECTREPO);
         }
 
         private void RemoveRepository(object sender, RoutedEventArgs e) {
@@ -109,14 +112,10 @@ namespace VersionControlGitApp {
 
         private void DeleteRepository(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
-            if (repoPath != "" && GitMethods.IsRepo(repoPath) && Directory.Exists(repoPath)) {
-                
-                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you want to delete {GitMethods.GetNameFromPath(repoPath)} ?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
-                if (messageBoxResult == MessageBoxResult.Yes) {
-                    Directory.Delete(repoPath);
-                    ConsoleLogger.UserPopup("Delete Confirmation", $"{GitMethods.GetNameFromPath(repoPath)} deleted");
-                }
-            }
+            if (GitMethods.IsRepo(repoPath)) 
+                Dispatcher.Invoke(() => MainWindowController.DeleteRepositoryCommand(repoPath));
+            else
+                ConsoleLogger.UserPopup("Commit repository", Config.USERMSG_SELECTREPO);
         }
 
         private void CreateNewBranch(object sender, RoutedEventArgs e) {

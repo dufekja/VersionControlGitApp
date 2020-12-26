@@ -95,5 +95,20 @@ namespace VersionControlGitApp.Controllers {
 
         }
 
+        public static void DeleteRepositoryCommand(string repoPath) {
+            if (repoPath != "" && GitMethods.IsRepo(repoPath) && Directory.Exists(repoPath)) {
+
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
+                    $"Do you want to delete {GitMethods.GetNameFromPath(repoPath)} ?",
+                    "Delete Confirmation", 
+                    System.Windows.MessageBoxButton.YesNo);
+
+                if (messageBoxResult == MessageBoxResult.Yes) {
+                    Directory.Delete(repoPath);
+                    ConsoleLogger.UserPopup("Delete Confirmation", $"{GitMethods.GetNameFromPath(repoPath)} deleted");
+                }
+            }
+        }
+
     }
 }
