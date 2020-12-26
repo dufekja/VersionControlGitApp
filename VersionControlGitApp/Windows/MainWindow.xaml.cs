@@ -28,20 +28,17 @@ namespace VersionControlGitApp {
         public static User user;
         public static List<UserRepository> userRepos;
 
-        public Collection<Thread> RunningThreadsCollection { get; set; }
-        public static bool abortThread = false;
+        public static Thread repoChangesThread;
+        public static string newThreadState = "0";
 
         public MainWindow(string token) {
             InitializeComponent();
-
-            RunningThreadsCollection = new Collection<Thread>();
 
             repoDB = new LocalRepoDB();
             repoDB.InitDB();
 
             // auth user using token
-            Dispatcher.Invoke(() => ConsoleLogger.StatusBarUpdate("Authenticating user", this));
-            client = GithubController.Authenticate(client, token);
+            client = GithubController.Authenticate(client, token, this);
 
             user = client.User.Current().Result;
             MainWindowUI.InitUIElements(this, user, repoDB);
@@ -49,23 +46,24 @@ namespace VersionControlGitApp {
             // get path from pathlabel
             string path = PathLabel.Text.ToString();
 
-            // set branch
-            MainWindowUI.ChangeCommitButtonBranch(path, this);
-
             // if there is repo then watch for changes
             if (path != "") {
-                Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo());
+
+                // set commit button branch
+                MainWindowUI.ChangeCommitButtonBranch(path, this);
+
+                // start thread to watch selected repo
+                repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();              
-                RunningThreadsCollection.Add(repoChangesThread);
 
                 ConsoleLogger.StatusBarUpdate($"{GitMethods.GetNameFromPath(path)} is now watched for changes", this);
 
                 // load repo branches
                 Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(path, this));
+            }
 
-                // async listener for changes in selected file
-                Task.Run(() => AsyncListener());
-            }   
+            // async listener for changes in selected file
+            Task.Run(() => AllReposListener());
         }
 
         // add already created repository to sqlite db
@@ -219,43 +217,47 @@ namespace VersionControlGitApp {
         private void RepoListBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 
             // get new selected repo name
-            string repoName = "";
-            if ((ListBoxItem)RepoListBox.SelectedItem != null)
-                repoName = ((ListBoxItem)RepoListBox.SelectedItem).Content.ToString();
+            if ((ListBoxItem)RepoListBox.SelectedItem != null) {
+                string repoName = ((ListBoxItem)RepoListBox.SelectedItem).Content.ToString();
+                if (repoName != "") {
+                    // let running thread execute remaining code
+                    newThreadState = "2";
+                    Task.Run(() => ChangeThreadWithNewRepo(repoName));
+                }   
+            }
+        }
 
-            if (repoName != "") {
+        private void ChangeThreadWithNewRepo(string repoName) {
+            List<Repo> repos = repoDB.FindByName(repoName);
+            if (repos != null) {
+
+                // set new path label and clear all old repo data
+                string path = repos[0].Path.ToString();
+                Dispatcher.Invoke(() => PathLabel.Text = path);
+                Dispatcher.Invoke(() => FileContent.Text = "");
+                Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(this));
+                Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(path, this));
+                Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(path, this));
 
                 ConsoleLogger.StatusBarUpdate($"Changed to repository: {repoName}", this);
 
-                // PathLabel change
-                List<Repo> repos = repoDB.FindByName(repoName);
-                if (repos != null) {
-                    string path = repos[0].Path.ToString();
-                    PathLabel.Text = path;
-                    FileContent.Text = "";
+                // start new thread which will watch new repo
+                newThreadState = "0";
+                repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
+                repoChangesThread.Start();
 
-                    Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(this));
-                    Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(path, this));
-                    Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(path, this));
-
-                    // delete all running threads
-                    AbortWasteThreads();
-
-                    // start new repo watching thread
-                    Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo());
-                    repoChangesThread.Start();
-                    RunningThreadsCollection.Add(repoChangesThread);
-                    ConsoleLogger.Success("MainWindow.RepoListBox_SelectionChanged", "WaitForChangesOnRepo thread started");
-                }
+                ConsoleLogger.Success("MainWindow.RepoListBox_SelectionChanged", "WaitForChangesOnRepo thread started");
             }
         }
 
         // thread watching repositories
-        private void AsyncListener() {
+        private void AllReposListener() {
             while (true) {
                 Thread.Sleep(2500);
 
-                // delete removed folders from db
+                ConsoleLogger.Info("MainWindow.AllReposListener.State", newThreadState);
+
+                // refresh lisbox if there are deleted repositories
                 List<string> deletedRepos = repoDB.Refresh();
                 if (deletedRepos != null) {
                     Dispatcher.Invoke(() => RepoListBox.Items.Clear());
@@ -264,49 +266,33 @@ namespace VersionControlGitApp {
             }
         }
 
-        private void AddTrackedFiles(List<string> untrackedFiles) {
-            bool state = false;
-            string path = "";
-            Dispatcher.Invoke(() => path = PathLabel.Text.ToString());
+        private void AddTrackedFiles(List<string> untrackedFiles, string path) {
 
             foreach (string file in untrackedFiles) {
                 string command = "add " + '"' + file.Trim() + '"';
-                state = Cmd.Run(command, path);
+                Cmd.Run(command, path);
             }
 
-            if (state) {
+            Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(this));
 
-                Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(this));
-                AbortWasteThreads();
-
-                Thread t = new Thread(() => WaitForChangesOnRepo());
-                t.Start();
-                RunningThreadsCollection.Add(t);
-
-                ConsoleLogger.StatusBarUpdate("Waiting on changes in repository", this);
-            }
-
+            ConsoleLogger.StatusBarUpdate("Waiting on changes in repository", this);
         }
 
         // thread watching files in selected repo
-        private void WaitForChangesOnRepo() {
-            while (true) {
+        private void WaitForChangesOnRepo(string path) {
+            if (newThreadState == "0")
+                newThreadState = "1";
+
+            while (newThreadState == "1") {
                 Thread.Sleep(2500);
 
-                string path = "";
-                Dispatcher.Invoke(() => path = PathLabel.Text.ToString());
-
-                // If untracked files in currently watched repo -> track them
+                // If there are untracked files in currently watched repo -> track them
                 List<string> untrackedFiles = Cmd.UntrackedFiles(path);
                 if (untrackedFiles != null) {
-                    if (abortThread == false) {
-                        Task.Run(() => AddTrackedFiles(untrackedFiles));
-                        abortThread = true;
-                    }
-                       
-                    break;
+                    AddTrackedFiles(untrackedFiles, path);
                 }
             }
+
         }
 
         private void FilesToCommit_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -322,24 +308,6 @@ namespace VersionControlGitApp {
                     ConsoleLogger.UserPopup("Error", $"File: {fileName} don't exists");
                 }
                 
-            }
-        }
-
-        public void AbortWasteThreads() {
-            if (RunningThreadsCollection != null) {
-                ConsoleLogger.Info("MainWindow.AbortWasteThreads", "Count: " + RunningThreadsCollection.Count.ToString());
-                foreach (Thread t in RunningThreadsCollection) {
-                    try {
-                        
-                        t.Interrupt();
-                        t.Abort();
-                    } catch {
-
-                    }
-                }
-                abortThread = false;
-                RunningThreadsCollection = new Collection<Thread>(); 
-
             }
         }
 

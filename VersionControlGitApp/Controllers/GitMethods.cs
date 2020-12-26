@@ -176,11 +176,12 @@ namespace VersionControlGitApp.Controllers {
 
         public static string GetCurrentBranch(string path) {
             List<string> lines = GetBranches(path);
-            foreach (string line in lines) {
-                if (line.Contains("*")) {
-                    return line.Replace("*", "").Trim();
+            if (lines != null)
+                foreach (string line in lines) {
+                    if (line.Contains("*")) {
+                        return line.Replace("*", "").Trim();
+                    }
                 }
-            }
             return null;
         }
 

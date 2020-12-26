@@ -81,6 +81,9 @@ namespace VersionControlGitApp.Controllers {
             List<string> modifiedFiles = RunAndRead("status --porcelain", path);
             List<string> output = new List<string>();
 
+            if (modifiedFiles == null)
+                return null;
+
             foreach (string line in modifiedFiles) {
                 output.Add(line.Substring(3));
             }

@@ -15,9 +15,18 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="client">Github client object</param>
         /// <param name="token">User private token</param>
         /// <returns>Return authenticated Github client object</returns>
-        public static GitHubClient Authenticate(GitHubClient client, string token) {
-            var tokenAuth = new Credentials(token, AuthenticationType.Oauth);
-            client.Credentials = tokenAuth;
+        public static GitHubClient Authenticate(GitHubClient client, string token, MainWindow win) {
+
+            win.Dispatcher.Invoke(() => ConsoleLogger.StatusBarUpdate("Authenticating user", win));
+
+            try {
+                var tokenAuth = new Credentials(token, AuthenticationType.Oauth);
+                client.Credentials = tokenAuth;
+                win.Dispatcher.Invoke(() => ConsoleLogger.StatusBarUpdate("User successfully authenticated", win));
+            } catch {
+                win.Dispatcher.Invoke(() => ConsoleLogger.StatusBarUpdate("There was an error with authenticating", win));
+            }
+
             return client;
         }
 
