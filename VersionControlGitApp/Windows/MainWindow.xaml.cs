@@ -27,12 +27,12 @@ namespace VersionControlGitApp {
         public static User user;
         public static List<UserRepository> userRepos;
 
-        public List<Thread> RunningThreadsList { get; set; }
+        public Collection<Thread> RunningThreadsCollection { get; set; }
 
         public MainWindow(string token) {
             InitializeComponent();
 
-            RunningThreadsList = new List<Thread>();
+            RunningThreadsCollection = new Collection<Thread>();
 
             repoDB = new LocalRepoDB();
             repoDB.InitDB();
@@ -53,7 +53,7 @@ namespace VersionControlGitApp {
                 ConsoleLogger.Success("MainWindow", $"Iniciace sledovacího vlákna pro {GitMethods.GetNameFromPath(path)}");
                 Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();              
-                RunningThreadsList.Add(repoChangesThread);
+                RunningThreadsCollection.Add(repoChangesThread);
 
                 // load repo branches
                 Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(path, this));
@@ -228,22 +228,16 @@ namespace VersionControlGitApp {
                     string path = repos[0].Path.ToString();
                     PathLabel.Text = path;
 
-                    // watch selected repo for changes
-                    if (RunningThreadsList.Count > 0) {
+                    if (RunningThreadsCollection.Count > 2 || RunningThreadsCollection != null) {
 
                         // delete all running threads
-                        ConsoleLogger.Warning("MainWindow", "Mazání všech vláken");
-                        try {
-                            foreach (Thread t in RunningThreadsList) {
-                                t.Abort();
-                            }
-                        } catch {}
+                        AbortWasteThreads();
 
                         // start new repo watching thread
                         Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                         repoChangesThread.Start();
-                        ConsoleLogger.Success("MainWindow", "Start nového vlákna pro sledování repozitáře");
-                        RunningThreadsList.Add(repoChangesThread);
+                        RunningThreadsCollection.Add(repoChangesThread);
+                        ConsoleLogger.Success("MainWindow.RepoListBox_SelectionChanged", "WaitForChangesOnRepo thread started");
                     }
                 }
             }
@@ -269,33 +263,22 @@ namespace VersionControlGitApp {
             foreach (string file in untrackedFiles) {
                 string command = "add " + '"' + file.Trim() + '"';
                 state = Cmd.Run(command, path);
-                ConsoleLogger.Success("MainWindow", $"File: {file} now tracked");
+                ConsoleLogger.Success("MainWindow.AddTrackedFiles", $"File: {file} now tracked");
             }
 
             if (state == true) {
-                if (RunningThreadsList.Count > 2) {
-                    try {
-                        foreach (Thread t in RunningThreadsList) {
-                            t.Interrupt();
-                            t.Abort();
-                            RunningThreadsList.Clear();
-                        }
-                        ConsoleLogger.Success("MainWindow", "Abort všech vláken úspěšný");
-                    } catch {
-                        ConsoleLogger.Error("MainWindow", "Abort všech vláken selhal");
-                    } 
-                }
+
+                AbortWasteThreads();
 
                 Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(path, this));
 
                 Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();
-                ConsoleLogger.Success("MainWindow", "Modified files watcher thread start");
+                RunningThreadsCollection.Add(repoChangesThread);
 
-
-                RunningThreadsList.Add(repoChangesThread);
-                ConsoleLogger.Info("MainWindow", $"Running threads count: {RunningThreadsList.Count}");  
+                ConsoleLogger.Success("MainWindow.AddTrackedFiles", "WaitForChangesOnRepo thread started");
             }
+
         }
 
         // thread watching files in selected repo
@@ -306,10 +289,11 @@ namespace VersionControlGitApp {
                 // If untracked files in currently watched repo -> track them
                 List<string> untrackedFiles = Cmd.UntrackedFiles(path);
                 if (untrackedFiles != null) {
-                    Task.Run(() => AddTrackedFiles(path, untrackedFiles));
+                    Thread addTrackedFilesThread = new Thread(() => AddTrackedFiles(path, untrackedFiles));
+                    addTrackedFilesThread.Start();
+                    RunningThreadsCollection.Add(addTrackedFilesThread);
                     break;
                 }
-
             }
         }
 
@@ -326,6 +310,14 @@ namespace VersionControlGitApp {
                     ConsoleLogger.Popup("MainWindow", $"File: {fileName} no exists");
                 }
                 
+            }
+        }
+
+        public void AbortWasteThreads() {
+            if (RunningThreadsCollection.Count > 2) {
+                foreach (Thread t in RunningThreadsCollection) {
+                    ConsoleLogger.Info("MainWindow.AbortWasteThreads", t.ThreadState.ToString());
+                }
             }
         }
 
