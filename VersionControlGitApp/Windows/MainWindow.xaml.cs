@@ -50,10 +50,11 @@ namespace VersionControlGitApp {
 
             // if there is repo then watch for changes
             if (path != "") {
-                ConsoleLogger.Success("MainWindow", $"Iniciace sledovacího vlákna pro {GitMethods.GetNameFromPath(path)}");
                 Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();              
                 RunningThreadsCollection.Add(repoChangesThread);
+
+                ConsoleLogger.Success("MainWindow", $"Watching thread started for {GitMethods.GetNameFromPath(path)}");
 
                 // load repo branches
                 Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(path, this));
@@ -76,16 +77,22 @@ namespace VersionControlGitApp {
         private void FetchExternalRepository(object sender, RoutedEventArgs e) {
             if (GitMethods.IsRepo(PathLabel.Text.ToString()))
                 Dispatcher.Invoke(() => GitMethods.Fetch(PathLabel.Text.ToString(), client));
+            else
+                ConsoleLogger.UserPopup("Fetch repository", "You must select repository first");
         }
 
         private void PushLocalRepository(object sender, RoutedEventArgs e) {
             if (GitMethods.IsRepo(PathLabel.Text.ToString()))
-                Dispatcher.Invoke(() => GitMethods.Push(PathLabel.Text.ToString(), client));      
+                Dispatcher.Invoke(() => GitMethods.Push(PathLabel.Text.ToString(), client));
+            else
+                ConsoleLogger.UserPopup("Push repository", "You must select repository first");
         }
 
         private void PullExternalRepository(object sende, RoutedEventArgs e) {
             if (GitMethods.IsRepo(PathLabel.Text.ToString()))
                 Dispatcher.Invoke(() => GitMethods.Pull(PathLabel.Text.ToString(), client));
+            else
+                ConsoleLogger.UserPopup("Pull repository", "You must select repository first");
         }
 
         private void NewRepository(object sender, RoutedEventArgs e) {
@@ -93,13 +100,11 @@ namespace VersionControlGitApp {
         }
 
         private void CommitRepository(object sender, RoutedEventArgs e) {
-            string repoPath = PathLabel.Text.ToString();
-            Dispatcher.Invoke(() => MainWindowController.CommitRepositoryCommand(repoPath, this));
+            Dispatcher.Invoke(() => MainWindowController.CommitRepositoryCommand(PathLabel.Text.ToString(), this));
         }
 
         private void RemoveRepository(object sender, RoutedEventArgs e) {
-            string repoPath = PathLabel.Text.ToString();
-            MainWindowController.RemoveRepositoryCommand(repoPath, repoDB, this);
+            MainWindowController.RemoveRepositoryCommand(PathLabel.Text.ToString(), repoDB, this);
         }
 
         private void DeleteRepository(object sender, RoutedEventArgs e) {
@@ -289,9 +294,7 @@ namespace VersionControlGitApp {
                 // If untracked files in currently watched repo -> track them
                 List<string> untrackedFiles = Cmd.UntrackedFiles(path);
                 if (untrackedFiles != null) {
-                    Thread addTrackedFilesThread = new Thread(() => AddTrackedFiles(path, untrackedFiles));
-                    addTrackedFilesThread.Start();
-                    RunningThreadsCollection.Add(addTrackedFilesThread);
+                    Task.Run(() => AddTrackedFiles(path, untrackedFiles));
                     break;
                 }
             }
@@ -314,10 +317,19 @@ namespace VersionControlGitApp {
         }
 
         public void AbortWasteThreads() {
-            if (RunningThreadsCollection.Count > 2) {
+            if (RunningThreadsCollection != null) {
                 foreach (Thread t in RunningThreadsCollection) {
-                    ConsoleLogger.Info("MainWindow.AbortWasteThreads", t.ThreadState.ToString());
+                    if (t.ThreadState == ThreadState.Stopped) {
+                        try {
+                            t.Abort();
+                        } catch {
+
+                        }
+                    }
                 }
+
+                ConsoleLogger.Info("MainWindow.AbortWasteThreads", "Count: " + RunningThreadsCollection.Count.ToString());
+
             }
         }
 
