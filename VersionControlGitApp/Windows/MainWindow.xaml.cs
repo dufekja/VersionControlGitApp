@@ -17,6 +17,7 @@ using VersionControlGitApp.Windows;
 
 using MenuItem = System.Windows.Controls.MenuItem;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace VersionControlGitApp {
     public partial class MainWindow : Window {
@@ -38,7 +39,9 @@ namespace VersionControlGitApp {
             repoDB.InitDB();
 
             // auth user using token
+            Dispatcher.Invoke(() => ConsoleLogger.StatusBarUpdate("Authenticating user", this));
             client = GithubController.Authenticate(client, token);
+
             user = client.User.Current().Result;
             MainWindowUI.InitUIElements(this, user, repoDB);
 
@@ -54,7 +57,7 @@ namespace VersionControlGitApp {
                 repoChangesThread.Start();              
                 RunningThreadsCollection.Add(repoChangesThread);
 
-                ConsoleLogger.Success("MainWindow", $"Watching thread started for {GitMethods.GetNameFromPath(path)}");
+                Dispatcher.Invoke(() => ConsoleLogger.StatusBarUpdate($"{GitMethods.GetNameFromPath(path)} is now watched for changes", this));
 
                 // load repo branches
                 Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(path, this));
@@ -220,23 +223,21 @@ namespace VersionControlGitApp {
                 repoName = ((ListBoxItem)RepoListBox.SelectedItem).Content.ToString();
 
             if (repoName != "") {
+
                 // PathLabel change
                 List<Repo> repos = repoDB.FindByName(repoName);
                 if (repos != null && repos.Count > 0) {
                     string path = repos[0].Path.ToString();
                     PathLabel.Text = path;
 
-                    if (RunningThreadsCollection.Count > 2 || RunningThreadsCollection != null) {
+                    // delete all running threads
+                    AbortWasteThreads();
 
-                        // delete all running threads
-                        AbortWasteThreads();
-
-                        // start new repo watching thread
-                        Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
-                        repoChangesThread.Start();
-                        RunningThreadsCollection.Add(repoChangesThread);
-                        ConsoleLogger.Success("MainWindow.RepoListBox_SelectionChanged", "WaitForChangesOnRepo thread started");
-                    }
+                    // start new repo watching thread
+                    Thread repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
+                    repoChangesThread.Start();
+                    RunningThreadsCollection.Add(repoChangesThread);
+                    ConsoleLogger.Success("MainWindow.RepoListBox_SelectionChanged", "WaitForChangesOnRepo thread started");
                 }
             }
         }
@@ -244,7 +245,7 @@ namespace VersionControlGitApp {
         // thread watching repositories
         private void AsyncListener() {
             while (true) {
-                Thread.Sleep(1000);
+                Thread.Sleep(2500);
 
                 // delete removed folders from db
                 List<string> deletedRepos = repoDB.Refresh();
@@ -261,7 +262,6 @@ namespace VersionControlGitApp {
             foreach (string file in untrackedFiles) {
                 string command = "add " + '"' + file.Trim() + '"';
                 state = Cmd.Run(command, path);
-                ConsoleLogger.Success("MainWindow.AddTrackedFiles", $"File: {file} now tracked");
             }
 
             if (state == true) {
@@ -282,7 +282,7 @@ namespace VersionControlGitApp {
         // thread watching files in selected repo
         private void WaitForChangesOnRepo(string path) {
             while (true) {
-                Thread.Sleep(1000);
+                Thread.Sleep(2500);
 
                 // If untracked files in currently watched repo -> track them
                 List<string> untrackedFiles = Cmd.UntrackedFiles(path);
@@ -303,7 +303,7 @@ namespace VersionControlGitApp {
                     string text = GitMethods.GetAllFileChanges(fileName, path);
                     FileContent.Text = text;
                 } else {
-                    ConsoleLogger.Popup("MainWindow", $"File: {fileName} no exists");
+                    ConsoleLogger.UserPopup("Error", $"File: {fileName} don't exists");
                 }
                 
             }
@@ -311,8 +311,9 @@ namespace VersionControlGitApp {
 
         public void AbortWasteThreads() {
             if (RunningThreadsCollection != null) {
+                ConsoleLogger.Info("MainWindow.AbortWasteThreads", "Count: " + RunningThreadsCollection.Count.ToString());
                 foreach (Thread t in RunningThreadsCollection) {
-                    if (t.ThreadState == ThreadState.Stopped) {
+                    if (t.ThreadState == System.Threading.ThreadState.Stopped) {
                         try {
                             t.Abort();
                         } catch {
@@ -320,9 +321,7 @@ namespace VersionControlGitApp {
                         }
                     }
                 }
-                RunningThreadsCollection = new Collection<Thread>();
-
-                ConsoleLogger.Info("MainWindow.AbortWasteThreads", "Count: " + RunningThreadsCollection.Count.ToString());
+                RunningThreadsCollection = new Collection<Thread>(); 
 
             }
         }

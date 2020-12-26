@@ -15,8 +15,7 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="client">Github client object</param>
         /// <param name="token">User private token</param>
         /// <returns>Return authenticated Github client object</returns>
-        public static GitHubClient Authenticate(GitHubClient client, string token, MainWindow win) {
-            ConsoleLogger.StatusBarUpdate("Authenticating user", win);
+        public static GitHubClient Authenticate(GitHubClient client, string token) {
             var tokenAuth = new Credentials(token, AuthenticationType.Oauth);
             client.Credentials = tokenAuth;
             return client;
@@ -27,8 +26,7 @@ namespace VersionControlGitApp.Controllers {
         /// </summary>
         /// <param name="client">Authenticated Github client object</param>
         /// <returns>Return List of UserRepository objects</returns>
-        public static List<UserRepository> GetAllRepos(GitHubClient client, MainWindow win) {
-            ConsoleLogger.StatusBarUpdate("Loading repositories", win);
+        public static List<UserRepository> GetAllRepos(GitHubClient client) {
             List<UserRepository> userRepos = new List<UserRepository>();
             var repoList = client.Repository.GetAllForCurrent().Result;
 
