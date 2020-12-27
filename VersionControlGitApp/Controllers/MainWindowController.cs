@@ -11,10 +11,15 @@ using VersionControlGitApp.Database;
 using VersionControlGitApp.Logging;
 using VersionControlGitApp.UIelements;
 using VersionControlGitApp.Windows;
+using static VersionControlGitApp.Config;
 
 namespace VersionControlGitApp.Controllers {
     public static class MainWindowController {
 
+        /// <summary>
+        /// Add already created repository based on .git folder inside
+        /// </summary>
+        /// <param name="repoDB">Instance of repository database</param>
         public static void AddLocalRepositoryCommand(LocalRepoDB repoDB) {
             using FolderBrowserDialog fbd = new FolderBrowserDialog();
             DialogResult result = fbd.ShowDialog();
@@ -30,6 +35,10 @@ namespace VersionControlGitApp.Controllers {
             }
         }
 
+        /// <summary>
+        /// Initialize new repository in folder which is not already repository
+        /// </summary>
+        /// <param name="repoDB">Instance of repository database</param>
         public static void NewRepositoryCommand(LocalRepoDB repoDB) {
             using FolderBrowserDialog fbd = new FolderBrowserDialog();
             DialogResult result = fbd.ShowDialog();
@@ -43,6 +52,11 @@ namespace VersionControlGitApp.Controllers {
             }
         }
 
+        /// <summary>
+        /// Get commit summary then commit changes
+        /// </summary>
+        /// <param name="repoPath">Path to repository</param>
+        /// <param name="win">Mainwindow window object</param>
         public static void CommitRepositoryCommand(string repoPath, MainWindow win) {
             if (repoPath != "" && GitMethods.IsRepo(repoPath)) {
 
@@ -51,11 +65,16 @@ namespace VersionControlGitApp.Controllers {
 
                 GitMethods.Commit(repoPath, summary, desc, win);
 
-                MainWindowUI.ClearCommitAndContext(win);
-                
+                MainWindowUI.ClearCommitAndContext(win); 
             }
         }
 
+        /// <summary>
+        /// Remove repository from repository listbox
+        /// </summary>
+        /// <param name="repoPath">Path to repository</param>
+        /// <param name="repoDB">Instance of repository database</param>
+        /// <param name="win">Mainwindow window object</param>
         public static void RemoveRepositoryCommand(string repoPath, LocalRepoDB repoDB, MainWindow win) {
             if (repoPath != "" && GitMethods.IsRepo(repoPath)) {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you want to remove {GitMethods.GetNameFromPath(repoPath)} from list?", "Remove Confirmation", System.Windows.MessageBoxButton.YesNo);
@@ -70,38 +89,16 @@ namespace VersionControlGitApp.Controllers {
             }
         }
 
-        public static void ChangeBranchCommand(string branch, string path) {
-            string currentBranch = GitMethods.GetCurrentBranch(path);
-            bool state = false;
-            if (branch != "" || path != "") {
-                state = Cmd.Run($"checkout {branch}", path);
-            }
-
-            if (state && currentBranch != branch)
-                ConsoleLogger.UserPopup("Branch swap", $"Swapped to branch '{branch}'");
-            else
-                ConsoleLogger.UserPopup("Branch swap", $"Can't swap to same branch");
-        }
-
-        public static void MergeCurrentBranchCommand(string branch, string currentBranch, string path) {
-            bool state = false;
-
-            if (Cmd.Run($"checkout {branch}", path))
-                state = Cmd.Run($"merge {currentBranch}", path);
-
-            if (state)
-                ConsoleLogger.UserPopup("Branch merge", $"{currentBranch} merged to {branch}");
-            else
-                ConsoleLogger.UserPopup("Branch merge", $"Can't merge to {branch}");
-
-        }
-
+        /// <summary>
+        /// Remove repository from listbox and move it into device trash bin
+        /// </summary>
+        /// <param name="repoPath">Repository path</param>
         public static void DeleteRepositoryCommand(string repoPath) {
             if (repoPath != "" && GitMethods.IsRepo(repoPath) && Directory.Exists(repoPath)) {
 
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
                     $"Do you want to delete {GitMethods.GetNameFromPath(repoPath)} ?",
-                    "Delete Confirmation", 
+                    "Delete Confirmation",
                     System.Windows.MessageBoxButton.YesNo);
 
                 if (messageBoxResult == MessageBoxResult.Yes) {
@@ -111,6 +108,31 @@ namespace VersionControlGitApp.Controllers {
             }
         }
 
+        /// <summary>
+        /// Change to selected branch
+        /// </summary>
+        /// <param name="branch">Name of selected branch</param>
+        /// <param name="repoPath">Repository path</param>
+        /// <param name="win">MainWindow window object</param>
+        public static void ChangeBranchCommand(string branch, string repoPath, MainWindow win) {
+            string currentBranch = GitMethods.GetCurrentBranch(repoPath);
+
+            ConsoleState state = ConsoleState.Error; 
+            state = Cmd.Run($"checkout {branch}", repoPath);
+            win.Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, win));
+            win.Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath, win));
+            
+            if (state == ConsoleState.Success && currentBranch != branch)
+                ConsoleLogger.UserPopup("Branch swap", $"Swapped to branch '{branch}'");
+            else
+                ConsoleLogger.UserPopup("Branch swap", $"Can't swap to same branch");
+        }
+
+        /// <summary>
+        /// Open window to create new branch
+        /// </summary>
+        /// <param name="repoPath">Repository path</param>
+        /// <param name="win">MainWindow window object</param>
         public static void CreateNewBranchCommand(string repoPath, MainWindow win) {
             List<string> lines = GitMethods.GetBranches(repoPath);
 
@@ -119,6 +141,48 @@ namespace VersionControlGitApp.Controllers {
             }
 
         }
+
+        public static void RenameCurrentBranchCommand(string repoPath, MainWindow win) {
+            string currentBranch = GitMethods.GetCurrentBranch(repoPath);
+            List<string> lines = GitMethods.GetBranches(repoPath);
+
+            try {
+                if (lines[0] != null) {
+                    if (currentBranch != "master") {
+                        new BranchEditWindow(lines, repoPath, "rename", win).Show();
+                    } else
+                        ConsoleLogger.UserPopup("Branch rename", "Can't rename branch master");
+                }
+            } catch { }
+
+        }
+
+        public static void MergeCurrentBranchCommand(string repoPath, string branch, MainWindow win) {
+            List<string> lines = GitMethods.GetBranches(repoPath);
+            string currentBranch = GitMethods.GetCurrentBranch(repoPath);
+
+            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
+                $"Do you want to merge {currentBranch} into {branch} ?",
+                "Merge confirmation",
+                MessageBoxButton.YesNo);
+
+            if (messageBoxResult == MessageBoxResult.Yes) {
+                ConsoleState state = ConsoleState.Error;
+
+                if (Cmd.Run($"checkout {branch}", repoPath) == ConsoleState.Success)
+                    state = Cmd.Run($"merge {currentBranch}", repoPath);
+
+                if (state == ConsoleState.Success) {
+                    ConsoleLogger.UserPopup("Branch merge", $"{currentBranch} merged to {branch}");
+                    win.Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, win));
+                    win.Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath, win));
+                } else {
+                    ConsoleLogger.UserPopup("Branch merge", $"Can't merge to {branch}");
+                }   
+            }
+
+        }
+
 
     }
 }

@@ -15,9 +15,8 @@ using System.IO;
 using System.Windows.Input;
 using VersionControlGitApp.Windows;
 
+using static VersionControlGitApp.Config;
 using MenuItem = System.Windows.Controls.MenuItem;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace VersionControlGitApp {
     public partial class MainWindow : Window {
@@ -30,12 +29,8 @@ namespace VersionControlGitApp {
 
         public static Thread repoChangesThread;
 
-        public static ThreadState newThreadState = ThreadState.New;
-        public enum ThreadState {
-            New,
-            Repeating,
-            Aborting
-        }
+        public static RepoChangesThreadState newRepoChangesThreadState = RepoChangesThreadState.New;
+        
 
         public MainWindow(string token) {
             InitializeComponent();
@@ -86,21 +81,21 @@ namespace VersionControlGitApp {
             if (GitMethods.IsRepo(PathLabel.Text.ToString()))
                 Dispatcher.Invoke(() => GitMethods.Fetch(PathLabel.Text.ToString(), client));
             else
-                ConsoleLogger.UserPopup("Fetch repository", Config.USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup("Fetch repository", USERMSG_SELECTREPO);
         }
 
         private void PushLocalRepository(object sender, RoutedEventArgs e) {
             if (GitMethods.IsRepo(PathLabel.Text.ToString()))
                 Dispatcher.Invoke(() => GitMethods.Push(PathLabel.Text.ToString(), client));
             else
-                ConsoleLogger.UserPopup("Push repository", Config.USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup("Push repository", USERMSG_SELECTREPO);
         }
 
         private void PullExternalRepository(object sende, RoutedEventArgs e) {
             if (GitMethods.IsRepo(PathLabel.Text.ToString()))
                 Dispatcher.Invoke(() => GitMethods.Pull(PathLabel.Text.ToString(), client));
             else
-                ConsoleLogger.UserPopup("Pull repository", Config.USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup("Pull repository", USERMSG_SELECTREPO);
         }
 
         private void NewRepository(object sender, RoutedEventArgs e) {
@@ -111,7 +106,7 @@ namespace VersionControlGitApp {
             if (GitMethods.IsRepo(PathLabel.Text.ToString()))
                 Dispatcher.Invoke(() => MainWindowController.CommitRepositoryCommand(PathLabel.Text.ToString(), this));
             else
-                ConsoleLogger.UserPopup("Commit repository", Config.USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup("Commit repository", USERMSG_SELECTREPO);
         }
 
         private void RemoveRepository(object sender, RoutedEventArgs e) {
@@ -123,7 +118,7 @@ namespace VersionControlGitApp {
             if (GitMethods.IsRepo(repoPath)) 
                 Dispatcher.Invoke(() => MainWindowController.DeleteRepositoryCommand(repoPath));
             else
-                ConsoleLogger.UserPopup("Commit repository", Config.USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup("Commit repository", USERMSG_SELECTREPO);
         }
 
         private void CreateNewBranch(object sender, RoutedEventArgs e) {
@@ -131,61 +126,44 @@ namespace VersionControlGitApp {
             if (GitMethods.IsRepo(repoPath)) {
                 Dispatcher.Invoke(() => MainWindowController.CreateNewBranchCommand(repoPath, this));
             } else {
-                ConsoleLogger.UserPopup("Branch", Config.USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup("Branch", USERMSG_SELECTREPO);
             }
         }
 
         private void ChangeBranch(object sender, RoutedEventArgs e) {
-            if (PathLabel.Text.ToString() != "") {
-                MenuItem item = sender as MenuItem;
-                string name = item.Header.ToString();
-                string repoPath = PathLabel.Text.ToString();
 
-                MainWindowController.ChangeBranchCommand(name, repoPath);
-                Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, this));
-                Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath, this));
+            // get repopath and clicked menuitem branch name
+            string repoPath = PathLabel.Text.ToString();
+            MenuItem item = sender as MenuItem;
+            string branch = item.Header.ToString();
+
+            if (repoPath != "" && branch != "") {
+                MainWindowController.ChangeBranchCommand(repoPath, branch, this);
             } else {
-                ConsoleLogger.UserPopup("Branch", Config.USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup("Branch", USERMSG_SELECTREPO);
             }
         }
 
         private void RenameCurrentBranch(object sender, RoutedEventArgs e) {
-            if (PathLabel.Text.ToString() != "") {
-                string repoPath = PathLabel.Text.ToString();
-                string currentBranch = GitMethods.GetCurrentBranch(repoPath);
-
-                List<string> lines = GitMethods.GetBranches(PathLabel.Text.ToString());
-
-                try {
-                    if (lines[0] != null) {
-                        if (currentBranch != "master") {
-                            new BranchEditWindow(lines, PathLabel.Text.ToString(), "rename", this).Show();
-                        } else
-                            ConsoleLogger.UserPopup("Branch rename", "Can't rename branch master");
-                    }
-                } catch { }
+            string repoPath = PathLabel.Text.ToString();
+            if (repoPath != "") {
+                MainWindowController.RenameCurrentBranchCommand(repoPath, this);
             } else {
-                ConsoleLogger.UserPopup("Branch", Config.USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup("Branch", USERMSG_SELECTREPO);
             }
         }
 
         private void MergeCurrentBranch(object sender, RoutedEventArgs e) {
+            string repoPath = PathLabel.Text.ToString();
+            MenuItem item = sender as MenuItem;
+            string branch = item.Header.ToString();
 
-            if (PathLabel.Text.ToString() != "") {
-                string repoPath = PathLabel.Text.ToString();
-                string currentBranch = GitMethods.GetCurrentBranch(repoPath);
-                List<string> lines = GitMethods.GetBranches(PathLabel.Text.ToString());
-                MenuItem item = sender as MenuItem;
-                string branch = item.Header.ToString();
+            if (repoPath != "" && branch != "") {
 
-                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you want to merge {currentBranch} to {branch} ?", "Merge confirmation", MessageBoxButton.YesNo);
-                if (messageBoxResult == MessageBoxResult.Yes) {
-                    MainWindowController.MergeCurrentBranchCommand(branch, currentBranch, repoPath);
-                    Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, this));
-                    Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath, this));
-                }
+                MainWindowController.MergeCurrentBranchCommand(repoPath, branch, this);
+                
             } else {
-                ConsoleLogger.UserPopup("Branch", Config.USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup("Branch", USERMSG_SELECTREPO);
             }
         }
 
@@ -199,8 +177,9 @@ namespace VersionControlGitApp {
                     MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you want to delete {currentBranch} ?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
                     if (messageBoxResult == MessageBoxResult.Yes && currentBranch != "master") {
                         Cmd.Run("checkout master", repoPath);
-                        bool success = Cmd.Run($"branch -D {currentBranch}", repoPath);
-                        if (success)
+
+                        ConsoleState state = Cmd.Run($"branch -D {currentBranch}", repoPath);
+                        if (state == ConsoleState.Success)
                             deleted = true;
                     }
 
@@ -215,7 +194,7 @@ namespace VersionControlGitApp {
                 Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, this));
                 Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath, this));
             } else {
-                ConsoleLogger.UserPopup("Branch", Config.USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup("Branch", USERMSG_SELECTREPO);
             }
         }
 
@@ -227,7 +206,7 @@ namespace VersionControlGitApp {
                 string repoName = ((ListBoxItem)RepoListBox.SelectedItem).Content.ToString();
                 if (repoName != "") {
                     // let running thread execute remaining code
-                    newThreadState = ThreadState.Aborting;
+                    newRepoChangesThreadState = RepoChangesThreadState.Aborting;
                     Task.Run(() => ChangeThreadWithNewRepo(repoName));
                 }   
             }
@@ -248,7 +227,7 @@ namespace VersionControlGitApp {
                 ConsoleLogger.StatusBarUpdate($"Changed to repository: {repoName}", this);
 
                 // start new thread which will watch new repo
-                newThreadState = ThreadState.New;
+                newRepoChangesThreadState = RepoChangesThreadState.New;
                 repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
                 repoChangesThread.Start();
 
@@ -260,8 +239,6 @@ namespace VersionControlGitApp {
         private void AllReposListener() {
             while (true) {
                 Thread.Sleep(2500);
-
-                ConsoleLogger.Info("MainWindow.AllReposListener.State", newThreadState.ToString());
 
                 // refresh lisbox if there are deleted repositories
                 List<string> deletedRepos = repoDB.Refresh();
@@ -286,10 +263,13 @@ namespace VersionControlGitApp {
 
         // thread watching files in selected repo
         private void WaitForChangesOnRepo(string path) {
-            if (newThreadState == ThreadState.New)
-                newThreadState = ThreadState.Repeating;
+            ConsoleLogger.Info("MainWindow.WaitForChangesOnRepo", "Called with state: " + newRepoChangesThreadState.ToString());
 
-            while (newThreadState == ThreadState.Repeating) {
+            if (newRepoChangesThreadState == RepoChangesThreadState.New)
+                newRepoChangesThreadState = RepoChangesThreadState.Repeating;
+
+            while (newRepoChangesThreadState == RepoChangesThreadState.Repeating) {
+                ConsoleLogger.Info("MainWindow.WaitForChangesOnRepo", "Running state: " + newRepoChangesThreadState.ToString());
                 Thread.Sleep(2500);
 
                 // If there are untracked files in currently watched repo -> track them
@@ -302,7 +282,6 @@ namespace VersionControlGitApp {
         }
 
         private void FilesToCommit_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-
             if (FilesToCommit.SelectedItem != null) {
                 string fileName = ((ComboBoxItem)FilesToCommit.SelectedItem).Content.ToString();
                 string path = PathLabel.Text.ToString();

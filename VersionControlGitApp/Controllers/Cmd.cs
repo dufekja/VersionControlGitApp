@@ -8,13 +8,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using VersionControlGitApp.Logging;
+using static VersionControlGitApp.Config;
 
 namespace VersionControlGitApp.Controllers {
     public static class Cmd {
 
-        public static bool Run(string command, string dir) {
-
-            bool state = true;
+        public static ConsoleState Run(string command, string dir) {
 
             if (command != "")
                 try {
@@ -29,9 +28,10 @@ namespace VersionControlGitApp.Controllers {
 
                     process.WaitForExit();
                 } catch {
-                    state = false;
+                    return ConsoleState.Error;
                 }
-            return state;
+
+            return ConsoleState.Success;
         }
 
         public static List<string> RunAndRead(string command, string dir) {
@@ -119,12 +119,12 @@ namespace VersionControlGitApp.Controllers {
 
         public static void AddFile(List<string> files, string path) {
             foreach (string file in files) {
-                Cmd.Run($"add {file}", path);
+                Run($"add {file}", path);
             }
         }
 
         public static List<string> RemovedFiles(string path) {
-            List<string> files = Cmd.RunAndRead("status --porcelain", path);
+            List<string> files = RunAndRead("status --porcelain", path);
             List<string> output = new List<string>();
             bool wasModified = false;
 
@@ -162,8 +162,8 @@ namespace VersionControlGitApp.Controllers {
                 User user = client.User.Current().Result;
                 string externalRepoPath = $"{Config.GetGithubPath()}{user.Login}/{name}.git";
 
-                Cmd.Run($"remote add origin {externalRepoPath}", path);
-                Cmd.Run($"push -u origin master", path);
+                Run($"remote add origin {externalRepoPath}", path);
+                Run($"push -u origin master", path);
 
                 ConsoleLogger.UserPopup("Repository push success", $"Data pushed from {path} to {externalRepoPath}");
             } else {
@@ -180,7 +180,7 @@ namespace VersionControlGitApp.Controllers {
                 User user = client.User.Current().Result;
                 string externalRepoPath = $"{Config.GetGithubPath()}{user.Login}/{name}.git";
 
-                Cmd.Run("pull", path);
+                Run("pull", path);
                 ConsoleLogger.UserPopup("Repository pull", $"Pulled from {externalRepoPath} to {path}");
 
             } else {

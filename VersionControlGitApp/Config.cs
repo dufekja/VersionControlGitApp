@@ -7,6 +7,17 @@ using System.Threading.Tasks;
 namespace VersionControlGitApp {
     public static class Config {
 
+        public enum RepoChangesThreadState {
+            New,
+            Repeating,
+            Aborting
+        }
+
+        public enum ConsoleState {
+            Success,
+            Error
+        }
+
         private const string GITHUB_PATH = "https://github.com/";
         public const string GITEXE = "git.exe";
 

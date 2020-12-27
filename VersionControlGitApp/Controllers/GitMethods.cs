@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using VersionControlGitApp.Database;
 using VersionControlGitApp.Logging;
+using static VersionControlGitApp.Config;
 
 namespace VersionControlGitApp.Controllers {
     public static class GitMethods {
@@ -90,22 +91,22 @@ namespace VersionControlGitApp.Controllers {
                 Directory.CreateDirectory(dirPath);
 
             string command = $"clone {URL} {dirPath}";
-            bool state = Cmd.Run(command, path);
-            if (state == true) {
+            ConsoleState state = Cmd.Run(command, path);
+            if (state == ConsoleState.Success) {
                 AddLocalRepo(dirPath, repoDB);
             }
         }
 
         public static void Init(string path, LocalRepoDB repoDB) {
             string command = $"init {path}";
-            bool state = Cmd.Run(command, path);
-            if (state == true) {
+            ConsoleState state = Cmd.Run(command, path);
+            if (state == ConsoleState.Success) {
                 AddLocalRepo(path, repoDB);
             }
         }
 
         public static void Commit(string path, string msg, string desc, MainWindow win) {
-            bool state = false;
+            ConsoleState state = ConsoleState.Error;
             List<string> lines = Cmd.RunAndRead("status --porcelain", path);
 
             if (lines != null) {
@@ -120,7 +121,7 @@ namespace VersionControlGitApp.Controllers {
                     state = Cmd.Run(command, path);
                 }
 
-                if (state)
+                if (state == ConsoleState.Success)
                     ConsoleLogger.UserPopup("Commit", "Commit successful");
                 else
                     ConsoleLogger.UserPopup("Commit", "There was an error");
