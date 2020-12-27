@@ -147,9 +147,7 @@ namespace VersionControlGitApp.UIelements {
                 foreach (ComboBoxItem newItem in newComboBoxItems) {
                     win.FilesToCommit.Items.Add(newItem);
                 }
-
             }
-
         }
 
         public static void ClearCommitAndContext(MainWindow win) {

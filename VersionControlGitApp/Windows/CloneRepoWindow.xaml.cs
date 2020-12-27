@@ -23,14 +23,20 @@ namespace VersionControlGitApp {
             repoDB = _repoDB;
             win = _win;
 
+            // select textbox
             URL.Focus();
 
             userRepos = GithubController.GetAllRepos(client);
+            bool isFirst = true;
             foreach (UserRepository repo in userRepos) {
                 ComboBoxItem item = new ComboBoxItem {
                     Content = repo.GetName(),
                     Tag = repo.GetHtmlUrl()
                 };
+                if (isFirst) {
+                    item.IsSelected = true;
+                    isFirst = false;
+                }
 
                 ExternalRepoComboBox.Items.Add(item);
             }
@@ -41,25 +47,22 @@ namespace VersionControlGitApp {
             string url = URL.Text.ToString();
 
             if (url != "") {
-                using (var fbd = new FolderBrowserDialog()) {
-                    DialogResult result = fbd.ShowDialog();
-                    string res = $"{result}";
-                    string path = fbd.SelectedPath;
+                using var fbd = new FolderBrowserDialog();
+                DialogResult result = fbd.ShowDialog();
+                string path = fbd.SelectedPath;
 
-                    if (res == "OK" && url != "" && path != "") {
-                        Task.Run(() => GitMethods.Clone(url, path, repoDB));
-                        ComboBoxItem item = new ComboBoxItem {
-                            Content = GitMethods.GetNameFromURL(url),
-                            IsSelected = true
-                        };
+                if (result.ToString() == "OK" && path != "") {
+                    Task.Run(() => GitMethods.Clone(url, path, repoDB));
+                    ComboBoxItem item = new ComboBoxItem {
+                        Content = GitMethods.GetNameFromURL(url),
+                    };
 
-                        win.RepoListBox.Items.Add(item);
-                        win.PathLabel.Text = path + @"\" + GitMethods.GetNameFromURL(url);
-                        this.Close();
-                    }
+                    win.RepoListBox.Items.Add(item);
+                    win.PathLabel.Text = path + @"\" + GitMethods.GetNameFromURL(url);
+                    this.Close();
                 }
             } else {
-                ConsoleLogger.UserPopup("Clone", "You must select repository first");
+                ConsoleLogger.UserPopup("Clone", Config.USERMSG_SELECTREPO);
             }
            
         }
@@ -74,12 +77,12 @@ namespace VersionControlGitApp {
         }
 
         private void Window_Closed(object sender, RoutedEventArgs e) {
-            this.Close();
+            Close();
         }
 
         private void DragWindownOnMouseDown(object sender, MouseButtonEventArgs e) {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
-                this.DragMove();
+                DragMove();
         }
     }
 }

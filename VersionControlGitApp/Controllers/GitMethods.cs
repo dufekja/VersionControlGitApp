@@ -131,25 +131,31 @@ namespace VersionControlGitApp.Controllers {
         }
 
         
-        public static void Push(string path, GitHubClient client) {
+        public static void Push(string path, GitHubClient client, MainWindow win) {
 
             string name = GetNameFromPath(path);
             bool repoExists = GithubController.RepoExists(client, name);
 
             if (!repoExists) {
-                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"{name} not found. Would you like to create it ?", $"{name} not found", System.Windows.MessageBoxButton.YesNo);
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
+                    $"{name} not found. Would you like to create it ?",
+                    $"{name} not found",
+                    System.Windows.MessageBoxButton.YesNo);
+
                 if (messageBoxResult == MessageBoxResult.Yes) {
+                    ConsoleLogger.StatusBarUpdate("Pushing external repository", win);
                     client.Repository.Create(new NewRepository(name));
                     Task.Run(() => Cmd.PushRepo(client, name, path));
                 }
             }
         }
 
-        public static void Pull(string path, GitHubClient client) {
+        public static void Pull(string path, GitHubClient client, MainWindow win) {
+            ConsoleLogger.StatusBarUpdate("Pulling external repository", win);
             Task.Run(() => Cmd.PullRepo(client, path));
         }
 
-        public static void Fetch(string path, GitHubClient client) {
+        public static void Fetch(string path, GitHubClient client, MainWindow win) {
             string name = GetNameFromPath(path);
             bool repoExists = GithubController.RepoExists(client, name);
 
@@ -159,9 +165,10 @@ namespace VersionControlGitApp.Controllers {
                 foreach (string line in lines) {
                     output += line;
                 }
-                ConsoleLogger.UserPopup("Fetch", $"{output}");
+                ConsoleLogger.StatusBarUpdate("External repository fetched", win);
+                ConsoleLogger.UserPopup("Fetch repository", $"{output}");
             } else {
-                ConsoleLogger.UserPopup("Fetch", "Vybraný repozitář nebyl nalezen");
+                ConsoleLogger.UserPopup("Fetch repository", "Selected repository not found");
             }
 
         }
@@ -187,22 +194,29 @@ namespace VersionControlGitApp.Controllers {
         }
 
         public static string GetAllFileChanges(string file, string path) {
-            List<string> list = Cmd.RunAndRead($"diff HEAD~2 HEAD -- {file}", path);
-            string fileContent = File.ReadAllText($@"{path}\{file}");
+
+            string ret = "";
+
+            List<string> diffSummary = Cmd.RunAndRead($"diff HEAD {file}", path);
 
             // filter changed lines
-            string output = "";
+            List<string> diffSummaryOutput = new List<string>();
             bool read = false;
-            foreach (string line in list) {
+            foreach (string line in diffSummary) {
                 if (read) {
                     if (!line.Contains("newline")) {
-                        output += line + "\n";
+                        diffSummaryOutput.Add(line);
                     }
                 } else if (line.Contains("@@")) {
                     read = true;
-                }   
+                }
             }
-            return output;
+
+
+            List<string> outputContentList = new List<string>(File.ReadAllText($@"{path}\{file}").Split('\n'));
+
+            
+            return ret;
         }
 
     }

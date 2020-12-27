@@ -79,12 +79,12 @@ namespace VersionControlGitApp.Controllers {
             if (repoPath != "" && GitMethods.IsRepo(repoPath)) {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
                     $"Do you want to remove {GitMethods.GetNameFromPath(repoPath)} from list?",
-                    HEADERMSG_REMOVECONF,
+                    HEADERMSG_REMOVE_CONF,
                     System.Windows.MessageBoxButton.YesNo);
 
                 if (messageBoxResult == MessageBoxResult.Yes) {
                     repoDB.DeleteByPath(repoPath);
-                    ConsoleLogger.UserPopup(HEADERMSG_REMOVECONF, $"{GitMethods.GetNameFromPath(repoPath)} removed");
+                    ConsoleLogger.UserPopup(HEADERMSG_REMOVE_CONF, $"{GitMethods.GetNameFromPath(repoPath)} removed");
 
                     win.Dispatcher.Invoke(() => win.RepoListBox.Items.Clear());
                     win.Dispatcher.Invoke(() => MainWindowUI.ListBoxLoad());
@@ -102,12 +102,12 @@ namespace VersionControlGitApp.Controllers {
 
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
                     $"Do you want to delete {GitMethods.GetNameFromPath(repoPath)} ?",
-                    HEADERMSG_DELETECONF,
+                    HEADERMSG_DELETE_CONF,
                     System.Windows.MessageBoxButton.YesNo);
 
                 if (messageBoxResult == MessageBoxResult.Yes) {
                     Directory.Delete(repoPath);
-                    ConsoleLogger.UserPopup(HEADERMSG_DELETECONF, $"{GitMethods.GetNameFromPath(repoPath)} deleted");
+                    ConsoleLogger.UserPopup(HEADERMSG_DELETE_CONF, $"{GitMethods.GetNameFromPath(repoPath)} deleted");
                 }
             }
         }
@@ -211,7 +211,7 @@ namespace VersionControlGitApp.Controllers {
 
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
                     $"Do you want to delete {currentBranch} ?",
-                    HEADERMSG_DELETECONF,
+                    HEADERMSG_DELETE_CONF,
                     System.Windows.MessageBoxButton.YesNo);
 
                 if (messageBoxResult == MessageBoxResult.Yes) {
@@ -220,11 +220,11 @@ namespace VersionControlGitApp.Controllers {
                 }
 
                 if (state == ConsoleState.Success)
-                    ConsoleLogger.UserPopup(HEADERMSG_DELETECONF, $"{currentBranch} deleted");
+                    ConsoleLogger.UserPopup(HEADERMSG_DELETE_CONF, $"{currentBranch} deleted");
                 else
-                    ConsoleLogger.UserPopup(HEADERMSG_DELETECONF, "There was an error");
+                    ConsoleLogger.UserPopup(HEADERMSG_DELETE_CONF, "There was an error");
             } else {
-                ConsoleLogger.UserPopup(HEADERMSG_DELETECONF, "Cannot delete branch master");
+                ConsoleLogger.UserPopup(HEADERMSG_DELETE_CONF, "Cannot delete branch master");
             }
 
             win.Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, win));

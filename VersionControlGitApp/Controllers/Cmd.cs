@@ -18,7 +18,7 @@ namespace VersionControlGitApp.Controllers {
             if (command != "")
                 try {
                     ProcessStartInfo startInfo = new ProcessStartInfo {
-                        FileName = Config.GITEXE,
+                        FileName = GITEXE,
                         Arguments = command,
                         CreateNoWindow = true,
                         WorkingDirectory = dir,
@@ -41,7 +41,7 @@ namespace VersionControlGitApp.Controllers {
                 try {
 
                     ProcessStartInfo startInfo = new ProcessStartInfo() {
-                        FileName = Config.GITEXE,
+                        FileName = GITEXE,
                         CreateNoWindow = true,
                         WindowStyle = ProcessWindowStyle.Hidden,
                         UseShellExecute = false,
@@ -151,40 +151,49 @@ namespace VersionControlGitApp.Controllers {
                 Thread.Sleep(1000);
                 bool repoExists = GithubController.RepoExists(client, name);
 
-                if (repoExists || counter > 10)
+                if (repoExists || counter > 5)
                     break;
                 else
                     counter++;
             }
 
             
-            if (counter <= 10) {
+            if (counter <= 5) {
                 User user = client.User.Current().Result;
-                string externalRepoPath = $"{Config.GetGithubPath()}{user.Login}/{name}.git";
+                string externalRepoPath = $"{GITHUB_PATH}{user.Login}/{name}.git";
 
                 Run($"remote add origin {externalRepoPath}", path);
                 Run($"push -u origin master", path);
 
-                ConsoleLogger.UserPopup("Repository push success", $"Data pushed from {path} to {externalRepoPath}");
+                ConsoleLogger.UserPopup(HEADERMSG_PUSH_REPO, $"Data pushed from {path} to {externalRepoPath}");
             } else {
-                ConsoleLogger.UserPopup("Repository push error", $"Failed to push data to external repository");
+                ConsoleLogger.UserPopup(HEADERMSG_PUSH_REPO, $"Failed to push data to external repository");
             }
         }
 
         public static void PullRepo(GitHubClient client, string path) {
 
+            int counter = 0;
             string name = GitMethods.GetNameFromPath(path);
-            bool repoExists = GithubController.RepoExists(client, name);
+            while (true) {
+                Thread.Sleep(1000);
+                bool repoExists = GithubController.RepoExists(client, name);
 
-            if (repoExists) {
+                if (repoExists || counter > 5)
+                    break;
+                else
+                    counter++;
+            }
+            
+            if (counter < 5) {
                 User user = client.User.Current().Result;
-                string externalRepoPath = $"{Config.GetGithubPath()}{user.Login}/{name}.git";
+                string externalRepoPath = $"{GITHUB_PATH}{user.Login}/{name}.git";
 
                 Run("pull", path);
-                ConsoleLogger.UserPopup("Repository pull", $"Pulled from {externalRepoPath} to {path}");
+                ConsoleLogger.UserPopup(HEADERMSG_PULL_REPO, $"Pulled from {externalRepoPath} to {path}");
 
             } else {
-                ConsoleLogger.UserPopup("Repository pull", $"Repozitář neexistuje");
+                ConsoleLogger.UserPopup(HEADERMSG_PULL_REPO, $"Failed to pull data from external repository");
             }
         }
     }
