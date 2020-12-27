@@ -22,25 +22,24 @@ namespace VersionControlGitApp {
     public partial class MainWindow : Window {
         
         public static GitHubClient client = new GitHubClient(new ProductHeaderValue("VersionControlGitApp"));
-
-        private readonly LocalRepoDB repoDB;
-        public static User user;
+        private readonly LocalRepoDB repoDB = new LocalRepoDB();
         public static List<UserRepository> userRepos;
+        public static User user;        
 
         public static Thread repoChangesThread;
-
         public static RepoChangesThreadState newRepoChangesThreadState = RepoChangesThreadState.New;
         
 
         public MainWindow(string token) {
             InitializeComponent();
 
-            repoDB = new LocalRepoDB();
+            // init repository database
             repoDB.InitDB();
 
             // auth user using token
             client = GithubController.Authenticate(client, token, this);
 
+            // get user based on token and set name + picture
             user = client.User.Current().Result;
             MainWindowUI.InitUIElements(this, user, repoDB);
 
@@ -67,12 +66,10 @@ namespace VersionControlGitApp {
             Task.Run(() => AllReposListener());
         }
 
-        // add already created repository to sqlite db
         private void AddLocalRepository(object sender, RoutedEventArgs e) {
             MainWindowController.AddLocalRepositoryCommand(repoDB);
         }
 
-        // clone repository window
         private void CloneRepository(object sender, RoutedEventArgs e) {
             new CloneRepoWindow(repoDB, client, this).Show();   
         }
@@ -168,31 +165,9 @@ namespace VersionControlGitApp {
         }
 
         private void DeleteCurrentBranch(object sender, RoutedEventArgs e) {
-            if (PathLabel.Text.ToString() != "") {
-                string repoPath = PathLabel.Text.ToString();
-                string currentBranch = GitMethods.GetCurrentBranch(repoPath);
-                bool deleted = false;
-
-                if (currentBranch != "master") {
-                    MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you want to delete {currentBranch} ?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
-                    if (messageBoxResult == MessageBoxResult.Yes && currentBranch != "master") {
-                        Cmd.Run("checkout master", repoPath);
-
-                        ConsoleState state = Cmd.Run($"branch -D {currentBranch}", repoPath);
-                        if (state == ConsoleState.Success)
-                            deleted = true;
-                    }
-
-                    if (deleted)
-                        ConsoleLogger.UserPopup("Delete Confirmation", $"{currentBranch} deleted");
-                    else
-                        ConsoleLogger.UserPopup("Delete Confirmation", "There was an error");
-                } else {
-                    ConsoleLogger.UserPopup("Delete branch", "Can't delete branch master");
-                }
-
-                Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, this));
-                Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath, this));
+            string repoPath = PathLabel.Text.ToString();
+            if (repoPath != "") {
+                MainWindowController.DeleteCurrentBranchCommand(repoPath, this);
             } else {
                 ConsoleLogger.UserPopup("Branch", USERMSG_SELECTREPO);
             }
@@ -217,18 +192,12 @@ namespace VersionControlGitApp {
             if (repos != null) {
 
                 // set new path label and clear all old repo data
-                string path = repos[0].Path.ToString();
-                Dispatcher.Invoke(() => PathLabel.Text = path);
-                Dispatcher.Invoke(() => FileContent.Text = "");
-                Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(this));
-                Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(path, this));
-                Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(path, this));
-
-                ConsoleLogger.StatusBarUpdate($"Changed to repository: {repoName}", this);
+                string repoPath = repos[0].Path.ToString();
+                Dispatcher.Invoke(() => MainWindowUI.SetDataForNewRepo(repoName, repoPath, this));
 
                 // start new thread which will watch new repo
                 newRepoChangesThreadState = RepoChangesThreadState.New;
-                repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
+                repoChangesThread = new Thread(() => WaitForChangesOnRepo(repoPath));
                 repoChangesThread.Start();
 
                 ConsoleLogger.Success("MainWindow.RepoListBox_SelectionChanged", "WaitForChangesOnRepo thread started");

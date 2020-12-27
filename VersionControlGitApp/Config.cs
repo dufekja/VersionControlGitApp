@@ -29,6 +29,8 @@ namespace VersionControlGitApp {
         public const string DELETEDMODIFIED = "DM ";
 
         public const string USERMSG_SELECTREPO = "You must select repository first";
+        public const string HEADERMSG_DELETECONF = "Delete confirmation";
+        public const string HEADERMSG_REMOVECONF = "Remove confirmation";
 
         public static string GetGithubPath() {
             return GITHUB_PATH;

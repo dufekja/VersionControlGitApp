@@ -158,5 +158,15 @@ namespace VersionControlGitApp.UIelements {
             win.FileContent.Text = "";
         }
 
+        public static void SetDataForNewRepo(string repoName, string repoPath, MainWindow win) {
+            win.PathLabel.Text = repoPath;
+            win.FileContent.Text = "";
+            FilesToCommitRefresh(win);
+            ChangeCommitButtonBranch(repoPath, win);
+            LoadRepoBranches(repoPath, win);
+
+            ConsoleLogger.StatusBarUpdate($"Changed to repository: {repoName}", win);
+        }
+
     }
 }
