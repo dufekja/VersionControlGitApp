@@ -5,18 +5,20 @@
              StartupUri="Windows/TokenWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            
+
             <!-- Import styles -->
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/Dictionaries/ColorsDictionary.xaml"/>
+                <ResourceDictionary Source="Styles/Dictionaries/FontsDictionary.xaml"/>
+                
                 <ResourceDictionary Source="Styles/Dictionaries/ToolbarMenuDictionary.xaml"/>
                 <ResourceDictionary Source="Styles/Dictionaries/ComboBoxDictionary.xaml"/>
-                <ResourceDictionary Source="Styles/Dictionaries/FontsDictionary.xaml"/>
                 <ResourceDictionary Source="Styles/Dictionaries/ButtonsDictionary.xaml"/>
                 <ResourceDictionary Source="Styles/Dictionaries/ListBoxDictionary.xaml"/>
                 <ResourceDictionary Source="Styles/Dictionaries/TextBoxDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
+            
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

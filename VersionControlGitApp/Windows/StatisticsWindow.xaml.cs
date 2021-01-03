@@ -20,13 +20,17 @@ namespace VersionControlGitApp.Windows {
         public static MainWindow mainWin;
         public static GitHubClient client;
         public static LocalRepoDB repoDB;
+        public static string header;
 
-        public StatisticsWindow(MainWindow _win, GitHubClient _client, LocalRepoDB _repoDB) {
+        public StatisticsWindow(MainWindow _win, GitHubClient _client, LocalRepoDB _repoDB, string _header) {
             InitializeComponent();
 
             mainWin = _win;
             client = _client;
             repoDB = _repoDB;
+            header = _header;
+
+            HeaderLabel.Content = header;
 
         }
 

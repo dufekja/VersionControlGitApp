@@ -238,7 +238,7 @@ namespace VersionControlGitApp {
 
         // thread watching files in selected repo
         private void WaitForChangesOnRepo(string path) {
-            ConsoleLogger.Info("MainWindow.WaitForChangesOnRepo", "Called with state: " + newRepoChangesThreadState.ToString());
+            ConsoleLogger.Info("MainWindow.WaitForChangesOnRepo", $"Called with state: {newRepoChangesThreadState.ToString()}");
 
             if (newRepoChangesThreadState == RepoChangesThreadState.New)
                 newRepoChangesThreadState = RepoChangesThreadState.Repeating;
@@ -277,7 +277,8 @@ namespace VersionControlGitApp {
         }
 
         private void OpenStatistics(object sender, RoutedEventArgs e) {
-            new StatisticsWindow(this, client, repoDB).Show();
+            string header = ((MenuItem)sender).Header.ToString();
+            new StatisticsWindow(this, client, repoDB, header).Show();
         }
 
         private void Window_Minimized(object sender, RoutedEventArgs e) {
@@ -290,7 +291,7 @@ namespace VersionControlGitApp {
 
         private void DragWindownOnMouseDown(object sender, MouseButtonEventArgs e) {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
-                this.DragMove();
+                DragMove();
         }
     
     }

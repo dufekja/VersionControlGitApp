@@ -100,8 +100,9 @@
                     </MenuItem>
 
                     <!-- Statistics menu -->
-                    <MenuItem Click="OpenStatistics" Header="Statistics">
-
+                    <MenuItem Header="Statistics">
+                        <MenuItem Header="User" Click="OpenStatistics"/>
+                        <MenuItem Header="Repository" Click="OpenStatistics"/>
                     </MenuItem>
 
                     <!-- Team menu -->

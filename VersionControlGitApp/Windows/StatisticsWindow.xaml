@@ -54,5 +54,7 @@
             </StackPanel>
         </DockPanel>
 
+        <Label x:Name="HeaderLabel" Grid.Column="3" Grid.Row="4" Content="header" Foreground="{StaticResource WhiteTextColor}" FontSize="22"/>
+
     </Grid>
 </Window>
