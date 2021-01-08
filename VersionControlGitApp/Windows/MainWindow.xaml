@@ -137,7 +137,7 @@
 
         <!-- Commit submit section -->
         <Border Grid.Column="0" Grid.Row="7" Grid.RowSpan="3" Grid.ColumnSpan="2"
-                BorderThickness="3"
+                BorderThickness="3" Margin="8,0,-4,0"
                 Background="{StaticResource BlackColor}">
 
             <StackPanel>
@@ -172,7 +172,7 @@
 
         <!-- Github user image -->
         <Image x:Name="UserImage" 
-            Grid.Column="0" Grid.Row="1" Grid.RowSpan="1"/>
+            Grid.Column="0" Grid.Row="1" Grid.RowSpan="1" Margin="0"/>
 
         <!-- Github user nick -->
         <Label 
@@ -185,9 +185,10 @@
             </Label.Content>
         </Label>
 
+        <!-- Files to commit combobox -->
         <StackPanel Grid.Row="1" Grid.Column="2" Grid.RowSpan="1"
                     VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                    Background="{StaticResource BlackColor}" Margin="2">
+                    Background="{StaticResource BlackColor}" Margin="12,4,0,0">
             
             <Label Content="Modified Files" 
                    Foreground="{StaticResource WhiteTextColor}" 
@@ -204,8 +205,9 @@
                Background="{StaticResource BlackColor}"
                BorderBrush="{StaticResource AccentsColor}"
                VerticalAlignment="Center"
-               Height="25"
-               Margin="8,0,12,0"
+               VerticalContentAlignment="Center"
+               Height="32"
+               Margin="12,8,12,0" Padding="4,0,4,0"
                Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="4"/>
 
         <!-- Current selected file content -->
@@ -220,7 +222,7 @@
         <!-- Listbox with added repositories -->
         <ScrollViewer 
             Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="4"
-            Margin="4">
+            Margin="12,-20,0,4">
             
             <ListBox 
                 x:Name="RepoListBox" 
@@ -235,7 +237,7 @@
 
         <!-- Status bar label -->
         <Border Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="7"
-                Margin="4,4,12,0" BorderThickness="1"
+                Margin="10,4,12,0" BorderThickness="1"
                 Background="{StaticResource BlackColor}"
                 BorderBrush="{StaticResource AccentsColor}">
 
