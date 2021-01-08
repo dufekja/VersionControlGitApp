@@ -54,7 +54,20 @@
             </StackPanel>
         </DockPanel>
 
-        <Label x:Name="HeaderLabel" Grid.Column="3" Grid.Row="4" Content="header" Foreground="{StaticResource WhiteTextColor}" FontSize="22"/>
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2"
+                    Margin="8,8,0,0">
+            <Label x:Name="PublicReposLabel" Content="Public repositories: -"
+                   Foreground="{StaticResource WhiteTextColor}" FontSize="18"
+                   Margin="0" Padding="0"/>
+            <Label x:Name="PrivateReposLabel" Content="Private repositories: -"
+                   Foreground="{StaticResource WhiteTextColor}" FontSize="18"
+                   Margin="0" Padding="0"/>
+        </StackPanel>
 
+        <StackPanel x:Name="ContentStackPanel"
+            Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="5" Grid.RowSpan="6">
+            
+        </StackPanel>
+        
     </Grid>
 </Window>

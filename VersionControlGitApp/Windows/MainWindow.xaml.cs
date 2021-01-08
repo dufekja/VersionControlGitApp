@@ -278,7 +278,7 @@ namespace VersionControlGitApp {
 
         private void OpenStatistics(object sender, RoutedEventArgs e) {
             string header = ((MenuItem)sender).Header.ToString();
-            new StatisticsWindow(this, client, repoDB, header).Show();
+            new StatisticsWindow(this, client, user, repoDB, header).Show();
         }
 
         private void Window_Minimized(object sender, RoutedEventArgs e) {
