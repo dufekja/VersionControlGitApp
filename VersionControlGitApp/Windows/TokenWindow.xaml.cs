@@ -13,29 +13,34 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using VersionControlGitApp.Database;
+using VersionControlGitApp.Logging;
 
 namespace VersionControlGitApp {
     public partial class TokenWindow : Window {
 
         private PrivateTokenDB tokenDB;
+        public static string user;
 
         public TokenWindow() {
 
+            user = System.Windows.Forms.SystemInformation.UserName;
             tokenDB = new PrivateTokenDB();
             tokenDB.InitDB();
 
-            string token = tokenDB.GetFirstToken();
-            if (token != "") {
-                GoMainWindow(token);
+            List<Token> tokens = tokenDB.FindTokensByUser(user);
+            if (tokens != null) {
+                foreach (Token token in tokens) {
+                    if (token.IsActive)
+                        GoMainWindow(token.Value);
+                }
             }
-
+            
 
             InitializeComponent();
         }
 
         private void GoMainWindow(string token) {
-            MainWindow main = new MainWindow(token);
-            main.Show();
+            new MainWindow(token).Show();
             this.Close();
         }
 
@@ -44,11 +49,17 @@ namespace VersionControlGitApp {
 
             if (token.Length == 40) {
                 if (tokenDB.FindTokenByValue(token) == null) {
-                    tokenDB.WriteToken(token);
+                    Token activeToken = tokenDB.GetActiveToken(user);
+                    bool isActive = false;
+
+                    if (activeToken == null)
+                        isActive = true;
+
+                    tokenDB.WriteToken(token, user, isActive);
                     GoMainWindow(token);
                 }
             } else {
-                TokenTextBox.Text = "Ur token not 40 chars *crying* | haha token lenght goes Brrrrrr";
+                ConsoleLogger.UserPopup("Submit token", "Token must be 40 characters long");
             }
         }
 
