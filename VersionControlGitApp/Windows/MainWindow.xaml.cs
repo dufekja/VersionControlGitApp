@@ -38,6 +38,8 @@ namespace VersionControlGitApp {
 
             // auth user using token
             client = GithubController.Authenticate(client, token, this);
+            //client.Connection.Credentials.GetToken()
+            ConsoleLogger.UserPopup("dw", $"");
 
             // get user based on token and set name + picture
             user = client.User.Current().Result;

@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 namespace VersionControlGitApp.Database {
     [Table("Tokens")]
     public class Token {
-        [PrimaryKey, AutoIncrement]
-        public int ID { get; set; }
-        public string User { get; set; }
-        public string Value { get; set; }
-        public bool IsActive { get; set; }
+        [PrimaryKey, AutoIncrement] public int ID { get; set; }
+        [NotNull, MaxLength(25)] public string User { get; set; }
+        [NotNull, MaxLength(40), Unique] public string Value { get; set; }
+        [NotNull] public bool IsActive { get; set; }
     }
     
     public class PrivateTokenDB {

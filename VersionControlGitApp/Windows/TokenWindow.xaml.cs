@@ -57,6 +57,8 @@ namespace VersionControlGitApp {
 
                     tokenDB.WriteToken(token, user, isActive);
                     GoMainWindow(token);
+                } else {
+                    ConsoleLogger.UserPopup("Submit token", "Token already exists");
                 }
             } else {
                 ConsoleLogger.UserPopup("Submit token", "Token must be 40 characters long");

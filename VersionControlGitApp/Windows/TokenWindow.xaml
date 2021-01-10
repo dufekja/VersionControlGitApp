@@ -66,7 +66,7 @@
                HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Margin="8"
                 FontSize="25" Foreground="{StaticResource WhiteTextColor}"/>
 
-        <TextBox x:Name="TokenTextBox" FontSize="15" Text="dwqhdwhquidwqui"
+        <TextBox x:Name="TokenTextBox" FontSize="15"
                  Grid.Column="1" Grid.Row="4"
                  Padding="8,0,8,0"
                  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Margin="8"
