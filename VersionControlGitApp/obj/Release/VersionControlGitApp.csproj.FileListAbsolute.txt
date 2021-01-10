@@ -49,3 +49,12 @@ C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\Ver
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\VersionControlGitApp.csproj.CopyComplete
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\VersionControlGitApp.exe
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\VersionControlGitApp.pdb
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\Styles\Dictionaries\ComboBoxDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\Styles\Dictionaries\FontsDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\Windows\StatisticsWindow.g.cs
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\Styles\Dictionaries\ButtonsDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\Styles\Dictionaries\ColorsDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\Styles\Dictionaries\ListBoxDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\Styles\Dictionaries\TextBoxDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\Styles\Dictionaries\ToolbarMenuDictionary.baml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\Windows\StatisticsWindow.baml
