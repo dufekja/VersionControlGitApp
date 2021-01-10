@@ -43,7 +43,44 @@ namespace VersionControlGitApp.Windows {
         }
 
         private void GenerateUserData() {
-            SetRepoLabelsText($"Public repositories: {user.PublicRepos}", $"Private repositories: {user.TotalPrivateRepos}");
+            
+            // set public and private repo labels count
+            SetRepoLabelsText($"Public repositories: {user.PublicRepos}", 
+                              $"Private repositories: {user.TotalPrivateRepos}");
+
+            // calculate commit activity for each repo
+            List<string[]> repositories = GenerateYearlyUserCommitActivity();
+            string text = "";
+
+            foreach(var repo in repositories) {
+                text += $"{repo[0]} - {repo[1]}\n";
+            }
+
+            ConsoleLogger.UserPopup("dwq", text);
+
+        }
+
+        private List<string[]> GenerateYearlyUserCommitActivity() {
+            IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
+            if (repos == null)
+                return null;
+
+            List<string[]> reposWithActivity = new List<string[]>();
+            foreach (var repo in repos) {
+                var yearCommitActivity = client.Repository.Statistics.GetCommitActivity(repo.Id).Result;
+                int totalYearActivity = 0;
+
+                foreach (var week in yearCommitActivity.Activity) {
+                    totalYearActivity += week.Total;
+                }
+                string[] repoTuple = new string[2];
+                repoTuple[0] = $"{repo.Name}";
+                repoTuple[1] = $"{totalYearActivity}";
+
+                reposWithActivity.Add(repoTuple);
+            }
+
+            return reposWithActivity;
         }
 
         private void GenerateRepoData() {
