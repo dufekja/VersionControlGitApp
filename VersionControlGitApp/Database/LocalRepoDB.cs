@@ -10,10 +10,9 @@ using VersionControlGitApp.Logging;
 namespace VersionControlGitApp.Database {
     [Table("Repositories")]
     public class Repo {
-        [PrimaryKey, AutoIncrement]
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public string Path { get; set; }
+        [PrimaryKey, AutoIncrement] public int ID { get; set; }
+        [NotNull, MaxLength(40)] public string Name { get; set; }
+        [NotNull, MaxLength(200)] public string Path { get; set; }
     }
 
     public class LocalRepoDB {

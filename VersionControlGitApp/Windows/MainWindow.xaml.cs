@@ -39,6 +39,9 @@ namespace VersionControlGitApp {
             // auth user using token
             client = GithubController.Authenticate(client, token, this);
 
+            // get current token
+            //client.Connection.Credentials.GetToken()
+
             // get user based on token and set name + picture
             user = client.User.Current().Result;
             MainWindowUI.InitUIElements(this, user, repoDB);
@@ -278,7 +281,8 @@ namespace VersionControlGitApp {
 
         private void OpenStatistics(object sender, RoutedEventArgs e) {
             string header = ((MenuItem)sender).Header.ToString();
-            new StatisticsWindow(this, client, user, repoDB, header).Show();
+            string repo = GitMethods.GetNameFromPath(PathLabel.Text.ToString());
+            new StatisticsWindow(this, client, user, repoDB, header, repo).Show();
         }
 
         private void Window_Minimized(object sender, RoutedEventArgs e) {

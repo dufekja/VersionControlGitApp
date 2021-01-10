@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 namespace VersionControlGitApp.Database {
     [Table("Tokens")]
     public class Token {
-        [PrimaryKey, AutoIncrement]
-        public int ID { get; set; }
-        public string Value { get; set; }
+        [PrimaryKey, AutoIncrement] public int ID { get; set; }
+        [NotNull, MaxLength(25)] public string User { get; set; }
+        [NotNull, MaxLength(40), Unique] public string Value { get; set; }
+        [NotNull] public bool IsActive { get; set; }
     }
     
     public class PrivateTokenDB {
@@ -20,38 +21,57 @@ namespace VersionControlGitApp.Database {
             database.CreateTable<Token>();
         }
 
-        public void WriteToken(string value) {
+        public void WriteToken(string value, string user, bool isActive) {
             database.Insert(new Token() {
-                Value = value
+                Value = value,
+                User = user,
+                IsActive = isActive
             });
         }
 
-        public string ReadTokens() {
-            var tokens = database.Table<Token>();
-            return tokens.First().Value;
-        }
-
-        public string GetFirstToken() {
-            string token = "";
+        public Token GetFirstToken(string user) {
             if (database.Table<Token>().Count() != 0) {
                 var tokens = database.Table<Token>();
-                return tokens.First().Value;
+                return tokens.First();
             }
-            return token;
+            return null;
+        }
+
+        public List<Token> FindTokensByUser(string user) {
+            var result = database.Query<Token>($"SELECT * FROM Tokens WHERE User='{user}'");
+            if (result.Count == 0) {
+                return null;
+            } else {
+                return result;
+            }
+        }
+
+        public Token GetActiveToken(string user) {
+            var result = database.Query<Token>($"SELECT * FROM Tokens WHERE User='{user}'");
+
+            if (result.Count > 0) {
+                foreach (Token token in result) {
+                    if (token.IsActive == true) {
+                        return token;
+                    }
+                }
+            }
+            return null;
         }
 
         public Token FindTokenByValue(string value) {
-            var query = database.Query<Token>($"SELECT * FROM Tokens WHERE Value='{value}'");
-            if (query.Count == 0) {
+            var result = database.Query<Token>($"SELECT * FROM Tokens WHERE Value='{value}'");
+            if (result.Count == 0) {
                 return null;
             } else {
                 return new Token() {
-                    ID = query[0].ID,
-                    Value = query[0].Value
+                    ID = result[0].ID,
+                    Value = result[0].Value,
+                    User = result[0].User,
+                    IsActive = result[0].IsActive
                 };
             }
         }
-
     }
 
 

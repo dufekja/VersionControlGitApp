@@ -23,8 +23,9 @@ namespace VersionControlGitApp.Windows {
         public static LocalRepoDB repoDB;
         public static User user;
         public static string header;
+        public static string currentRepo;
 
-        public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header) {
+        public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header, string _currentRepo) {
             InitializeComponent();
 
             mainWin = _win;
@@ -32,6 +33,7 @@ namespace VersionControlGitApp.Windows {
             user = _user;
             repoDB = _repoDB;
             header = _header;
+            currentRepo = _currentRepo;
 
 
             if (header == "User") {
@@ -43,11 +45,80 @@ namespace VersionControlGitApp.Windows {
         }
 
         private void GenerateUserData() {
-            SetRepoLabelsText($"Public repositories: {user.PublicRepos}", $"Private repositories: {user.TotalPrivateRepos}");
+            
+            // set public and private repo labels count
+            SetRepoLabelsText($"Public repositories: {user.PublicRepos}", 
+                              $"Private repositories: {user.TotalPrivateRepos}");
+
+            // calculate commit activity for each repo
+            Task.Run(() => SetStatsLabel());
+
+        }
+
+        private List<string[]> GenerateYearlyUserCommitActivity() {
+            IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
+            if (repos == null)
+                return null;
+
+            List<string[]> reposWithActivity = new List<string[]>();
+            foreach (var repo in repos) {
+                var yearCommitActivity = client.Repository.Statistics.GetCommitActivity(repo.Id).Result;
+                int totalYearActivity = 0;
+
+                foreach (var week in yearCommitActivity.Activity) {
+                    totalYearActivity += week.Total;
+                }
+                string[] repoTuple = new string[2];
+                repoTuple[0] = $"{repo.Name}";
+                repoTuple[1] = $"{totalYearActivity}";
+
+                reposWithActivity.Add(repoTuple);
+            }
+
+            return reposWithActivity;
+        }
+
+        private void SetStatsLabel() {
+            List<string[]> repositories = GenerateYearlyUserCommitActivity();
+            string text = "";
+
+            foreach (var repo in repositories) {
+                text += $"{repo[0]} - {repo[1]}\n";
+            }
+
+            Dispatcher.Invoke(() => StatsLabel.Content = text);
         }
 
         private void GenerateRepoData() {
             SetRepoLabelsText("", "");
+
+            Task.Run(() => GenerateRepoDataFunc());
+        }
+
+        private void GenerateRepoDataFunc() {
+
+            // TODO -> delete current repo
+            currentRepo = "VersionControlGitApp";
+
+            IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
+            long repoID = 0;
+            foreach (var repo in repos) {
+                ConsoleLogger.Info("StatisticsWindow", $"{repo.Name} - {currentRepo}");
+                if (repo.Name == currentRepo) {
+                    repoID = repo.Id;
+                    break;
+                }
+            }
+
+            if (repoID != 0) {
+                Dispatcher.Invoke(() => StatsLabel.Content = $"{currentRepo} - {repoID}");
+                //client.Repository.Statistics.GetCommitActivity();
+            } else {
+                Dispatcher.Invoke(() => StatsLabel.Content = "Your project is not yet pushed on Github");
+            }
+                
+
+            
         }
 
         private void SetRepoLabelsText(string publicLabel, string privateLabel) {
