@@ -49,14 +49,7 @@ namespace VersionControlGitApp.Windows {
                               $"Private repositories: {user.TotalPrivateRepos}");
 
             // calculate commit activity for each repo
-            List<string[]> repositories = GenerateYearlyUserCommitActivity();
-            string text = "";
-
-            foreach(var repo in repositories) {
-                text += $"{repo[0]} - {repo[1]}\n";
-            }
-
-            ConsoleLogger.UserPopup("dwq", text);
+            Task.Run(() => SetStatsLabel());
 
         }
 
@@ -81,6 +74,17 @@ namespace VersionControlGitApp.Windows {
             }
 
             return reposWithActivity;
+        }
+
+        private void SetStatsLabel() {
+            List<string[]> repositories = GenerateYearlyUserCommitActivity();
+            string text = "";
+
+            foreach (var repo in repositories) {
+                text += $"{repo[0]} - {repo[1]}\n";
+            }
+
+            Dispatcher.Invoke(() => StatsLabel.Content = text);
         }
 
         private void GenerateRepoData() {

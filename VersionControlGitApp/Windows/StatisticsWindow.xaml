@@ -66,7 +66,10 @@
 
         <StackPanel x:Name="ContentStackPanel"
             Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="5" Grid.RowSpan="6">
-            
+
+            <Label x:Name="StatsLabel" Content="Pls w8"
+                   HorizontalAlignment="Center" FontSize="14"
+                   Foreground="{StaticResource WhiteTextColor}"/>
         </StackPanel>
         
     </Grid>
