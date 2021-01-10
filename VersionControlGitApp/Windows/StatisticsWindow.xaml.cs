@@ -23,8 +23,9 @@ namespace VersionControlGitApp.Windows {
         public static LocalRepoDB repoDB;
         public static User user;
         public static string header;
+        public static string currentRepo;
 
-        public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header) {
+        public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header, string _currentRepo) {
             InitializeComponent();
 
             mainWin = _win;
@@ -32,6 +33,7 @@ namespace VersionControlGitApp.Windows {
             user = _user;
             repoDB = _repoDB;
             header = _header;
+            currentRepo = _currentRepo;
 
 
             if (header == "User") {
@@ -89,6 +91,34 @@ namespace VersionControlGitApp.Windows {
 
         private void GenerateRepoData() {
             SetRepoLabelsText("", "");
+
+            Task.Run(() => GenerateRepoDataFunc());
+        }
+
+        private void GenerateRepoDataFunc() {
+
+            // TODO -> delete current repo
+            currentRepo = "VersionControlGitApp";
+
+            IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
+            long repoID = 0;
+            foreach (var repo in repos) {
+                ConsoleLogger.Info("StatisticsWindow", $"{repo.Name} - {currentRepo}");
+                if (repo.Name == currentRepo) {
+                    repoID = repo.Id;
+                    break;
+                }
+            }
+
+            if (repoID != 0) {
+                Dispatcher.Invoke(() => StatsLabel.Content = $"{currentRepo} - {repoID}");
+                //client.Repository.Statistics.GetCommitActivity();
+            } else {
+                Dispatcher.Invoke(() => StatsLabel.Content = "Your project is not yet pushed on Github");
+            }
+                
+
+            
         }
 
         private void SetRepoLabelsText(string publicLabel, string privateLabel) {
