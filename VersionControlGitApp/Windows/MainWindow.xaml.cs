@@ -281,8 +281,9 @@ namespace VersionControlGitApp {
 
         private void OpenStatistics(object sender, RoutedEventArgs e) {
             string header = ((MenuItem)sender).Header.ToString();
-            string repo = GitMethods.GetNameFromPath(PathLabel.Text.ToString());
-            new StatisticsWindow(this, client, user, repoDB, header, repo).Show();
+            string repoPath = PathLabel.Text.ToString();
+
+            new StatisticsWindow(this, client, user, repoDB, header, repoPath).Show();
         }
 
         private void Window_Minimized(object sender, RoutedEventArgs e) {

@@ -14,6 +14,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using VersionControlGitApp.Database;
 using VersionControlGitApp.Logging;
+using LiveCharts.Wpf;
+using LiveCharts;
+using VersionControlGitApp.Controllers;
 
 namespace VersionControlGitApp.Windows {
     public partial class StatisticsWindow : Window {
@@ -24,8 +27,12 @@ namespace VersionControlGitApp.Windows {
         public static User user;
         public static string header;
         public static string currentRepo;
+        public static string currentRepoPath;
 
-        public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header, string _currentRepo) {
+        public SeriesCollection SeriesCollection { get; private set; }
+        public string[] Labels { get; private set; }
+
+        public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header, string _currentRepoPath) {
             InitializeComponent();
 
             mainWin = _win;
@@ -33,7 +40,8 @@ namespace VersionControlGitApp.Windows {
             user = _user;
             repoDB = _repoDB;
             header = _header;
-            currentRepo = _currentRepo;
+            currentRepoPath = _currentRepoPath;
+            currentRepo = GitMethods.GetNameFromPath(_currentRepoPath);
 
 
             if (header == "User") {
@@ -82,6 +90,19 @@ namespace VersionControlGitApp.Windows {
             List<string[]> repositories = GenerateYearlyUserCommitActivity();
             string text = "";
 
+            /*SeriesCollection = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Commits per year",
+                    Values = new ChartValues<double> { 10, 50, 39, 50 }
+                }
+            };
+
+            Labels = new[] { "Maria", "Susan", "Charles", "Frida" };
+
+            DataContext = this;*/
+
             foreach (var repo in repositories) {
                 text += $"{repo[0]} - {repo[1]}\n";
             }
@@ -97,9 +118,6 @@ namespace VersionControlGitApp.Windows {
 
         private void GenerateRepoDataFunc() {
 
-            // TODO -> delete current repo
-            currentRepo = "VersionControlGitApp";
-
             IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
             long repoID = 0;
             foreach (var repo in repos) {
@@ -114,7 +132,13 @@ namespace VersionControlGitApp.Windows {
                 Dispatcher.Invoke(() => StatsLabel.Content = $"{currentRepo} - {repoID}");
                 //client.Repository.Statistics.GetCommitActivity();
             } else {
-                Dispatcher.Invoke(() => StatsLabel.Content = "Your project is not yet pushed on Github");
+                List<string> lines = Cmd.RunAndRead("log", currentRepoPath);
+                Dispatcher.Invoke(() => StatsLabel.Content = "");
+
+                foreach (string line in lines) {
+                    Dispatcher.Invoke(() => StatsLabel.Content += line + "\n");
+                }
+
             }
                 
 

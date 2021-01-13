@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VersionControlGitApp.Windows"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Title="StatisticsWindow" WindowStyle="None" WindowStartupLocation="CenterScreen" AllowsTransparency="True"
         MinHeight="550" MinWidth="800" Height="500" Width="900" 
@@ -70,6 +71,7 @@
             <Label x:Name="StatsLabel" Content="Pls w8"
                    HorizontalAlignment="Center" FontSize="14"
                    Foreground="{StaticResource WhiteTextColor}"/>
+
         </StackPanel>
         
     </Grid>
