@@ -217,18 +217,14 @@
         </TextBox>
 
         <!-- Listbox with added repositories -->
-        <ScrollViewer 
+        <ScrollViewer
             Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="4"
             Margin="12,-20,0,4">
             
-            <ListBox 
+            <ListBox
                 x:Name="RepoListBox" 
-                Foreground="{StaticResource WhiteTextColor}" 
-                Background="{StaticResource GrayBackgroundColor}" 
-                BorderBrush="{StaticResource AccentsColor}"
                 SelectionChanged="RepoListBox_SelectionChanged" 
-                MinHeight="30" FontSize="16"
-                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                MinHeight="30" FontSize="16"/>
 
         </ScrollViewer>
 
