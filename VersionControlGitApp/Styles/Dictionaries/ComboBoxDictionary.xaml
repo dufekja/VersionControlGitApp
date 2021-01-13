@@ -12,6 +12,11 @@
                     <Border x:Name="Bd" BorderThickness="1"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}">
+                        <ContentPresenter>
+                            <ContentPresenter.Content>
+                                <TextBlock Foreground="{TemplateBinding Foreground}"></TextBlock>
+                            </ContentPresenter.Content>
+                        </ContentPresenter>
                     </Border>
 
                     <ControlTemplate.Triggers>

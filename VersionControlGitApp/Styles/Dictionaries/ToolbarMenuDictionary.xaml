@@ -3,13 +3,14 @@
                     xmlns:local="clr-namespace:VersionControlGitApp.Styles">
 
     <!-- Dockpanel, Menu, MenuItems style -->
-    <!--
+ 
     <Style TargetType="{x:Type Menu}">
         <Setter Property="Background" Value="{StaticResource GrayBackgroundColor}"/>
         <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
         <Setter Property="BorderBrush" Value="{StaticResource GrayBackgroundColor}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="0"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
     </Style>
 
@@ -23,13 +24,18 @@
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style TargetType="{x:Type Separator}">
         <Setter Property="Background" Value="{StaticResource GrayBackgroundColor}"/>
-        <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
+        <Setter Property="Foreground" Value="{StaticResource GrayBackgroundColor}"/>
         <Setter Property="BorderBrush" Value="{StaticResource GrayBackgroundColor}"/>
         <Setter Property="BorderThickness" Value="0"/>
-    </Style> -->
+    </Style>
 
 </ResourceDictionary>
