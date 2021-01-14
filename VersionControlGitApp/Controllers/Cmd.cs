@@ -14,58 +14,55 @@ namespace VersionControlGitApp.Controllers {
     public static class Cmd {
 
         public static ConsoleState Run(string command, string dir) {
+            if (command == "" || dir == "")
+                return ConsoleState.Error;
 
-            if (command != "")
-                try {
-                    ProcessStartInfo startInfo = new ProcessStartInfo {
-                        FileName = GITEXE,
-                        Arguments = command,
-                        CreateNoWindow = true,
-                        WorkingDirectory = dir,
-                        WindowStyle = ProcessWindowStyle.Hidden
-                    };
-                    Process process = Process.Start(startInfo);
+            try {
+                ProcessStartInfo startInfo = new ProcessStartInfo {
+                    FileName = GITEXE,
+                    Arguments = command,
+                    CreateNoWindow = true,
+                    WorkingDirectory = dir,
+                    WindowStyle = ProcessWindowStyle.Hidden
+                };
+                Process process = Process.Start(startInfo);
 
-                    process.WaitForExit();
-                } catch {
-                    return ConsoleState.Error;
-                }
+                process.WaitForExit();
+            } catch {
+                return ConsoleState.Error;
+            }
 
             return ConsoleState.Success;
         }
 
         public static List<string> RunAndRead(string command, string dir) {
+            if (command == "" || dir == "")
+                return null;
 
             List<string> output = new List<string>();
-            if (command != "") {
-                try {
+            try {
+                ProcessStartInfo startInfo = new ProcessStartInfo() {
+                    FileName = GITEXE,
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    UseShellExecute = false,
+                    WorkingDirectory = dir,
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    Arguments = command
+                };
 
-                    ProcessStartInfo startInfo = new ProcessStartInfo() {
-                        FileName = GITEXE,
-                        CreateNoWindow = true,
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        UseShellExecute = false,
-                        WorkingDirectory = dir,
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                        Arguments = command
-                    };
+                Process process = new Process() { StartInfo = startInfo };
+                process.Start();
 
-                    Process process = new Process {
-                        StartInfo = startInfo
-                    };
-
-                    process.Start();
-                    string line = process.StandardOutput.ReadLine();
-                    while (line != null) {
-                        output.Add(line);
-                        line = process.StandardOutput.ReadLine();
-                    }
-                    process.WaitForExit();
-                } catch {
-                    output = null;
+                string line = process.StandardOutput.ReadLine();
+                while (line != null) {
+                    output.Add(line);
+                    line = process.StandardOutput.ReadLine();
                 }
-
+                process.WaitForExit();
+            } catch {
+                output = null;
             }
 
             return output;

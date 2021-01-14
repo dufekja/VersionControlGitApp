@@ -241,7 +241,7 @@ namespace VersionControlGitApp {
 
         // thread watching files in selected repo
         private void WaitForChangesOnRepo(string path) {
-            ConsoleLogger.Info("MainWindow.WaitForChangesOnRepo", $"Called with state: {newRepoChangesThreadState.ToString()}");
+            ConsoleLogger.Info("MainWindow.WaitForChangesOnRepo", $"Called with state: {newRepoChangesThreadState}");
 
             if (newRepoChangesThreadState == RepoChangesThreadState.New)
                 newRepoChangesThreadState = RepoChangesThreadState.Repeating;
