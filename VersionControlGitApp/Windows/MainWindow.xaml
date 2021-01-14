@@ -64,11 +64,6 @@
                         <MenuItem InputGestureText="Ctrl+Shift+C" Click="CloneRepository" Header="Clone Repository"/>
                     </MenuItem>
 
-                    <!-- Accounts menu -->
-                    <MenuItem Header="Accounts">
-
-                    </MenuItem>
-
                     <!-- Branch menu -->
                     <MenuItem Header="Branch">
                         <MenuItem Header="New" InputGestureText="Ctrl+B+N" Click="CreateNewBranch"/>
@@ -112,7 +107,7 @@
                         Background="{StaticResource GrayBackgroundColor}">
                 <Grid DockPanel.Dock="Right">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="486.5"/>
+                        <ColumnDefinition Width="560"/>
                         <ColumnDefinition Width="30"/>
                         <ColumnDefinition Width="30"/>
                     </Grid.ColumnDefinitions>
