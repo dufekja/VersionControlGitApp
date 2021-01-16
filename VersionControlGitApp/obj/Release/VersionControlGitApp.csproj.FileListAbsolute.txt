@@ -118,3 +118,9 @@ D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\Release\VersionCont
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\Release\VersionControlGitApp.csproj.CopyComplete
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\Release\VersionControlGitApp.exe
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\Release\VersionControlGitApp.pdb
+D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\Release\LiveCharts.dll
+D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\Release\LiveCharts.Wpf.dll
+D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\Release\LiveCharts.pdb
+D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\Release\LiveCharts.xml
+D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\Release\LiveCharts.Wpf.pdb
+D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\Release\LiveCharts.Wpf.xml
