@@ -7,12 +7,18 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "VersionControlGitAppSetup",
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|Default = Debug|Default
+		Release|Any CPU = Release|Any CPU
 		Release|Default = Release|Default
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Debug|Any CPU.ActiveCfg = Debug
+		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Debug|Any CPU.Build.0 = Debug
 		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Debug|Default.ActiveCfg = Debug
 		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Debug|Default.Build.0 = Debug
+		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Release|Any CPU.ActiveCfg = Release
+		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Release|Any CPU.Build.0 = Release
 		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Release|Default.ActiveCfg = Release
 		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Release|Default.Build.0 = Release
 	EndGlobalSection
