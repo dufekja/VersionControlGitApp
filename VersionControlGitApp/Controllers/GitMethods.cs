@@ -32,7 +32,8 @@ namespace VersionControlGitApp.Controllers {
             if (IsRepo(path) && !exist) {
                 Repo repo = new Repo() {
                     Name = GetNameFromPath(path),
-                    Path = path
+                    Path = path,
+                    User = System.Windows.Forms.SystemInformation.UserName
                 };
                 repoDB.WriteDB(repo);
                 created = true;

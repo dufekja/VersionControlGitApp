@@ -13,6 +13,7 @@ namespace VersionControlGitApp.Database {
         [PrimaryKey, AutoIncrement] public int ID { get; set; }
         [NotNull, MaxLength(40)] public string Name { get; set; }
         [NotNull, MaxLength(200)] public string Path { get; set; }
+        [NotNull, MaxLength(100)] public string User { get; set; }
     }
 
     public class LocalRepoDB {
@@ -22,8 +23,8 @@ namespace VersionControlGitApp.Database {
             database.CreateTable<Repo>();
         }
 
-        public List<string> Refresh() {
-            List<Repo> repoList = ReadDB();
+        public List<string> Refresh(string user) {
+            List<Repo> repoList = ReadDB(user);
             List<string> deletedRepos = new List<string>();
 
             foreach (Repo repo in repoList) {
@@ -50,11 +51,11 @@ namespace VersionControlGitApp.Database {
         }
 
         public List<Repo> FindByName(string name) {
-            var query = database.Query<Repo>($"SELECT * FROM Repositories WHERE Name='{name}'");
-            if (query.Count == 0) {
+            var result = database.Query<Repo>($"SELECT * FROM Repositories WHERE Name='{name}'");
+            if (result.Count == 0) {
                 return null;
             } else {
-                return query;
+                return result;
             }
         }
 
@@ -74,14 +75,17 @@ namespace VersionControlGitApp.Database {
             }
         }
 
-        public List<Repo> ReadDB() {
-            var TBrepo = database.Table<Repo>();
+        public List<Repo> ReadDB(string user) {
             List<Repo> list = new List<Repo>();
-
-            foreach (Repo repo in TBrepo) {
-                list.Add(repo);
+            try {
+                var result = database.Query<Repo>($"SELECT * FROM Repositories WHERE User='{user}'");
+                foreach (Repo repo in result) {
+                    list.Add(repo);
+                }
+            } catch {
+                return null;
             }
-
+           
             return list;
         }
     }

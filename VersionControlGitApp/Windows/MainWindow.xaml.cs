@@ -24,7 +24,8 @@ namespace VersionControlGitApp {
         public static GitHubClient client = new GitHubClient(new ProductHeaderValue("VersionControlGitApp"));
         private readonly LocalRepoDB repoDB = new LocalRepoDB();
         public static List<UserRepository> userRepos;
-        public static User user;        
+        public static User user;
+        public static string loggedUser;
 
         public static Thread repoChangesThread;
         public static RepoChangesThreadState newRepoChangesThreadState = RepoChangesThreadState.New;
@@ -35,6 +36,7 @@ namespace VersionControlGitApp {
 
             // init repository database
             repoDB.InitDB();
+            loggedUser = System.Windows.Forms.SystemInformation.UserName;
 
             // auth user using token
             client = GithubController.Authenticate(client, token, this);
@@ -44,7 +46,7 @@ namespace VersionControlGitApp {
 
             // get user based on token and set name + picture
             user = client.User.Current().Result;
-            MainWindowUI.InitUIElements(this, user, repoDB);
+            MainWindowUI.InitUIElements(this, user, repoDB, loggedUser);
 
             // get path from pathlabel
             string path = PathLabel.Text.ToString();
@@ -219,7 +221,7 @@ namespace VersionControlGitApp {
                 Thread.Sleep(2500);
 
                 // refresh lisbox if there are deleted repositories
-                List<string> deletedRepos = repoDB.Refresh();
+                List<string> deletedRepos = repoDB.Refresh(loggedUser);
                 if (deletedRepos != null) {
                     Dispatcher.Invoke(() => RepoListBox.Items.Clear());
                     Dispatcher.Invoke(() => MainWindowUI.ListBoxLoad());
