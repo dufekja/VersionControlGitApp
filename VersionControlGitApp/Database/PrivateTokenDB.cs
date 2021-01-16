@@ -17,6 +17,9 @@ namespace VersionControlGitApp.Database {
     public class PrivateTokenDB {
         public static SQLiteConnection database = new SQLiteConnection("./tokens.db3");
 
+        /// <summary>
+        /// Init token database
+        /// </summary>
         public void InitDB() {
             database.CreateTable<Token>();
         }

@@ -19,10 +19,18 @@ namespace VersionControlGitApp.Database {
     public class LocalRepoDB {
         public static SQLiteConnection database = new SQLiteConnection("./repos.db3");
 
+        /// <summary>
+        /// Init repository database
+        /// </summary>
         public void InitDB() {
             database.CreateTable<Repo>();
         }
 
+        /// <summary>
+        /// Refresh database and return stored data
+        /// </summary>
+        /// <param name="user">Current logged user</param>
+        /// <returns>Returns list of repositories</returns>
         public List<string> Refresh(string user) {
             List<Repo> repoList = ReadDB(user);
             List<string> deletedRepos = new List<string>();
@@ -40,6 +48,10 @@ namespace VersionControlGitApp.Database {
             return deletedRepos;
         }
 
+        /// <summary>
+        /// Save repository to DB
+        /// </summary>
+        /// <param name="repo">Repository object</param>
         public void WriteDB(Repo repo) {
             var obj = FindByName(repo.Name);
             if (obj == null) {
@@ -50,6 +62,11 @@ namespace VersionControlGitApp.Database {
             }
         }
 
+        /// <summary>
+        /// Find repository by name
+        /// </summary>
+        /// <param name="name">Repository name</param>
+        /// <returns>Returns list of found repositories</returns>
         public List<Repo> FindByName(string name) {
             var result = database.Query<Repo>($"SELECT * FROM Repositories WHERE Name='{name}'");
             if (result.Count == 0) {
@@ -59,6 +76,10 @@ namespace VersionControlGitApp.Database {
             }
         }
 
+        /// <summary>
+        /// Delete repository by name
+        /// </summary>
+        /// <param name="name">Repository name</param>
         public void DeleteByName(string name) {
             try {
                 database.Query<Repo>($"DELETE FROM Repositories WHERE Name='{name}'");
@@ -67,6 +88,10 @@ namespace VersionControlGitApp.Database {
             }
         }
 
+        /// <summary>
+        /// Delete repository by path
+        /// </summary>
+        /// <param name="path">Repository path</param>
         public void DeleteByPath(string path) {
             try {
                 database.Query<Repo>($"DELETE FROM Repositories WHERE Path='{path}'");
@@ -75,6 +100,11 @@ namespace VersionControlGitApp.Database {
             }
         }
 
+        /// <summary>
+        /// Read database
+        /// </summary>
+        /// <param name="user">Currently logged user</param>
+        /// <returns>Returns list of found repositories</returns>
         public List<Repo> ReadDB(string user) {
             List<Repo> list = new List<Repo>();
             try {

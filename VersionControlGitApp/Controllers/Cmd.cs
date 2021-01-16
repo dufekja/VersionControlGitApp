@@ -13,6 +13,12 @@ using static VersionControlGitApp.Config;
 namespace VersionControlGitApp.Controllers {
     public static class Cmd {
 
+        /// <summary>
+        /// Run git async command using window terminal
+        /// </summary>
+        /// <param name="command">Given command</param>
+        /// <param name="dir">Directory where to execute command</param>
+        /// <returns>ConsoleState variable which returns Success or Error</returns>
         public static ConsoleState Run(string command, string dir) {
             if (command == "" || dir == "")
                 return ConsoleState.Error;
@@ -35,6 +41,12 @@ namespace VersionControlGitApp.Controllers {
             return ConsoleState.Success;
         }
 
+        /// <summary>
+        /// Run git async command using window terminal and return output
+        /// </summary>
+        /// <param name="command">Given command</param>
+        /// <param name="dir">Directory where to execute command</param>
+        /// <returns>Returns list of output lines</returns>
         public static List<string> RunAndRead(string command, string dir) {
             if (command == "" || dir == "")
                 return null;
@@ -68,12 +80,24 @@ namespace VersionControlGitApp.Controllers {
             return output;
         }
 
+        /// <summary>
+        /// Parse string between 2 delimeters
+        /// </summary>
+        /// <param name="text">Given text</param>
+        /// <param name="firstDelimeter">First delimeter</param>
+        /// <param name="secondDelimeter">Second delimeter</param>
+        /// <returns>Returns string between delimeters</returns>
         public static string Explode(string text, string firstDelimeter, string secondDelimeter) {
             string[] arr = text.Split(new string[] { firstDelimeter }, StringSplitOptions.None);
             string[] arr2 = arr[1].Split(new string[] { secondDelimeter }, StringSplitOptions.None);
             return arr2[0];
         }
 
+        /// <summary>
+        /// Check for unstracked files in repository
+        /// </summary>
+        /// <param name="path">Given path of repository</param>
+        /// <returns>Returns list of untracked files</returns>
         public static List<string> UntrackedFiles(string path) {
             List<string> modifiedFiles = RunAndRead("status --porcelain", path);
             List<string> output = new List<string>();
@@ -88,6 +112,11 @@ namespace VersionControlGitApp.Controllers {
             return output;
         }
         
+        /// <summary>
+        /// Check for modified files in selected repository
+        /// </summary>
+        /// <param name="path">Path to selected repository</param>
+        /// <returns>Returns list of modified files</returns>
         public static List<string> ModifiedFiles(string path) {
             List<string> files = RunAndRead("status --porcelain", path);
             List<string> output = new List<string>();
@@ -114,12 +143,22 @@ namespace VersionControlGitApp.Controllers {
                 return null;
         }
 
+        /// <summary>
+        /// Add file to watching index
+        /// </summary>
+        /// <param name="files">List of files</param>
+        /// <param name="path">Path to selected repository</param>
         public static void AddFile(List<string> files, string path) {
             foreach (string file in files) {
                 Run($"add {file}", path);
             }
         }
 
+        /// <summary>
+        /// Remove files that was removed
+        /// </summary>
+        /// <param name="path">Selected repository</param>
+        /// <returns>Returns list of deleted files</returns>
         public static List<string> RemovedFiles(string path) {
             List<string> files = RunAndRead("status --porcelain", path);
             List<string> output = new List<string>();
@@ -141,6 +180,12 @@ namespace VersionControlGitApp.Controllers {
                 return null;
         }
 
+        /// <summary>
+        /// Push selected repository to Github
+        /// </summary>
+        /// <param name="client">Github client object</param>
+        /// <param name="name">Repository name</param>
+        /// <param name="path">Repository path</param>
         public static void PushRepo(GitHubClient client, string name, string path) {
 
             int counter = 0;
@@ -168,6 +213,11 @@ namespace VersionControlGitApp.Controllers {
             }
         }
 
+        /// <summary>
+        /// Pull selected repository from Github
+        /// </summary>
+        /// <param name="client">Github client object</param>
+        /// <param name="path">External repository path</param>
         public static void PullRepo(GitHubClient client, string path) {
 
             int counter = 0;

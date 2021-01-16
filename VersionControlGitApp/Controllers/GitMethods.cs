@@ -98,6 +98,11 @@ namespace VersionControlGitApp.Controllers {
             }
         }
 
+        /// <summary>
+        /// Init git repository
+        /// </summary>
+        /// <param name="path">Path to repository</param>
+        /// <param name="repoDB">RepoDB object</param>
         public static void Init(string path, LocalRepoDB repoDB) {
             string command = $"init {path}";
             ConsoleState state = Cmd.Run(command, path);
@@ -106,6 +111,13 @@ namespace VersionControlGitApp.Controllers {
             }
         }
 
+        /// <summary>
+        /// Commit all watched changes
+        /// </summary>
+        /// <param name="path">Path to selected repository</param>
+        /// <param name="msg">Commit message</param>
+        /// <param name="desc">Commit description</param>
+        /// <param name="win">Reference to MainWindow object</param>
         public static void Commit(string path, string msg, string desc, MainWindow win) {
             ConsoleState state = ConsoleState.Error;
             List<string> lines = Cmd.RunAndRead("status --porcelain", path);
@@ -131,7 +143,12 @@ namespace VersionControlGitApp.Controllers {
             }  
         }
 
-        
+        /// <summary>
+        /// User push interaction method
+        /// </summary>
+        /// <param name="path">Selected repository path</param>
+        /// <param name="client">Github client</param>
+        /// <param name="win">Reference to MainWindow object</param>
         public static void Push(string path, GitHubClient client, MainWindow win) {
 
             string name = GetNameFromPath(path);
@@ -151,11 +168,23 @@ namespace VersionControlGitApp.Controllers {
             }
         }
 
+        /// <summary>
+        /// User pull interaction
+        /// </summary>
+        /// <param name="path">Selected repository path</param>
+        /// <param name="client">Github client</param>
+        /// <param name="win">Reference to MainWindow object</param>
         public static void Pull(string path, GitHubClient client, MainWindow win) {
             ConsoleLogger.StatusBarUpdate("Pulling external repository", win);
             Task.Run(() => Cmd.PullRepo(client, path));
         }
 
+        /// <summary>
+        /// Fetch selected repository
+        /// </summary>
+        /// <param name="path">Selected repository path</param>
+        /// <param name="client">Github client</param>
+        /// <param name="win">Reference to MainWindow object</param>
         public static void Fetch(string path, GitHubClient client, MainWindow win) {
             string name = GetNameFromPath(path);
             bool repoExists = GithubController.RepoExists(client, name);
@@ -174,6 +203,11 @@ namespace VersionControlGitApp.Controllers {
 
         }
 
+        /// <summary>
+        /// Get list of branches for repository
+        /// </summary>
+        /// <param name="path">Repository path</param>
+        /// <returns>Returns list of branches</returns>
         public static List<string> GetBranches(string path) {
             List<string> lines = Cmd.RunAndRead("branch", path);
 
@@ -183,6 +217,11 @@ namespace VersionControlGitApp.Controllers {
             return lines;
         }
 
+        /// <summary>
+        /// Get current repository branch
+        /// </summary>
+        /// <param name="path">Repository path</param>
+        /// <returns>Returns current repository branch</returns>
         public static string GetCurrentBranch(string path) {
             List<string> lines = GetBranches(path);
             if (lines != null)
@@ -194,10 +233,14 @@ namespace VersionControlGitApp.Controllers {
             return null;
         }
 
+        /// <summary>
+        /// Get all changes between last commit and current version of repository
+        /// </summary>
+        /// <param name="file">File name</param>
+        /// <param name="path">Repostory path</param>
+        /// <returns>Returns diff output</returns>
         public static string GetAllFileChanges(string file, string path) {
-
             string ret = "";
-
             List<string> diffSummary = Cmd.RunAndRead($"diff HEAD {file}", path);
 
             // filter changed lines
@@ -213,10 +256,7 @@ namespace VersionControlGitApp.Controllers {
                 }
             }
 
-
-            List<string> outputContentList = new List<string>(File.ReadAllText($@"{path}\{file}").Split('\n'));
-
-            
+            List<string> outputContentList = new List<string>(File.ReadAllText($@"{path}\{file}").Split('\n'));      
             return ret;
         }
 
