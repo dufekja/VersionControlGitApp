@@ -26,6 +26,7 @@ namespace VersionControlGitApp {
         public const string HEADERMSG_REMOVE_CONF = "Remove confirmation";
         public const string HEADERMSG_DELETE_REPO = "Delete repository";
         public const string HEADERMSG_REMOVE_REPO = "Remove repository";
+        public const string HEADERMSG_CREATE_REPO = "Create repository";
         public const string HEADERMSG_COMMIT_REPO = "Commit repository";
         public const string HEADERMSG_PUSH_REPO = "Push repository";
         public const string HEADERMSG_PULL_REPO = "Pull repository"; 

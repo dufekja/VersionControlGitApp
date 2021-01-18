@@ -69,7 +69,6 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="path">Path of given folder</param>
         /// <returns>Returns bool if folder is repo</returns>
         public static bool IsRepo(string path) {
-
             bool status = false;
             if (Directory.Exists(path + @"\.git")) {
                 status = true;
@@ -250,6 +249,7 @@ namespace VersionControlGitApp.Controllers {
                 if (read) {
                     if (!line.Contains("newline")) {
                         diffSummaryOutput.Add(line);
+                        ret += line + "\n";
                     }
                 } else if (line.Contains("@@")) {
                     read = true;

@@ -17,6 +17,7 @@ using VersionControlGitApp.Logging;
 using LiveCharts.Wpf;
 using LiveCharts;
 using VersionControlGitApp.Controllers;
+using LiveCharts.Defaults;
 
 namespace VersionControlGitApp.Windows {
     public partial class StatisticsWindow : Window {
@@ -29,11 +30,29 @@ namespace VersionControlGitApp.Windows {
         public static string currentRepo;
         public static string currentRepoPath;
 
-        public SeriesCollection SeriesCollection { get; private set; }
-        public string[] Labels { get; private set; }
+        public SeriesCollection SeriesCollection { get; set; }
 
         public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header, string _currentRepoPath) {
             InitializeComponent();
+
+            SeriesCollection = new SeriesCollection
+            {
+                new PieSeries
+                {
+                    Title = "Repo 1",
+                    Values = new ChartValues<ObservableValue> { new ObservableValue(8) },
+                    DataLabels = true
+                },
+                new PieSeries
+                {
+                    Title = "Repo 2",
+                    Values = new ChartValues<ObservableValue> { new ObservableValue(6) },
+                    DataLabels = true
+                },
+
+            };
+
+            DataContext = this;
 
             mainWin = _win;
             client = _client;
@@ -42,7 +61,6 @@ namespace VersionControlGitApp.Windows {
             header = _header;
             currentRepoPath = _currentRepoPath;
             currentRepo = GitMethods.GetNameFromPath(_currentRepoPath);
-
 
             if (header == "User") {
                 GenerateUserData();
@@ -59,7 +77,7 @@ namespace VersionControlGitApp.Windows {
                               $"Private repositories: {user.TotalPrivateRepos}");
 
             // calculate commit activity for each repo
-            Task.Run(() => SetStatsLabel());
+            Task.Run(() => Dispatcher.Invoke(() => SetStatsLabel()));
 
         }
 
@@ -90,20 +108,13 @@ namespace VersionControlGitApp.Windows {
             List<string[]> repositories = GenerateYearlyUserCommitActivity();
             string text = "";
 
-            /*SeriesCollection = new SeriesCollection
-            {
-                new ColumnSeries
-                {
-                    Title = "Commits per year",
-                    Values = new ChartValues<double> { 10, 50, 39, 50 }
-                }
-            };
-
-            Labels = new[] { "Maria", "Susan", "Charles", "Frida" };
-
-            DataContext = this;*/
-
             foreach (var repo in repositories) {
+                //adding values or series will update and animate the chart automatically
+                SeriesCollection.Add(new PieSeries() { 
+                    Title = $"{repo[0]}"
+                });
+                SeriesCollection[SeriesCollection.Count].Values.Add(new ObservableValue(int.Parse(repo[1])));
+
                 text += $"{repo[0]} - {repo[1]}\n";
             }
 
@@ -113,7 +124,7 @@ namespace VersionControlGitApp.Windows {
         private void GenerateRepoData() {
             SetRepoLabelsText("", "");
 
-            Task.Run(() => GenerateRepoDataFunc());
+           Task.Run(() => GenerateRepoDataFunc());
         }
 
         private void GenerateRepoDataFunc() {
@@ -140,9 +151,6 @@ namespace VersionControlGitApp.Windows {
                 }
 
             }
-                
-
-            
         }
 
         private void SetRepoLabelsText(string publicLabel, string privateLabel) {
