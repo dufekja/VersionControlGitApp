@@ -82,7 +82,7 @@ namespace VersionControlGitApp.Controllers {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
                     $"Do you want to remove {GitMethods.GetNameFromPath(repoPath)} from list?",
                     HEADERMSG_REMOVE_CONF,
-                    System.Windows.MessageBoxButton.YesNo);
+                    MessageBoxButton.YesNo);
 
                 if (messageBoxResult == MessageBoxResult.Yes) {
                     repoDB.DeleteByPath(repoPath);

@@ -54,7 +54,20 @@
 
                     <!-- Git menu -->
                     <MenuItem Header="Git">
-                        <MenuItem Header="Private Token" Padding="3" FontSize="14"/>
+                        <Label Content="Change private token" 
+                               Foreground="{StaticResource WhiteTextColor}"
+                               FontSize="18"/>
+                        
+                        <StackPanel Orientation="Horizontal">
+                            
+                            <TextBox x:Name="TokenTextBox" FontSize="12" 
+                                     Width="300" Padding="2,6,2,0"/>
+                            
+                            <Button Content="Update" Click="UpdatePrivateToken"
+                                    Width="60" Height="30"
+                                    Margin="12,0,0,0"/>
+                            
+                        </StackPanel>
                     </MenuItem>
 
                     <!-- File menu -->

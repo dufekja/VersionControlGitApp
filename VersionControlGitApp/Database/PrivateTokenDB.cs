@@ -24,12 +24,19 @@ namespace VersionControlGitApp.Database {
             database.CreateTable<Token>();
         }
 
-        public void WriteToken(string value, string user, bool isActive) {
-            database.Insert(new Token() {
-                Value = value,
-                User = user,
-                IsActive = isActive
-            });
+        public bool WriteToken(string value, string user, bool isActive) {
+            try {
+                database.Insert(new Token() {
+                    Value = value,
+                    User = user,
+                    IsActive = isActive
+                });
+                return true;
+            } catch {
+                return false;
+            }
+
+
         }
 
         public Token GetFirstToken(string user) {
@@ -75,6 +82,17 @@ namespace VersionControlGitApp.Database {
                 };
             }
         }
+
+        public bool UpdateTokenByValue(string value, bool isActive) {
+            try {
+                database.Query<Token>($"UPDATE Tokens SET IsActive='{isActive}' WHERE Value='{value}'");
+                return true;
+            } catch {
+                return false;
+            }
+            
+        }
+
     }
 
 

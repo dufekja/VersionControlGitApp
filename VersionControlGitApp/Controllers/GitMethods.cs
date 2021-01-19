@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using VersionControlGitApp.Database;
 using VersionControlGitApp.Logging;
 using static VersionControlGitApp.Config;
@@ -157,12 +158,12 @@ namespace VersionControlGitApp.Controllers {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
                     $"{name} not found. Would you like to create it ?",
                     $"{name} not found",
-                    System.Windows.MessageBoxButton.YesNo);
+                    MessageBoxButton.YesNo);
 
                 if (messageBoxResult == MessageBoxResult.Yes) {
                     ConsoleLogger.StatusBarUpdate("Pushing external repository", win);
                     client.Repository.Create(new NewRepository(name));
-                    Task.Run(() => Cmd.PushRepo(client, name, path));
+                    Task.Run(() => Cmd.PushRepo(client, name, path, win));
                 }
             }
         }
@@ -175,7 +176,7 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="win">Reference to MainWindow object</param>
         public static void Pull(string path, GitHubClient client, MainWindow win) {
             ConsoleLogger.StatusBarUpdate("Pulling external repository", win);
-            Task.Run(() => Cmd.PullRepo(client, path));
+            Task.Run(() => Cmd.PullRepo(client, path, win));
         }
 
         /// <summary>
@@ -258,6 +259,26 @@ namespace VersionControlGitApp.Controllers {
 
             List<string> outputContentList = new List<string>(File.ReadAllText($@"{path}\{file}").Split('\n'));      
             return ret;
+        }
+
+        /// <summary>
+        /// Updates private token of logged user
+        /// </summary>
+        /// <param name="token">Private token</param>
+        /// <param name="win">Reference to MainWindow object</param>
+        public static bool UpdatePrivateTokenCommand(string token, PrivateTokenDB tokenDB, MainWindow win) {
+
+            // get active token and set it unactive
+            Token tk = tokenDB.GetActiveToken(SystemInformation.UserName);
+            bool updated = tokenDB.UpdateTokenByValue(tk.Value, false);
+            bool created = tokenDB.WriteToken(token, SystemInformation.UserName, true);
+
+            if (updated && created) {
+                return true;
+            }
+
+            return false;
+
         }
 
     }

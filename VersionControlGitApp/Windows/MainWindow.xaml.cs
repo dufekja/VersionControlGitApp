@@ -23,6 +23,7 @@ namespace VersionControlGitApp {
         
         public static GitHubClient client = new GitHubClient(new ProductHeaderValue("VersionControlGitApp"));
         private readonly LocalRepoDB repoDB = new LocalRepoDB();
+        private readonly PrivateTokenDB tokenDB;
         public static List<UserRepository> userRepos;
         public static User user;
         public static string loggedUser;
@@ -31,12 +32,13 @@ namespace VersionControlGitApp {
         public static RepoChangesThreadState newRepoChangesThreadState = RepoChangesThreadState.New;
         
 
-        public MainWindow(string token) {
+        public MainWindow(string token, PrivateTokenDB _tokenDB) {
             InitializeComponent();
 
-            // init repository database
+            // init databases
+            tokenDB = _tokenDB;
             repoDB.InitDB();
-            loggedUser = System.Windows.Forms.SystemInformation.UserName;
+            loggedUser = SystemInformation.UserName;
 
             // auth user using token
             client = GithubController.Authenticate(client, token, this);
@@ -286,6 +288,22 @@ namespace VersionControlGitApp {
             string repoPath = PathLabel.Text.ToString();
 
             new StatisticsWindow(this, client, user, repoDB, header, repoPath).Show();
+        }
+
+        private void UpdatePrivateToken(object sender, RoutedEventArgs e) {
+            string token = TokenTextBox.Text.ToString();
+            TokenTextBox.Text = "";
+
+            if (token != "" && token.Length == 40) {
+                bool updated = GitMethods.UpdatePrivateTokenCommand(token, tokenDB, this);
+                if (updated) {
+                    Dispatcher.Invoke(() => client = GithubController.Authenticate(client, token, this));
+                }
+
+            } else {
+                ConsoleLogger.UserPopup("Private token", "Please insert valid token");
+            }
+            
         }
 
         private void Window_Minimized(object sender, RoutedEventArgs e) {

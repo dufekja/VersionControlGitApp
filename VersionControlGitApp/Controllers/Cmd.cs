@@ -186,12 +186,14 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="client">Github client object</param>
         /// <param name="name">Repository name</param>
         /// <param name="path">Repository path</param>
-        public static void PushRepo(GitHubClient client, string name, string path) {
+        public static void PushRepo(GitHubClient client, string name, string path, MainWindow win) {
 
             int counter = 0;
             while (true) {
                 Thread.Sleep(1000);
                 bool repoExists = GithubController.RepoExists(client, name);
+
+                win.Dispatcher.Invoke(() => ConsoleLogger.StatusBarUpdate($"Pushing repository | Time: {counter}s", win));
 
                 if (repoExists || counter > 5)
                     break;
@@ -218,13 +220,15 @@ namespace VersionControlGitApp.Controllers {
         /// </summary>
         /// <param name="client">Github client object</param>
         /// <param name="path">External repository path</param>
-        public static void PullRepo(GitHubClient client, string path) {
+        public static void PullRepo(GitHubClient client, string path, MainWindow win) {
 
             int counter = 0;
             string name = GitMethods.GetNameFromPath(path);
             while (true) {
                 Thread.Sleep(1000);
                 bool repoExists = GithubController.RepoExists(client, name);
+
+                win.Dispatcher.Invoke(() => ConsoleLogger.StatusBarUpdate($"Pulling repository | Time: {counter}s", win));
 
                 if (repoExists || counter > 5)
                     break;

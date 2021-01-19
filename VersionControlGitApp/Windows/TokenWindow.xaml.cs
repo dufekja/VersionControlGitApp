@@ -40,7 +40,7 @@ namespace VersionControlGitApp {
         }
 
         private void GoMainWindow(string token) {
-            new MainWindow(token).Show();
+            new MainWindow(token, tokenDB).Show();
             this.Close();
         }
 
