@@ -266,19 +266,34 @@ namespace VersionControlGitApp.Controllers {
         /// </summary>
         /// <param name="token">Private token</param>
         /// <param name="win">Reference to MainWindow object</param>
-        public static bool UpdatePrivateTokenCommand(string token, PrivateTokenDB tokenDB, MainWindow win) {
+        public static bool UpdatePrivateTokenCommand(string token, PrivateTokenDB tokenDB) {
 
             // get active token and set it unactive
             Token tk = tokenDB.GetActiveToken(SystemInformation.UserName);
-            bool updated = tokenDB.UpdateTokenByValue(tk.Value, false);
-            bool created = tokenDB.WriteToken(token, SystemInformation.UserName, true);
+            if (tk != null) {
 
-            if (updated && created) {
-                return true;
+                if (tk.Value == token) {
+                    ConsoleLogger.UserPopup("Private token", "This token is already active");
+                    return false;
+                }
+
+                // update old to false
+               bool updated = tokenDB.UpdateTokenByValue(tk.Value, 0);
+
+               if (updated) {
+                    Token updateToken = tokenDB.FindTokenByValue(token);
+
+                    if (updateToken != null) {
+                        tokenDB.UpdateTokenByValue(token, 1);
+                    } else {
+                        tokenDB.WriteToken(token, SystemInformation.UserName, 1);
+                    }
+
+                    return true;
+                }
             }
 
             return false;
-
         }
 
     }

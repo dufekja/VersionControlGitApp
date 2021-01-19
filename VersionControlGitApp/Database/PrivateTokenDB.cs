@@ -11,7 +11,7 @@ namespace VersionControlGitApp.Database {
         [PrimaryKey, AutoIncrement] public int ID { get; set; }
         [NotNull, MaxLength(25)] public string User { get; set; }
         [NotNull, MaxLength(40), Unique] public string Value { get; set; }
-        [NotNull] public bool IsActive { get; set; }
+        [NotNull] public int IsActive { get; set; }
     }
     
     public class PrivateTokenDB {
@@ -24,7 +24,7 @@ namespace VersionControlGitApp.Database {
             database.CreateTable<Token>();
         }
 
-        public bool WriteToken(string value, string user, bool isActive) {
+        public bool WriteToken(string value, string user, int isActive) {
             try {
                 database.Insert(new Token() {
                     Value = value,
@@ -61,7 +61,7 @@ namespace VersionControlGitApp.Database {
 
             if (result.Count > 0) {
                 foreach (Token token in result) {
-                    if (token.IsActive == true) {
+                    if (token.IsActive == 1) {
                         return token;
                     }
                 }
@@ -83,7 +83,7 @@ namespace VersionControlGitApp.Database {
             }
         }
 
-        public bool UpdateTokenByValue(string value, bool isActive) {
+        public bool UpdateTokenByValue(string value, int isActive) {
             try {
                 database.Query<Token>($"UPDATE Tokens SET IsActive='{isActive}' WHERE Value='{value}'");
                 return true;

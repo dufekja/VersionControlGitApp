@@ -295,9 +295,10 @@ namespace VersionControlGitApp {
             TokenTextBox.Text = "";
 
             if (token != "" && token.Length == 40) {
-                bool updated = GitMethods.UpdatePrivateTokenCommand(token, tokenDB, this);
+                bool updated = GitMethods.UpdatePrivateTokenCommand(token, tokenDB);
                 if (updated) {
                     Dispatcher.Invoke(() => client = GithubController.Authenticate(client, token, this));
+                    ConsoleLogger.UserPopup("Private token", "Private token updated and set to active");
                 }
 
             } else {

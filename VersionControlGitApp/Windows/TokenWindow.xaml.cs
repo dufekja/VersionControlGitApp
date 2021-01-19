@@ -30,7 +30,7 @@ namespace VersionControlGitApp {
             List<Token> tokens = tokenDB.FindTokensByUser(user);
             if (tokens != null) {
                 foreach (Token token in tokens) {
-                    if (token.IsActive)
+                    if (token.IsActive == 1)
                         GoMainWindow(token.Value);
                 }
             }
@@ -50,10 +50,10 @@ namespace VersionControlGitApp {
             if (token.Length == 40) {
                 if (tokenDB.FindTokenByValue(token) == null) {
                     Token activeToken = tokenDB.GetActiveToken(user);
-                    bool isActive = false;
+                    int isActive = 0;
 
                     if (activeToken == null)
-                        isActive = true;
+                        isActive = 1;
 
                     tokenDB.WriteToken(token, user, isActive);
                     GoMainWindow(token);
