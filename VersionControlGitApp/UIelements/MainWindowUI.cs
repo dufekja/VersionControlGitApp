@@ -15,12 +15,14 @@ namespace VersionControlGitApp.UIelements {
         public static MainWindow win;
         public static User user;
         public static LocalRepoDB repoDB;
+        public static string loggedUser;
 
-        public static void InitUIElements(MainWindow _win, User _user, LocalRepoDB _repoDB) {
+        public static void InitUIElements(MainWindow _win, User _user, LocalRepoDB _repoDB, string _loggedUser) {
 
             win = _win;
             user = _user;
             repoDB = _repoDB;
+            loggedUser = _loggedUser;
 
             win.PathLabel.Text = "";
             win.UserName.Text = user.Name;
@@ -48,7 +50,6 @@ namespace VersionControlGitApp.UIelements {
         }
 
         public static void LoadRepoBranches(string path, MainWindow win) {
-
             win.MergeBranchMenuItem.Items.Clear();
             win.ChangeBranchMenuItem.Items.Clear();
 
@@ -62,14 +63,12 @@ namespace VersionControlGitApp.UIelements {
                         MenuItem item = new MenuItem() {
                             Header = line.Replace("*", "").Trim(),
                             FontSize = 14.0,
-
                         };
                         win.ChangeBranchMenuItem.Items.Add(item);
 
                         item = new MenuItem() {
                             Header = line.Replace("*", "").Trim(),
                             FontSize = 14.0,
-
                         };
                         win.MergeBranchMenuItem.Items.Add(item);
                     }
@@ -86,8 +85,6 @@ namespace VersionControlGitApp.UIelements {
                 win.MergeBranchMenuItem.IsEnabled = true;
             else
                 win.MergeBranchMenuItem.IsEnabled = false;
-
-
         }
 
         public static void ChangeCommitButtonBranch(string path, MainWindow win) {
@@ -96,7 +93,7 @@ namespace VersionControlGitApp.UIelements {
 
         public static void ListBoxLoad() {
 
-            List<Repo> localRepos = repoDB.ReadDB();
+            List<Repo> localRepos = repoDB.ReadDB(loggedUser);
             bool isSelected = false;
 
             if (localRepos.Count > 0) {

@@ -54,7 +54,20 @@
 
                     <!-- Git menu -->
                     <MenuItem Header="Git">
-                        <MenuItem Header="Private Token" Padding="3" FontSize="14"/>
+                        <Label Content="Change private token" 
+                               Foreground="{StaticResource WhiteTextColor}"
+                               FontSize="18"/>
+                        
+                        <StackPanel Orientation="Horizontal">
+                            
+                            <TextBox x:Name="TokenTextBox" FontSize="12" 
+                                     Width="300" Padding="2,6,2,0"/>
+                            
+                            <Button Content="Update" Click="UpdatePrivateToken"
+                                    Width="60" Height="30"
+                                    Margin="12,0,0,0"/>
+                            
+                        </StackPanel>
                     </MenuItem>
 
                     <!-- File menu -->
@@ -62,11 +75,6 @@
                         <MenuItem InputGestureText="Ctrl+Shift+N" Click="NewRepository" Header="New Repository"/>
                         <MenuItem InputGestureText="Ctrl+Shift+A" Click="AddLocalRepository" Header="Add Local Repository"/>
                         <MenuItem InputGestureText="Ctrl+Shift+C" Click="CloneRepository" Header="Clone Repository"/>
-                    </MenuItem>
-
-                    <!-- Accounts menu -->
-                    <MenuItem Header="Accounts">
-
                     </MenuItem>
 
                     <!-- Branch menu -->
@@ -105,10 +113,6 @@
                         <MenuItem Header="Repository" Click="OpenStatistics"/>
                     </MenuItem>
 
-                    <!-- Team menu -->
-                    <MenuItem Header="Team">
-
-                    </MenuItem>
                 </Menu>
             </StackPanel>
 
@@ -116,7 +120,7 @@
                         Background="{StaticResource GrayBackgroundColor}">
                 <Grid DockPanel.Dock="Right">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="493.5"/>
+                        <ColumnDefinition Width="560"/>
                         <ColumnDefinition Width="30"/>
                         <ColumnDefinition Width="30"/>
                     </Grid.ColumnDefinitions>
@@ -164,7 +168,7 @@
                          VerticalAlignment="Center" TextWrapping="Wrap"/>
 
                 <!-- Commit button -->
-                <Button x:Name="CommitButton" Click="CommitRepository" Content="Commit to {branchName}"
+                <Button x:Name="CommitButton" Click="CommitRepository" Content="Commit"
                         Margin="8,8,8,0" Height="30" FontSize="14"/>
                 
             </StackPanel>
@@ -172,30 +176,31 @@
 
         <!-- Github user image -->
         <Image x:Name="UserImage" 
-            Grid.Column="0" Grid.Row="1" Grid.RowSpan="1" Margin="0"/>
+            Grid.Column="0" Grid.Row="1" Grid.RowSpan="1" Margin="14,8,4,-8"/>
 
         <!-- Github user nick -->
         <Label 
             Foreground="{StaticResource WhiteTextColor}" 
-            Grid.Column="1" Grid.Row="1" 
-            VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            Grid.Column="1" Grid.Row="1" Margin="12,4,12,4"
+            VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+            VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Padding="0">
 
             <Label.Content>
-                <AccessText x:Name="UserName" FontSize="12" TextWrapping="Wrap" Text="Account name placeholder"/>
+                <AccessText x:Name="UserName" FontSize="14" TextWrapping="Wrap" Text="Account name placeholder"/>
             </Label.Content>
         </Label>
 
         <!-- Files to commit combobox -->
         <StackPanel Grid.Row="1" Grid.Column="2" Grid.RowSpan="1"
                     VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                    Background="{StaticResource BlackColor}" Margin="12,4,0,0">
+                    Background="{StaticResource BlackColor}" Margin="12,8,0,0">
             
             <Label Content="Modified Files" 
                    Foreground="{StaticResource WhiteTextColor}" 
                    FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center"/>
 
             <ComboBox x:Name="FilesToCommit" SelectionChanged="FilesToCommit_SelectionChanged" 
-                     FontSize="12" HorizontalAlignment="Stretch" MinHeight="25"/>
+                     FontSize="12" HorizontalAlignment="Stretch" MinHeight="24"/>
 
         </StackPanel>
 
@@ -207,7 +212,7 @@
                VerticalAlignment="Center"
                VerticalContentAlignment="Center"
                Height="32"
-               Margin="12,8,12,0" Padding="4,0,4,0"
+               Margin="12,-12,12,0" Padding="4,0,4,0"
                Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="4"/>
 
         <!-- Current selected file content -->
@@ -220,18 +225,14 @@
         </TextBox>
 
         <!-- Listbox with added repositories -->
-        <ScrollViewer 
+        <ScrollViewer
             Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="4"
             Margin="12,-20,0,4">
             
-            <ListBox 
+            <ListBox
                 x:Name="RepoListBox" 
-                Foreground="{StaticResource WhiteTextColor}" 
-                Background="{StaticResource GrayBackgroundColor}" 
-                BorderBrush="{StaticResource AccentsColor}"
                 SelectionChanged="RepoListBox_SelectionChanged" 
-                MinHeight="30" FontSize="16"
-                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                MinHeight="30" FontSize="16"/>
 
         </ScrollViewer>
 

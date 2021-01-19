@@ -11,22 +11,32 @@ namespace VersionControlGitApp.Database {
         [PrimaryKey, AutoIncrement] public int ID { get; set; }
         [NotNull, MaxLength(25)] public string User { get; set; }
         [NotNull, MaxLength(40), Unique] public string Value { get; set; }
-        [NotNull] public bool IsActive { get; set; }
+        [NotNull] public int IsActive { get; set; }
     }
     
     public class PrivateTokenDB {
         public static SQLiteConnection database = new SQLiteConnection("./tokens.db3");
 
+        /// <summary>
+        /// Init token database
+        /// </summary>
         public void InitDB() {
             database.CreateTable<Token>();
         }
 
-        public void WriteToken(string value, string user, bool isActive) {
-            database.Insert(new Token() {
-                Value = value,
-                User = user,
-                IsActive = isActive
-            });
+        public bool WriteToken(string value, string user, int isActive) {
+            try {
+                database.Insert(new Token() {
+                    Value = value,
+                    User = user,
+                    IsActive = isActive
+                });
+                return true;
+            } catch {
+                return false;
+            }
+
+
         }
 
         public Token GetFirstToken(string user) {
@@ -51,7 +61,7 @@ namespace VersionControlGitApp.Database {
 
             if (result.Count > 0) {
                 foreach (Token token in result) {
-                    if (token.IsActive == true) {
+                    if (token.IsActive == 1) {
                         return token;
                     }
                 }
@@ -72,6 +82,17 @@ namespace VersionControlGitApp.Database {
                 };
             }
         }
+
+        public bool UpdateTokenByValue(string value, int isActive) {
+            try {
+                database.Query<Token>($"UPDATE Tokens SET IsActive='{isActive}' WHERE Value='{value}'");
+                return true;
+            } catch {
+                return false;
+            }
+            
+        }
+
     }
 
 

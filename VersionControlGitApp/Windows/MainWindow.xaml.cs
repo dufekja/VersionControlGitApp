@@ -23,18 +23,22 @@ namespace VersionControlGitApp {
         
         public static GitHubClient client = new GitHubClient(new ProductHeaderValue("VersionControlGitApp"));
         private readonly LocalRepoDB repoDB = new LocalRepoDB();
+        private readonly PrivateTokenDB tokenDB;
         public static List<UserRepository> userRepos;
-        public static User user;        
+        public static User user;
+        public static string loggedUser;
 
         public static Thread repoChangesThread;
         public static RepoChangesThreadState newRepoChangesThreadState = RepoChangesThreadState.New;
         
 
-        public MainWindow(string token) {
+        public MainWindow(string token, PrivateTokenDB _tokenDB) {
             InitializeComponent();
 
-            // init repository database
+            // init databases
+            tokenDB = _tokenDB;
             repoDB.InitDB();
+            loggedUser = SystemInformation.UserName;
 
             // auth user using token
             client = GithubController.Authenticate(client, token, this);
@@ -44,7 +48,7 @@ namespace VersionControlGitApp {
 
             // get user based on token and set name + picture
             user = client.User.Current().Result;
-            MainWindowUI.InitUIElements(this, user, repoDB);
+            MainWindowUI.InitUIElements(this, user, repoDB, loggedUser);
 
             // get path from pathlabel
             string path = PathLabel.Text.ToString();
@@ -219,7 +223,7 @@ namespace VersionControlGitApp {
                 Thread.Sleep(2500);
 
                 // refresh lisbox if there are deleted repositories
-                List<string> deletedRepos = repoDB.Refresh();
+                List<string> deletedRepos = repoDB.Refresh(loggedUser);
                 if (deletedRepos != null) {
                     Dispatcher.Invoke(() => RepoListBox.Items.Clear());
                     Dispatcher.Invoke(() => MainWindowUI.ListBoxLoad());
@@ -241,7 +245,7 @@ namespace VersionControlGitApp {
 
         // thread watching files in selected repo
         private void WaitForChangesOnRepo(string path) {
-            ConsoleLogger.Info("MainWindow.WaitForChangesOnRepo", $"Called with state: {newRepoChangesThreadState.ToString()}");
+            ConsoleLogger.Info("MainWindow.WaitForChangesOnRepo", $"Called with state: {newRepoChangesThreadState}");
 
             if (newRepoChangesThreadState == RepoChangesThreadState.New)
                 newRepoChangesThreadState = RepoChangesThreadState.Repeating;
@@ -281,8 +285,26 @@ namespace VersionControlGitApp {
 
         private void OpenStatistics(object sender, RoutedEventArgs e) {
             string header = ((MenuItem)sender).Header.ToString();
-            string repo = GitMethods.GetNameFromPath(PathLabel.Text.ToString());
-            new StatisticsWindow(this, client, user, repoDB, header, repo).Show();
+            string repoPath = PathLabel.Text.ToString();
+
+            new StatisticsWindow(this, client, user, repoDB, header, repoPath).Show();
+        }
+
+        private void UpdatePrivateToken(object sender, RoutedEventArgs e) {
+            string token = TokenTextBox.Text.ToString();
+            TokenTextBox.Text = "";
+
+            if (token != "" && token.Length == 40) {
+                bool updated = GitMethods.UpdatePrivateTokenCommand(token, tokenDB);
+                if (updated) {
+                    Dispatcher.Invoke(() => client = GithubController.Authenticate(client, token, this));
+                    ConsoleLogger.UserPopup("Private token", "Private token updated and set to active");
+                }
+
+            } else {
+                ConsoleLogger.UserPopup("Private token", "Please insert valid token");
+            }
+            
         }
 
         private void Window_Minimized(object sender, RoutedEventArgs e) {

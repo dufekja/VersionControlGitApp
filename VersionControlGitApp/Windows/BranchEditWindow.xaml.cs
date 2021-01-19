@@ -61,7 +61,7 @@ namespace VersionControlGitApp.Windows {
                 } 
             }
 
-            if (branchExists) {
+            if (branchExists && currentBranch != null) {
                 if (currentBranch != branch) {
                     Cmd.Run($"checkout {branch}", dirPath);
                     ConsoleLogger.UserPopup("Branch swap", $"Swapped from {branch} to {branch}");
@@ -82,7 +82,8 @@ namespace VersionControlGitApp.Windows {
                 ConsoleLogger.UserPopup("Branch create", $"Branch {branch} created");
                 close = true;
             } else {
-                ConsoleLogger.UserPopup("Branch edit", $"There was an error");
+                ConsoleLogger.UserPopup("Branch edit", $"There was an error\n Try to commit changes first");
+                Dispatcher.Invoke(() => win.CommitButton.Content = "Commit to master");
                 close = true;
             }
 

@@ -14,6 +14,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using VersionControlGitApp.Database;
 using VersionControlGitApp.Logging;
+using LiveCharts.Wpf;
+using LiveCharts;
+using VersionControlGitApp.Controllers;
+using LiveCharts.Defaults;
 
 namespace VersionControlGitApp.Windows {
     public partial class StatisticsWindow : Window {
@@ -24,17 +28,39 @@ namespace VersionControlGitApp.Windows {
         public static User user;
         public static string header;
         public static string currentRepo;
+        public static string currentRepoPath;
 
-        public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header, string _currentRepo) {
+        public SeriesCollection SeriesCollection { get; set; }
+
+        public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header, string _currentRepoPath) {
             InitializeComponent();
+
+            SeriesCollection = new SeriesCollection
+            {
+                new PieSeries
+                {
+                    Title = "Repo 1",
+                    Values = new ChartValues<ObservableValue> { new ObservableValue(8) },
+                    DataLabels = true
+                },
+                new PieSeries
+                {
+                    Title = "Repo 2",
+                    Values = new ChartValues<ObservableValue> { new ObservableValue(6) },
+                    DataLabels = true
+                },
+
+            };
+
+            DataContext = this;
 
             mainWin = _win;
             client = _client;
             user = _user;
             repoDB = _repoDB;
             header = _header;
-            currentRepo = _currentRepo;
-
+            currentRepoPath = _currentRepoPath;
+            currentRepo = GitMethods.GetNameFromPath(_currentRepoPath);
 
             if (header == "User") {
                 GenerateUserData();
@@ -51,7 +77,7 @@ namespace VersionControlGitApp.Windows {
                               $"Private repositories: {user.TotalPrivateRepos}");
 
             // calculate commit activity for each repo
-            Task.Run(() => SetStatsLabel());
+            Task.Run(() => Dispatcher.Invoke(() => SetStatsLabel()));
 
         }
 
@@ -83,6 +109,12 @@ namespace VersionControlGitApp.Windows {
             string text = "";
 
             foreach (var repo in repositories) {
+                //adding values or series will update and animate the chart automatically
+                SeriesCollection.Add(new PieSeries() { 
+                    Title = $"{repo[0]}"
+                });
+                SeriesCollection[SeriesCollection.Count].Values.Add(new ObservableValue(int.Parse(repo[1])));
+
                 text += $"{repo[0]} - {repo[1]}\n";
             }
 
@@ -92,13 +124,10 @@ namespace VersionControlGitApp.Windows {
         private void GenerateRepoData() {
             SetRepoLabelsText("", "");
 
-            Task.Run(() => GenerateRepoDataFunc());
+           Task.Run(() => GenerateRepoDataFunc());
         }
 
         private void GenerateRepoDataFunc() {
-
-            // TODO -> delete current repo
-            currentRepo = "VersionControlGitApp";
 
             IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
             long repoID = 0;
@@ -114,11 +143,14 @@ namespace VersionControlGitApp.Windows {
                 Dispatcher.Invoke(() => StatsLabel.Content = $"{currentRepo} - {repoID}");
                 //client.Repository.Statistics.GetCommitActivity();
             } else {
-                Dispatcher.Invoke(() => StatsLabel.Content = "Your project is not yet pushed on Github");
-            }
-                
+                List<string> lines = Cmd.RunAndRead("log", currentRepoPath);
+                Dispatcher.Invoke(() => StatsLabel.Content = "");
 
-            
+                foreach (string line in lines) {
+                    Dispatcher.Invoke(() => StatsLabel.Content += line + "\n");
+                }
+
+            }
         }
 
         private void SetRepoLabelsText(string publicLabel, string privateLabel) {

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VersionControlGitApp.Windows"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Title="StatisticsWindow" WindowStyle="None" WindowStartupLocation="CenterScreen" AllowsTransparency="True"
         MinHeight="550" MinWidth="800" Height="500" Width="900" 
@@ -65,12 +66,22 @@
         </StackPanel>
 
         <StackPanel x:Name="ContentStackPanel"
-            Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="5" Grid.RowSpan="6">
+            Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="5">
 
             <Label x:Name="StatsLabel" Content="Pls w8"
                    HorizontalAlignment="Center" FontSize="14"
                    Foreground="{StaticResource WhiteTextColor}"/>
         </StackPanel>
-        
+
+        <lvc:PieChart Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="7" Name="Chart" Grid.Row="1" Series="{Binding SeriesCollection}" 
+                    LegendLocation="Right" InnerRadius="180" Margin="0 15">
+            <lvc:PieChart.ChartLegend>
+                <lvc:DefaultLegend BulletSize="20"></lvc:DefaultLegend>
+            </lvc:PieChart.ChartLegend>
+            <lvc:PieChart.DataTooltip>
+                <lvc:DefaultTooltip BulletSize="20"></lvc:DefaultTooltip>
+            </lvc:PieChart.DataTooltip>
+        </lvc:PieChart>
+
     </Grid>
 </Window>

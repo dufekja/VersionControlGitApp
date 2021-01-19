@@ -4,16 +4,29 @@
     
     <!-- ListBox style  -->
     <Style TargetType="{x:Type ListBox}">
-        
+        <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
+        <Setter Property="Background" Value="{StaticResource GrayBackgroundColor}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AccentsColor}"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
     </Style>
 
     <!-- ListBoxItem style -->
     <Style TargetType="{x:Type ListBoxItem}">
-        
+        <Setter Property="Background" Value="{StaticResource DarkBackgroundColor}"/>
+        <Setter Property="Foreground" Value="{StaticResource WhiteTextColor}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource DarkBackgroundColor}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Margin" Value="4"/>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{StaticResource DarkBackgroundColor}"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!-- ScrollBar style -->
-    <Style TargetType="ScrollBar">
+    <Style TargetType="{x:Type ScrollBar}">
         <Setter Property="Background" Value="{StaticResource DarkBackgroundColor}"/>
         <Setter Property="Foreground" Value="{StaticResource AccentsColor}"/>
         <Setter Property="BorderBrush" Value="{StaticResource AccentsColor}"/>

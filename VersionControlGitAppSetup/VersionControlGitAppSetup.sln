@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "VersionControlGitAppSetup", "VersionControlGitAppSetup\VersionControlGitAppSetup.vdproj", "{9EA0065D-D824-431D-A4C1-C2D8188D5981}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Default = Debug|Default
+		Release|Any CPU = Release|Any CPU
+		Release|Default = Release|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Debug|Any CPU.ActiveCfg = Debug
+		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Debug|Any CPU.Build.0 = Debug
+		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Debug|Default.ActiveCfg = Debug
+		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Debug|Default.Build.0 = Debug
+		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Release|Any CPU.ActiveCfg = Release
+		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Release|Any CPU.Build.0 = Release
+		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Release|Default.ActiveCfg = Release
+		{9EA0065D-D824-431D-A4C1-C2D8188D5981}.Release|Default.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0C6EA831-9245-4423-8762-6D40C50EA6DB}
+	EndGlobalSection
+EndGlobal

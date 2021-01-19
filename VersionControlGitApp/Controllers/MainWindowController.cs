@@ -50,6 +50,8 @@ namespace VersionControlGitApp.Controllers {
                 GitMethods.Init(repoPath, repoDB);
                 MainWindowUI.LoadPathLabel(repoPath);
             }
+
+            ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, "Repostiory added");
         }
 
         /// <summary>
@@ -80,7 +82,7 @@ namespace VersionControlGitApp.Controllers {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
                     $"Do you want to remove {GitMethods.GetNameFromPath(repoPath)} from list?",
                     HEADERMSG_REMOVE_CONF,
-                    System.Windows.MessageBoxButton.YesNo);
+                    MessageBoxButton.YesNo);
 
                 if (messageBoxResult == MessageBoxResult.Yes) {
                     repoDB.DeleteByPath(repoPath);
@@ -153,12 +155,12 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="win">MainWindow window object</param>
         public static void RenameCurrentBranchCommand(string repoPath, MainWindow win) {
             string currentBranch = GitMethods.GetCurrentBranch(repoPath);
-            List<string> lines = GitMethods.GetBranches(repoPath);
+            List<string> branches = GitMethods.GetBranches(repoPath);
 
             try {
-                if (lines[0] != null) {
+                if (branches[0] != null) {
                     if (currentBranch != "master") {
-                        new BranchEditWindow(lines, repoPath, "rename", win).Show();
+                        new BranchEditWindow(branches, repoPath, "rename", win).Show();
                     } else
                         ConsoleLogger.UserPopup("Branch rename", "Can't rename branch master");
                 }

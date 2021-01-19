@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Debug\
+D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\Debug\
 VersionControlGitApp
 none
 false
 DEBUG;TRACE
-C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\App.xaml
+D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\App.xaml
 122100102645
-3-1124523197
+3-1857426464
 21858474272
-321307562096
+341387043686
 Styles\Dictionaries\ButtonsDictionary.xaml;Styles\Dictionaries\ColorsDictionary.xaml;Styles\Dictionaries\ComboBoxDictionary.xaml;Styles\Dictionaries\FontsDictionary.xaml;Styles\Dictionaries\ListBoxDictionary.xaml;Styles\Dictionaries\TextBoxDictionary.xaml;Styles\Dictionaries\ToolbarMenuDictionary.xaml;Windows\BranchEditWindow.xaml;Windows\CloneRepoWindow.xaml;Windows\MainWindow.xaml;Windows\StatisticsWindow.xaml;Windows\TokenWindow.xaml;
 
 True
