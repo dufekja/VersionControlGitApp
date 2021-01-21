@@ -33,6 +33,8 @@ namespace VersionControlGitApp {
         public const string HEADERMSG_FETCH_REPO = "Fetch repository";
         public const string HEADERMSG_BRANCH_RELATED = "Branch edit";
 
+        public const string ERROR_MSG = "There was an error";
+
         public const string NEWFILE = "?? ";
         public const string MODIFIEDNEW = "M ";
         public const string MODIFIED = "MM ";

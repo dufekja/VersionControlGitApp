@@ -31,6 +31,8 @@ namespace VersionControlGitApp.Controllers {
                 if (ok == true) {
                     MainWindowUI.LoadPathLabel(path);
                 }
+            } else {
+                ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, ERROR_MSG);
             }
         }
 
@@ -48,6 +50,22 @@ namespace VersionControlGitApp.Controllers {
                 GitMethods.Init(repoPath, repoDB);
                 MainWindowUI.LoadPathLabel(repoPath);
                 ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, $"Repostiory {GitMethods.GetNameFromPath(repoPath)} added");
+            } else {
+                string repoName = GitMethods.GetNameFromPath(repoPath);
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
+                    $"{repoName} is already repository. Would you like to add it ?",
+                    $"{repoName} is already repository",
+                    MessageBoxButton.YesNo);
+
+                if (messageBoxResult == MessageBoxResult.Yes) {
+                    bool success = GitMethods.AddLocalRepo(repoPath, repoDB);
+                    if (success) {
+                        MainWindowUI.LoadPathLabel(repoPath);
+                        ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, $"Repository {repoName} added");
+                    } else {
+                        ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, ERROR_MSG);
+                    }
+                }
             }
         }
 
@@ -58,12 +76,10 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="win">Mainwindow window object</param>
         public static void CommitRepositoryCommand(string repoPath, MainWindow win) {
             if (repoPath != "" && GitMethods.IsRepo(repoPath)) {
-
                 string summary = win.CommitSummary.Text.ToString();
                 string desc = win.CommitDescription.Text.ToString();
 
                 GitMethods.Commit(repoPath, summary, desc, win);
-
                 MainWindowUI.ClearCommitAndContext(win); 
             }
         }
@@ -102,10 +118,10 @@ namespace VersionControlGitApp.Controllers {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
                     $"Do you want to delete {GitMethods.GetNameFromPath(repoPath)} ?",
                     HEADERMSG_DELETE_CONF,
-                    System.Windows.MessageBoxButton.YesNo);
+                    MessageBoxButton.YesNo);
 
                 if (messageBoxResult == MessageBoxResult.Yes) {
-                    Directory.Delete(repoPath);
+                    Directory.Delete(repoPath, true);
                     ConsoleLogger.UserPopup(HEADERMSG_DELETE_CONF, $"{GitMethods.GetNameFromPath(repoPath)} deleted");
                 }
             }

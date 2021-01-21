@@ -34,7 +34,7 @@ namespace VersionControlGitApp.Controllers {
                 Repo repo = new Repo() {
                     Name = GetNameFromPath(path),
                     Path = path,
-                    User = System.Windows.Forms.SystemInformation.UserName
+                    User = SystemInformation.UserName
                 };
                 repoDB.WriteDB(repo);
                 created = true;
@@ -135,11 +135,11 @@ namespace VersionControlGitApp.Controllers {
                 }
 
                 if (state == ConsoleState.Success)
-                    ConsoleLogger.UserPopup("Commit", "Commit successful");
+                    ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, "Commit successful");
                 else
-                    ConsoleLogger.UserPopup("Commit", "There was an error");
+                    ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, "There was an error");
             } else {
-                ConsoleLogger.UserPopup("Commit", "There are no files to commit");
+                ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, "There are no files to commit");
             }  
         }
 
