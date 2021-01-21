@@ -55,31 +55,26 @@
             </StackPanel>
         </DockPanel>
 
-        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2"
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="1"
                     Margin="8,8,0,0">
-            <Label x:Name="PublicReposLabel" Content="Public repositories: -"
+            <Label x:Name="PublicReposLabel" Content="Owned public repositories: -"
                    Foreground="{StaticResource WhiteTextColor}" FontSize="18"
                    Margin="0" Padding="0"/>
-            <Label x:Name="PrivateReposLabel" Content="Private repositories: -"
+            <Label x:Name="PrivateReposLabel" Content="Owned private repositories: -"
                    Foreground="{StaticResource WhiteTextColor}" FontSize="18"
                    Margin="0" Padding="0"/>
         </StackPanel>
 
-        <StackPanel x:Name="ContentStackPanel"
-            Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="5">
+        <lvc:PieChart Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" Grid.RowSpan="8" 
+                      Name="Chart" Series="{Binding SeriesCollection}" 
+                      LegendLocation="Right" InnerRadius="180" Margin="0 15">
 
-            <Label x:Name="StatsLabel" Content="Pls w8"
-                   HorizontalAlignment="Center" FontSize="14"
-                   Foreground="{StaticResource WhiteTextColor}"/>
-        </StackPanel>
-
-        <lvc:PieChart Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="7" Name="Chart" Grid.Row="1" Series="{Binding SeriesCollection}" 
-                    LegendLocation="Right" InnerRadius="180" Margin="0 15">
             <lvc:PieChart.ChartLegend>
-                <lvc:DefaultLegend BulletSize="20"></lvc:DefaultLegend>
+                <lvc:DefaultLegend Foreground="{StaticResource WhiteTextColor}" 
+                                   BulletSize="16"></lvc:DefaultLegend>
             </lvc:PieChart.ChartLegend>
             <lvc:PieChart.DataTooltip>
-                <lvc:DefaultTooltip BulletSize="20"></lvc:DefaultTooltip>
+                <lvc:DefaultTooltip BulletSize="16"></lvc:DefaultTooltip>
             </lvc:PieChart.DataTooltip>
         </lvc:PieChart>
 

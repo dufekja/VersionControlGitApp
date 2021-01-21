@@ -32,6 +32,7 @@ namespace VersionControlGitApp {
         public const string HEADERMSG_PULL_REPO = "Pull repository"; 
         public const string HEADERMSG_FETCH_REPO = "Fetch repository";
         public const string HEADERMSG_BRANCH_RELATED = "Branch edit";
+        public const string HEADERMSG_CHART_RELATED = "Chart loading";
 
         public const string ERROR_MSG = "There was an error";
 

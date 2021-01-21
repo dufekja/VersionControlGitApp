@@ -18,6 +18,7 @@ using LiveCharts.Wpf;
 using LiveCharts;
 using VersionControlGitApp.Controllers;
 using LiveCharts.Defaults;
+using static VersionControlGitApp.Config;
 
 namespace VersionControlGitApp.Windows {
     public partial class StatisticsWindow : Window {
@@ -35,23 +36,8 @@ namespace VersionControlGitApp.Windows {
         public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header, string _currentRepoPath) {
             InitializeComponent();
 
-            SeriesCollection = new SeriesCollection
-            {
-                new PieSeries
-                {
-                    Title = "Repo 1",
-                    Values = new ChartValues<ObservableValue> { new ObservableValue(8) },
-                    DataLabels = true
-                },
-                new PieSeries
-                {
-                    Title = "Repo 2",
-                    Values = new ChartValues<ObservableValue> { new ObservableValue(6) },
-                    DataLabels = true
-                },
-
-            };
-
+            // series for pie chart
+            SeriesCollection = new SeriesCollection();
             DataContext = this;
 
             mainWin = _win;
@@ -73,8 +59,9 @@ namespace VersionControlGitApp.Windows {
         private void GenerateUserData() {
             
             // set public and private repo labels count
-            SetRepoLabelsText($"Public repositories: {user.PublicRepos}", 
-                              $"Private repositories: {user.TotalPrivateRepos}");
+            Task.Run(() => Dispatcher.Invoke(() => SetRepoLabelsText(
+                $"Owned public repositories: {user.PublicRepos}", 
+                $"Owned private repositories: {user.TotalPrivateRepos}")));
 
             // calculate commit activity for each repo
             Task.Run(() => Dispatcher.Invoke(() => SetStatsLabel()));
@@ -106,19 +93,25 @@ namespace VersionControlGitApp.Windows {
 
         private void SetStatsLabel() {
             List<string[]> repositories = GenerateYearlyUserCommitActivity();
-            string text = "";
 
-            foreach (var repo in repositories) {
-                //adding values or series will update and animate the chart automatically
-                SeriesCollection.Add(new PieSeries() { 
-                    Title = $"{repo[0]}"
-                });
-                SeriesCollection[SeriesCollection.Count].Values.Add(new ObservableValue(int.Parse(repo[1])));
+            if (repositories != null) {
+                foreach (string[] repo in repositories) {
+                    //adding values or series will update and animate the chart automatically
 
-                text += $"{repo[0]} - {repo[1]}\n";
+                    ObservableValue commits = new ObservableValue(int.Parse(repo[1])); 
+
+                    var pie = new PieSeries() {
+                        Title = repo[0],
+                        Values = new ChartValues<ObservableValue> { commits },
+                        DataLabels = true
+                    };
+
+                    SeriesCollection.Add(pie);
+                }
+            } else {
+                ConsoleLogger.UserPopup(HEADERMSG_CHART_RELATED, "There are no repositories on user Github");
             }
-
-            Dispatcher.Invoke(() => StatsLabel.Content = text);
+  
         }
 
         private void GenerateRepoData() {
@@ -140,14 +133,20 @@ namespace VersionControlGitApp.Windows {
             }
 
             if (repoID != 0) {
-                Dispatcher.Invoke(() => StatsLabel.Content = $"{currentRepo} - {repoID}");
+
+                // generate from github
+
+                //Dispatcher.Invoke(() => StatsLabel.Content = $"{currentRepo} - {repoID}");
                 //client.Repository.Statistics.GetCommitActivity();
             } else {
+
+                // generate from local git func
+
                 List<string> lines = Cmd.RunAndRead("log", currentRepoPath);
-                Dispatcher.Invoke(() => StatsLabel.Content = "");
+                //Dispatcher.Invoke(() => StatsLabel.Content = "");
 
                 foreach (string line in lines) {
-                    Dispatcher.Invoke(() => StatsLabel.Content += line + "\n");
+                    //Dispatcher.Invoke(() => StatsLabel.Content += line + "\n");
                 }
 
             }
