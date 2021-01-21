@@ -175,3 +175,9 @@ D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\Debug\LiveCharts.pd
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\Debug\LiveCharts.xml
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\Debug\LiveCharts.Wpf.pdb
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\Debug\LiveCharts.Wpf.xml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Debug\LiveCharts.dll
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Debug\LiveCharts.Wpf.dll
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Debug\LiveCharts.pdb
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Debug\LiveCharts.xml
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Debug\LiveCharts.Wpf.pdb
+C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Debug\LiveCharts.Wpf.xml

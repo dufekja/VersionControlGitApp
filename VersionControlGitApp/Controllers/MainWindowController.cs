@@ -24,10 +24,9 @@ namespace VersionControlGitApp.Controllers {
             using FolderBrowserDialog fbd = new FolderBrowserDialog();
             DialogResult result = fbd.ShowDialog();
 
-            string res = $"{result}";
             string path = fbd.SelectedPath;
 
-            if (res == "OK") {
+            if (result == DialogResult.OK) {
                 bool ok = GitMethods.AddLocalRepo(path, repoDB);
                 if (ok == true) {
                     MainWindowUI.LoadPathLabel(path);
@@ -43,15 +42,13 @@ namespace VersionControlGitApp.Controllers {
             using FolderBrowserDialog fbd = new FolderBrowserDialog();
             DialogResult result = fbd.ShowDialog();
 
-            string res = $"{result}";
             string repoPath = fbd.SelectedPath;
 
-            if (res == "OK" && !GitMethods.IsRepo(repoPath)) {
+            if (result == DialogResult.OK && !GitMethods.IsRepo(repoPath)) {
                 GitMethods.Init(repoPath, repoDB);
                 MainWindowUI.LoadPathLabel(repoPath);
+                ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, $"Repostiory {GitMethods.GetNameFromPath(repoPath)} added");
             }
-
-            ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, "Repostiory added");
         }
 
         /// <summary>

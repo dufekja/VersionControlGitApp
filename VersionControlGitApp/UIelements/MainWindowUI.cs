@@ -114,6 +114,12 @@ namespace VersionControlGitApp.UIelements {
             }
         }
 
+        public static void ClearRepoPathOnEmpty(MainWindow win) {
+            if (win.RepoListBox.Items.Count == 0) {
+                win.PathLabel.Text = "";
+            }
+        }
+
         public static void FilesToCommitRefresh(MainWindow win) {
 
             string path = "";

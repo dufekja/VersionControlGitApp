@@ -227,6 +227,7 @@ namespace VersionControlGitApp {
                 if (deletedRepos != null) {
                     Dispatcher.Invoke(() => RepoListBox.Items.Clear());
                     Dispatcher.Invoke(() => MainWindowUI.ListBoxLoad());
+                    Dispatcher.Invoke(() => MainWindowUI.ClearRepoPathOnEmpty(this));
                 }
             }
         }
