@@ -142,9 +142,9 @@ namespace VersionControlGitApp.Controllers {
             win.Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath, win));
             
             if (state == ConsoleState.Success && currentBranch != branch)
-                ConsoleLogger.UserPopup("Branch swap", $"Swapped to branch '{branch}'");
+                ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, $"Swapped to branch '{branch}'");
             else
-                ConsoleLogger.UserPopup("Branch swap", $"Can't swap to same branch");
+                ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, $"Can't swap to same branch");
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace VersionControlGitApp.Controllers {
                     if (currentBranch != "master") {
                         new BranchEditWindow(branches, repoPath, "rename", win).Show();
                     } else
-                        ConsoleLogger.UserPopup("Branch rename", "Can't rename branch master");
+                        ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, "Can't rename branch master");
                 }
             } catch { }
 
@@ -203,11 +203,11 @@ namespace VersionControlGitApp.Controllers {
                     state = Cmd.Run($"merge {currentBranch}", repoPath);
 
                 if (state == ConsoleState.Success) {
-                    ConsoleLogger.UserPopup("Branch merge", $"{currentBranch} merged to {branch}");
+                    ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, $"{currentBranch} merged to {branch}");
                     win.Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, win));
                     win.Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath, win));
                 } else {
-                    ConsoleLogger.UserPopup("Branch merge", $"Cannot merge to {branch}");
+                    ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, $"Cannot merge to {branch}");
                 }   
             }
 
@@ -237,7 +237,7 @@ namespace VersionControlGitApp.Controllers {
                 if (state == ConsoleState.Success)
                     ConsoleLogger.UserPopup(HEADERMSG_DELETE_CONF, $"{currentBranch} deleted");
                 else
-                    ConsoleLogger.UserPopup(HEADERMSG_DELETE_CONF, "There was an error");
+                    ConsoleLogger.UserPopup(HEADERMSG_DELETE_CONF, ERROR_MSG);
             } else {
                 ConsoleLogger.UserPopup(HEADERMSG_DELETE_CONF, "Cannot delete branch master");
             }

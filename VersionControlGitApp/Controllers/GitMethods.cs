@@ -196,9 +196,9 @@ namespace VersionControlGitApp.Controllers {
                     output += line;
                 }
                 ConsoleLogger.StatusBarUpdate("External repository fetched", win);
-                ConsoleLogger.UserPopup("Fetch repository", $"{output}");
+                ConsoleLogger.UserPopup(HEADERMSG_FETCH_REPO, $"{output}");
             } else {
-                ConsoleLogger.UserPopup("Fetch repository", "Selected repository not found");
+                ConsoleLogger.UserPopup(HEADERMSG_FETCH_REPO, "Selected repository not found");
             }
 
         }
