@@ -10,7 +10,7 @@
         MinHeight="550" MinWidth="800" Height="500" Width="900" 
         Background="{StaticResource DarkBackgroundColor}">
     
-    <Grid>
+    <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -66,7 +66,7 @@
         </StackPanel>
 
         <lvc:PieChart Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" Grid.RowSpan="8" 
-                      Name="Chart" Series="{Binding SeriesCollection}" 
+                      x:Name="Piechart" Series="{Binding SeriesCollection}" 
                       LegendLocation="Right" InnerRadius="180" Margin="0 15">
 
             <lvc:PieChart.ChartLegend>

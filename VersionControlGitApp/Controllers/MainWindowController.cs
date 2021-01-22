@@ -20,7 +20,7 @@ namespace VersionControlGitApp.Controllers {
         /// Add already created repository based on .git folder inside
         /// </summary>
         /// <param name="repoDB">Instance of repository database</param>
-        public static void AddLocalRepositoryCommand(LocalRepoDB repoDB) {
+        public static void AddLocalRepositoryCommand(LocalRepoDB repoDB, MainWindow win) {
             using FolderBrowserDialog fbd = new FolderBrowserDialog();
             DialogResult result = fbd.ShowDialog();
 
@@ -30,6 +30,7 @@ namespace VersionControlGitApp.Controllers {
                 bool ok = GitMethods.AddLocalRepo(path, repoDB);
                 if (ok == true) {
                     MainWindowUI.LoadPathLabel(path);
+                    MainWindowUI.ChangeCommitButtonBranch(path, win);
                 }
             } else {
                 ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, ERROR_MSG);

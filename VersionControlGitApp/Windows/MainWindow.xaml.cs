@@ -74,7 +74,7 @@ namespace VersionControlGitApp {
         }
 
         private void AddLocalRepository(object sender, RoutedEventArgs e) {
-            MainWindowController.AddLocalRepositoryCommand(repoDB);
+            MainWindowController.AddLocalRepositoryCommand(repoDB, this);
         }
 
         private void CloneRepository(object sender, RoutedEventArgs e) {
@@ -278,7 +278,7 @@ namespace VersionControlGitApp {
                     FileContent.Text = text;
 
                 } else {
-                    ConsoleLogger.UserPopup("Error", $"File: {fileName} don't exists");
+                    ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, $"File: {fileName} don't exists");
                 }
                 
             }
@@ -288,7 +288,13 @@ namespace VersionControlGitApp {
             string header = ((MenuItem)sender).Header.ToString();
             string repoPath = PathLabel.Text.ToString();
 
-            new StatisticsWindow(this, client, user, repoDB, header, repoPath).Show();
+            if (header == "Repository")
+                if (repoPath != "")
+                    new StatisticsWindow(this, client, user, repoDB, header, repoPath).Show();
+                else
+                    ConsoleLogger.UserPopup("Repository statistics", "You need to select repository first");
+            else
+                new StatisticsWindow(this, client, user, repoDB, header, repoPath).Show();
         }
 
         private void UpdatePrivateToken(object sender, RoutedEventArgs e) {

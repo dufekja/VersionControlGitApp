@@ -51,7 +51,12 @@ namespace VersionControlGitApp.Windows {
             if (header == "User") {
                 GenerateUserData();
             } else if (header == "Repository") {
-                GenerateRepoData();
+
+                // remove pie chart 
+                PieChart chart = (PieChart)this.MainGrid.FindName("Piechart");
+                this.MainGrid.Children.Remove(chart);
+
+;                GenerateRepoData();
             }
 
         }
@@ -141,13 +146,17 @@ namespace VersionControlGitApp.Windows {
             } else {
 
                 // generate from local git func
-
+                string text = "";
                 List<string> lines = Cmd.RunAndRead("log", currentRepoPath);
+             
                 //Dispatcher.Invoke(() => StatsLabel.Content = "");
 
                 foreach (string line in lines) {
+                    text += line + "\n";
                     //Dispatcher.Invoke(() => StatsLabel.Content += line + "\n");
                 }
+
+                ConsoleLogger.UserPopup("diwhq", text);
 
             }
         }

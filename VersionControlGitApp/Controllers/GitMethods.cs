@@ -230,7 +230,7 @@ namespace VersionControlGitApp.Controllers {
                         return line.Replace("*", "").Trim();
                     }
                 }
-            return null;
+            return "master";
         }
 
         /// <summary>
