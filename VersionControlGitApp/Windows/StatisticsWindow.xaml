@@ -65,6 +65,8 @@
                    Margin="0" Padding="0"/>
         </StackPanel>
 
+        <Label x:Name="TestingLabel" Foreground="White" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="8" Grid.RowSpan="8"/>
+
         <lvc:PieChart Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" Grid.RowSpan="8" 
                       x:Name="Piechart" Series="{Binding SeriesCollection}" 
                       LegendLocation="Right" InnerRadius="180" Margin="0 15">

@@ -56,7 +56,7 @@ namespace VersionControlGitApp.Windows {
                 PieChart chart = (PieChart)this.MainGrid.FindName("Piechart");
                 this.MainGrid.Children.Remove(chart);
 
-;                GenerateRepoData();
+;               GenerateRepoData();
             }
 
         }
@@ -127,10 +127,36 @@ namespace VersionControlGitApp.Windows {
 
         private void GenerateRepoDataFunc() {
 
-            IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
+            string userName = user.Login.ToLower();
+            string totalCommits = $"Total commits in {currentRepo}: ";
+            string commitsFromLoggedUser = $"Commmits from {userName}: ";
+
+            // generate from local git func
+            List<string> commits = GetCommitsFromGitLog();
+
+            if (commits != null) {
+
+                
+                int loggedUserCommitsCount = 0;
+
+                foreach (string commit in commits) {
+                    if (commit.Contains(userName)) {
+                        loggedUserCommitsCount++;
+                    }
+                }
+
+                totalCommits += $"{commits.Count}";
+                commitsFromLoggedUser += $"{loggedUserCommitsCount}";
+
+                Dispatcher.Invoke(() => SetRepoLabelsText(totalCommits, commitsFromLoggedUser));
+
+            }            
+
+            
+
+            /*IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
             long repoID = 0;
             foreach (var repo in repos) {
-                ConsoleLogger.Info("StatisticsWindow", $"{repo.Name} - {currentRepo}");
                 if (repo.Name == currentRepo) {
                     repoID = repo.Id;
                     break;
@@ -139,26 +165,32 @@ namespace VersionControlGitApp.Windows {
 
             if (repoID != 0) {
 
-                // generate from github
+            Dispatcher.Invoke(() => StatsLabel.Content = $"{currentRepo} - {repoID}");
+            client.Repository.Statistics.GetCommitActivity();*/
 
-                //Dispatcher.Invoke(() => StatsLabel.Content = $"{currentRepo} - {repoID}");
-                //client.Repository.Statistics.GetCommitActivity();
-            } else {
+        }
 
-                // generate from local git func
-                string text = "";
-                List<string> lines = Cmd.RunAndRead("log", currentRepoPath);
-             
-                //Dispatcher.Invoke(() => StatsLabel.Content = "");
+        private List<string> GetCommitsFromGitLog() {
+            List<string> lines = Cmd.RunAndRead("log", currentRepoPath);
 
-                foreach (string line in lines) {
-                    text += line + "\n";
-                    //Dispatcher.Invoke(() => StatsLabel.Content += line + "\n");
+            if (lines == null)
+                return null;
+
+            List<string> commits = new List<string>();
+            string commit = "";
+            foreach (string line in lines) {
+                if (!line.Contains("commit")) {
+                    commit += line;
+                } else {
+                    commits.Add(commit);
+                    commit = line;
                 }
-
-                ConsoleLogger.UserPopup("diwhq", text);
-
             }
+            commits.RemoveAt(0);
+            if (commit != "")
+                commits.Add(commit);
+
+            return commits;
         }
 
         private void SetRepoLabelsText(string publicLabel, string privateLabel) {
