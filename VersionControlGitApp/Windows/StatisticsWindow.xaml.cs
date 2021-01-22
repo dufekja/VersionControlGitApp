@@ -33,6 +33,11 @@ namespace VersionControlGitApp.Windows {
 
         public SeriesCollection SeriesCollection { get; set; }
 
+        public SeriesCollection ColumnSeriesCollection { get; set; }
+        public string[] Labels { get; set; }
+        public Func<double, string> Formatter { get; set; }
+
+
         public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header, string _currentRepoPath) {
             InitializeComponent();
 
@@ -49,14 +54,31 @@ namespace VersionControlGitApp.Windows {
             currentRepo = GitMethods.GetNameFromPath(_currentRepoPath);
 
             if (header == "User") {
+
+                // remove column chart 
+                CartesianChart chart = (CartesianChart)this.MainGrid.FindName("Columnchart");
+                this.MainGrid.Children.Remove(chart);
+
                 GenerateUserData();
+
             } else if (header == "Repository") {
 
                 // remove pie chart 
                 PieChart chart = (PieChart)this.MainGrid.FindName("Piechart");
                 this.MainGrid.Children.Remove(chart);
 
-;               GenerateRepoData();
+                ColumnSeriesCollection = new SeriesCollection();
+
+                //adding series will update and animate the chart automatically
+                ColumnSeriesCollection.Add(new ColumnSeries {
+                    Title = "Date",
+                    Values = new ChartValues<double> { 11, 56, 42 }
+                });
+
+                Labels = new[] { "Jan 2021", "Feb 2020", "Dec 2020", "Mar 2020" };
+                Formatter = value => value.ToString("N");
+
+                GenerateRepoData();
             }
 
         }
@@ -133,7 +155,7 @@ namespace VersionControlGitApp.Windows {
 
             // generate from local git func
             List<string> commits = GetCommitsFromGitLog();
-            Dictionary<int, int> yearCommitsStatsOnMonths = new Dictionary<int, int>();
+            List<int[]> yearCommitsStatsOnMonths = new List<int[]>();
 
             if (commits != null) {
                 int loggedUserCommitsCount = 0;
@@ -146,7 +168,9 @@ namespace VersionControlGitApp.Windows {
                     string date = Cmd.Explode(commit, "Date:   ", " +");
                     string month = date.Substring(4, 3);
                     string year = date.Substring(20, 4);
-                    yearCommitsStatsOnMonths.Add(int.Parse(year), monthsIndexes[month]);
+
+                    int[] datePair = { int.Parse(year), monthsIndexes[month] };
+                    yearCommitsStatsOnMonths.Add(datePair);
                 }
 
                 totalCommits += $"{commits.Count}";

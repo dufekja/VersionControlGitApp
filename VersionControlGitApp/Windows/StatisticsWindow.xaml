@@ -80,5 +80,18 @@
             </lvc:PieChart.DataTooltip>
         </lvc:PieChart>
 
+        <lvc:CartesianChart  Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" Grid.RowSpan="8" 
+                             x:Name="Columnchart" Series="{Binding ColumnSeriesCollection}" LegendLocation="None"
+                             Foreground="{StaticResource BlackColor}">
+            
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Title="Date" Labels="{Binding Labels}" Foreground="{StaticResource WhiteTextColor}" ></lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+            
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis Title="Commits" LabelFormatter="{Binding Formatter}" Foreground="{StaticResource WhiteTextColor}" ></lvc:Axis>
+            </lvc:CartesianChart.AxisY>
+        </lvc:CartesianChart>
+
     </Grid>
 </Window>
