@@ -157,7 +157,7 @@ namespace VersionControlGitApp.Windows {
                         loggedUserCommitsCount++;
                     }
 
-                    string date = Cmd.Explode(commit, "Date:   ", " +");
+                    string date = Cmd.Explode(commit, "Date:   ", "   ");
                     string month = date.Substring(4, 3);
                     string year = date.Substring(20, 4);
                     string key = $"{month} {year}";
@@ -167,7 +167,6 @@ namespace VersionControlGitApp.Windows {
                     } else {
                         finalChartParse[key]++;
                     }
-
                 }
 
                 //adding series will update and animate the chart automatically
@@ -175,12 +174,12 @@ namespace VersionControlGitApp.Windows {
                     Title = "Commits: ",
                     Values = new ChartValues<int>() { }
                 });
-
+                
                 foreach (var pair in finalChartParse) {
                     Labels.Add(pair.Key);
                     ColumnSeriesCollection[0].Values.Add(pair.Value);
                 }
-                
+
                 totalCommits += $"{commits.Count}";
                 commitsFromLoggedUser += $"{loggedUserCommitsCount}";
 
@@ -215,7 +214,7 @@ namespace VersionControlGitApp.Windows {
             List<string> commits = new List<string>();
             string commit = "";
             foreach (string line in lines) {
-                if (!line.Contains("commit")) {
+                if (!line.Contains("Author:")) {
                     commit += line;
                 } else {
                     commits.Add(commit);
