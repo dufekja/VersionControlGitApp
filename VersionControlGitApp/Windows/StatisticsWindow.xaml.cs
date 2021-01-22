@@ -34,8 +34,8 @@ namespace VersionControlGitApp.Windows {
         public SeriesCollection SeriesCollection { get; set; }
 
         public SeriesCollection ColumnSeriesCollection { get; set; }
-        public string[] Labels { get; set; }
-        public Func<double, string> Formatter { get; set; }
+        public List<string> Labels { get; set; }
+        public Func<int, string> Formatter { get; set; }
 
 
         public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header, string _currentRepoPath) {
@@ -68,14 +68,7 @@ namespace VersionControlGitApp.Windows {
                 this.MainGrid.Children.Remove(chart);
 
                 ColumnSeriesCollection = new SeriesCollection();
-
-                //adding series will update and animate the chart automatically
-                ColumnSeriesCollection.Add(new ColumnSeries {
-                    Title = "Date",
-                    Values = new ChartValues<double> { 11, 56, 42 }
-                });
-
-                Labels = new[] { "Jan 2021", "Feb 2020", "Dec 2020", "Mar 2020" };
+                Labels = new List<string>();
                 Formatter = value => value.ToString("N");
 
                 GenerateRepoData();
@@ -143,8 +136,8 @@ namespace VersionControlGitApp.Windows {
 
         private void GenerateRepoData() {
             SetRepoLabelsText("", "");
-
-           Task.Run(() => GenerateRepoDataFunc());
+            
+            Task.Run(() => Dispatcher.Invoke(() => GenerateRepoDataFunc()));
         }
 
         private void GenerateRepoDataFunc() {
@@ -155,24 +148,39 @@ namespace VersionControlGitApp.Windows {
 
             // generate from local git func
             List<string> commits = GetCommitsFromGitLog();
-            List<int[]> yearCommitsStatsOnMonths = new List<int[]>();
+            Dictionary<string, int> finalChartParse = new Dictionary<string, int>();
 
             if (commits != null) {
                 int loggedUserCommitsCount = 0;
                 foreach (string commit in commits) {
                     if (commit.Contains(userName)) {
-                    
                         loggedUserCommitsCount++;
                     }
 
                     string date = Cmd.Explode(commit, "Date:   ", " +");
                     string month = date.Substring(4, 3);
                     string year = date.Substring(20, 4);
+                    string key = $"{month} {year}";
 
-                    int[] datePair = { int.Parse(year), monthsIndexes[month] };
-                    yearCommitsStatsOnMonths.Add(datePair);
+                    if (!finalChartParse.ContainsKey(key)) {
+                        finalChartParse.Add(key, 1);
+                    } else {
+                        finalChartParse[key]++;
+                    }
+
                 }
 
+                //adding series will update and animate the chart automatically
+                ColumnSeriesCollection.Add(new ColumnSeries {
+                    Title = "Commits: ",
+                    Values = new ChartValues<int>() { }
+                });
+
+                foreach (var pair in finalChartParse) {
+                    Labels.Add(pair.Key);
+                    ColumnSeriesCollection[0].Values.Add(pair.Value);
+                }
+                
                 totalCommits += $"{commits.Count}";
                 commitsFromLoggedUser += $"{loggedUserCommitsCount}";
 
