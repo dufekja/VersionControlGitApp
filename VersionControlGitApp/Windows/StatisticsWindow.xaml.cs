@@ -133,16 +133,20 @@ namespace VersionControlGitApp.Windows {
 
             // generate from local git func
             List<string> commits = GetCommitsFromGitLog();
+            Dictionary<int, int> yearCommitsStatsOnMonths = new Dictionary<int, int>();
 
             if (commits != null) {
-
-                
                 int loggedUserCommitsCount = 0;
-
                 foreach (string commit in commits) {
                     if (commit.Contains(userName)) {
+                    
                         loggedUserCommitsCount++;
                     }
+
+                    string date = Cmd.Explode(commit, "Date:   ", " +");
+                    string month = date.Substring(4, 3);
+                    string year = date.Substring(20, 4);
+                    yearCommitsStatsOnMonths.Add(int.Parse(year), monthsIndexes[month]);
                 }
 
                 totalCommits += $"{commits.Count}";
