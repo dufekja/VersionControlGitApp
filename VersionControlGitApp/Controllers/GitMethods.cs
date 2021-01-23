@@ -241,62 +241,25 @@ namespace VersionControlGitApp.Controllers {
         /// <returns>Returns diff output</returns>
         public static string GetAllFileChanges(string file, string path) {
             string finalOutput = "";
-            List<string> diffOutput = Cmd.RunAndRead($"diff -U0 HEAD {file}", path);
+            List<string> diffOutput = Cmd.RunAndRead($"blame {file}", path);
 
             if (diffOutput != null) {
-                List<string> chunks = new List<string>();
-
                 // fill content with line numbers
                 List<string> outputContentList = new List<string>(File.ReadAllText($@"{path}\{file}").Split('\n'));
+                List<string> oldFile = new List<string>();
 
-                string chunk = "";
-                bool read = false;
-                foreach (string line in diffOutput) {
-                    if (line.Contains("@@")) {
-                        read = true;
-                        chunks.Add(chunk);
-                        chunk = line + "\n";
-                    } else if (read) {
-                        chunk += line + "\n";
+                for (int x = 0; x < diffOutput.Count; x++) {
+                    if (!diffOutput[x].Contains("00000000")) {
+                        string[] text = diffOutput[x].Split(new[] { $" {x+1}) " }, StringSplitOptions.None);
+                        oldFile.Add(text[1]);
+                    } else {
+                        oldFile.Add("");
                     }
                 }
-                chunks.RemoveAt(0);
-                if (chunk != "")
-                    chunks.Add(chunk);
 
-                List<int> delStartLine = new List<int>();
-                List<int> delEndLine = new List<int>();
-                List<int> addStartLine = new List<int>();
-                List<int> addEndLine = new List<int>();
-
-                for (int x = 0; x < chunks.Count; x++) {
-                    if (chunks[x].Contains("@@")) {
-                        string editedLines = Cmd.Explode(chunks[x], "@@", "@@");
-
-                        string deletedLines = Cmd.Explode(editedLines, "-", " ");
-                        if (deletedLines.Contains(",")) {
-                            string[] del = deletedLines.Split(',');
-                            delStartLine.Add(int.Parse(del[0]));
-                            delEndLine.Add(int.Parse(del[1]));
-                        } else {
-                            delStartLine.Add(int.Parse(deletedLines));
-                            delEndLine.Add(int.Parse(deletedLines));
-                        }
-
-                        string addedLines = Cmd.Explode(editedLines, "+", " ");
-                        if (addedLines.Contains(",")) {
-                            string[] del = addedLines.Split(',');
-                            addStartLine.Add(int.Parse(del[0]));
-                            addEndLine.Add(int.Parse(del[1]));
-                        } else {
-                            addStartLine.Add(int.Parse(addedLines));
-                            addEndLine.Add(int.Parse(addedLines));
-                        }
-
-                        finalOutput += $"Del: {delStartLine} to {delEndLine} Add: {addStartLine} to {addedLines}\n";
-                    } else {
-
-                    }
+                for (int i = 0; i < oldFile.Count; i++) {
+                    string lineNum = $"{i + 1})";
+                    finalOutput += $"{lineNum} {oldFile[i]} -> {outputContentList[i]}";
                 }
             }
 
