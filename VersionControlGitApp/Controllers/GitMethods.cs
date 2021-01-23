@@ -240,25 +240,35 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="path">Repostory path</param>
         /// <returns>Returns diff output</returns>
         public static string GetAllFileChanges(string file, string path) {
-            string ret = "";
-            List<string> diffSummary = Cmd.RunAndRead($"diff HEAD {file}", path);
+            string finalOutput = "";
+            List<string> diffOutput = Cmd.RunAndRead($"diff -U0 HEAD {file}", path);
 
-            // filter changed lines
-            List<string> diffSummaryOutput = new List<string>();
-            bool read = false;
-            foreach (string line in diffSummary) {
-                if (read) {
-                    if (!line.Contains("newline")) {
-                        diffSummaryOutput.Add(line);
-                        ret += line + "\n";
+            if (diffOutput != null) {
+                List<string> chunks = new List<string>();
+                List<string> outputContentList = new List<string>(File.ReadAllText($@"{path}\{file}").Split('\n'));
+
+                string chunk = "";
+                bool read = false;
+                foreach (string line in diffOutput) {
+                    if (line.Contains("@@")) {
+                        read = true;
+                        chunks.Add(chunk);
+                        chunk = line + "\n";
+                    } else if (read) {
+                        chunk += line + "\n";
                     }
-                } else if (line.Contains("@@")) {
-                    read = true;
                 }
+                chunks.RemoveAt(0);
+                if (chunk != "")
+                    chunks.Add(chunk);
+
+                foreach (string x in chunks) {
+                    finalOutput += x + "\n\n";
+                }
+
             }
 
-            List<string> outputContentList = new List<string>(File.ReadAllText($@"{path}\{file}").Split('\n'));      
-            return ret;
+            return finalOutput;
         }
 
         /// <summary>
