@@ -245,6 +245,8 @@ namespace VersionControlGitApp.Controllers {
 
             if (diffOutput != null) {
                 List<string> chunks = new List<string>();
+
+                // fill content with line numbers
                 List<string> outputContentList = new List<string>(File.ReadAllText($@"{path}\{file}").Split('\n'));
 
                 string chunk = "";
@@ -262,10 +264,40 @@ namespace VersionControlGitApp.Controllers {
                 if (chunk != "")
                     chunks.Add(chunk);
 
-                foreach (string x in chunks) {
-                    finalOutput += x + "\n\n";
-                }
+                List<int> delStartLine = new List<int>();
+                List<int> delEndLine = new List<int>();
+                List<int> addStartLine = new List<int>();
+                List<int> addEndLine = new List<int>();
 
+                for (int x = 0; x < chunks.Count; x++) {
+                    if (chunks[x].Contains("@@")) {
+                        string editedLines = Cmd.Explode(chunks[x], "@@", "@@");
+
+                        string deletedLines = Cmd.Explode(editedLines, "-", " ");
+                        if (deletedLines.Contains(",")) {
+                            string[] del = deletedLines.Split(',');
+                            delStartLine.Add(int.Parse(del[0]));
+                            delEndLine.Add(int.Parse(del[1]));
+                        } else {
+                            delStartLine.Add(int.Parse(deletedLines));
+                            delEndLine.Add(int.Parse(deletedLines));
+                        }
+
+                        string addedLines = Cmd.Explode(editedLines, "+", " ");
+                        if (addedLines.Contains(",")) {
+                            string[] del = addedLines.Split(',');
+                            addStartLine.Add(int.Parse(del[0]));
+                            addEndLine.Add(int.Parse(del[1]));
+                        } else {
+                            addStartLine.Add(int.Parse(addedLines));
+                            addEndLine.Add(int.Parse(addedLines));
+                        }
+
+                        finalOutput += $"Del: {delStartLine} to {delEndLine} Add: {addStartLine} to {addedLines}\n";
+                    } else {
+
+                    }
+                }
             }
 
             return finalOutput;
