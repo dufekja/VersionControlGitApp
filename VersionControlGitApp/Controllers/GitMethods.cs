@@ -244,23 +244,52 @@ namespace VersionControlGitApp.Controllers {
             List<string> diffOutput = Cmd.RunAndRead($"blame {file}", path);
 
             if (diffOutput != null) {
-                // fill content with line numbers
-                List<string> outputContentList = new List<string>(File.ReadAllText($@"{path}\{file}").Split('\n'));
+                List<string> newFile = new List<string>(File.ReadAllText($@"{path}\{file}").Split('\n'));
                 List<string> oldFile = new List<string>();
 
                 for (int x = 0; x < diffOutput.Count; x++) {
                     if (!diffOutput[x].Contains("00000000")) {
-                        string[] text = diffOutput[x].Split(new[] { $" {x+1}) " }, StringSplitOptions.None);
-                        oldFile.Add(text[1]);
-                    } else {
-                        oldFile.Add("");
+                        oldFile.Add(diffOutput[x].Split(new[] { $" {x + 1}) " }, StringSplitOptions.None)[1]);
                     }
                 }
 
-                for (int i = 0; i < oldFile.Count; i++) {
-                    string lineNum = $"{i + 1})";
-                    finalOutput += $"{lineNum} {oldFile[i]} -> {outputContentList[i]}";
+                int oldFileCount = oldFile.Count;
+                int newFileCount = newFile.Count;
+                bool linesAdded = false;
+
+                for (int y = 0; y < Math.Abs(oldFileCount - newFileCount); y++) {
+                    // lines was added
+                    if (oldFileCount < newFileCount) {
+                        oldFile.Add(null);
+                        linesAdded = true;
+                    } else {
+                        newFile.Add(null);
+                    }
                 }
+
+                if (linesAdded) {
+                    for (int i = 0; i < newFileCount; i++) {
+                        string lineNum = $"{i + 1}";
+                        var oldLine = oldFile[i];
+                        var newLine = newFile[i];
+
+                        if (oldLine == null) {
+                            finalOutput += $"{lineNum} +        {newFile[i].Trim()} \n";
+                        } else if (oldLine.Trim() == newLine.Trim()) { 
+                            finalOutput += $"{lineNum}          {oldFile[i]} \n";
+                        } else {
+                            finalOutput += $"{lineNum} -        {oldFile[i]} \n";
+                            finalOutput += $"{lineNum} +        {newFile[i].Trim()} \n";
+                        }
+                        
+                        
+
+                    }
+                } else {
+                    finalOutput = "lmao";
+                }
+
+               
             }
 
             return finalOutput;
