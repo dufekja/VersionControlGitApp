@@ -39,7 +39,6 @@ namespace VersionControlGitApp.Windows {
 
 
         public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header, string _currentRepoPath) {
-            InitializeComponent();
 
             // series for pie chart
             SeriesCollection = new SeriesCollection();
@@ -52,6 +51,8 @@ namespace VersionControlGitApp.Windows {
             header = _header;
             currentRepoPath = _currentRepoPath;
             currentRepo = GitMethods.GetNameFromPath(_currentRepoPath);
+
+            InitializeComponent();
 
             if (header == "User") {
 
@@ -85,7 +86,6 @@ namespace VersionControlGitApp.Windows {
 
             // calculate commit activity for each repo
             Task.Run(() => Dispatcher.Invoke(() => SetStatsLabel()));
-
         }
 
         private List<string[]> GenerateYearlyUserCommitActivity() {
@@ -136,15 +136,13 @@ namespace VersionControlGitApp.Windows {
 
         private void GenerateRepoData() {
             SetRepoLabelsText("", "");
-            
             Task.Run(() => Dispatcher.Invoke(() => GenerateRepoDataFunc()));
         }
 
         private void GenerateRepoDataFunc() {
-
             string userName = user.Login.ToLower();
             string totalCommits = $"Total commits in {currentRepo}: ";
-            string commitsFromLoggedUser = $"Commmits from {userName}: ";
+            string commitsFromLoggedUser = $"Commits from {userName}: ";
 
             // generate from local git func
             List<string> commits = GetCommitsFromGitLog();
@@ -193,7 +191,7 @@ namespace VersionControlGitApp.Windows {
             }
 
             
-
+            // for reading repo stats from github
             /*IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
             long repoID = 0;
             foreach (var repo in repos) {

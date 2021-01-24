@@ -16,7 +16,6 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="token">User private token</param>
         /// <returns>Return authenticated Github client object</returns>
         public static GitHubClient Authenticate(GitHubClient client, string token, MainWindow win) {
-
             win.Dispatcher.Invoke(() => ConsoleLogger.StatusBarUpdate("Authenticating user", win));
 
             try {

@@ -22,7 +22,6 @@ namespace VersionControlGitApp {
         public static string user;
 
         public TokenWindow() {
-
             user = System.Windows.Forms.SystemInformation.UserName;
             tokenDB = new PrivateTokenDB();
             tokenDB.InitDB();

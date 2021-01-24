@@ -19,7 +19,6 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="path">Path to repository folder</param>
         /// <param name="repoDB">Initiated repodDB object</param>
         public static bool AddLocalRepo(string path, LocalRepoDB repoDB) {
-
             bool created = false;
             bool exist = false; 
             List<Repo> repos = repoDB.FindByName(GetNameFromPath(path));
@@ -282,8 +281,6 @@ namespace VersionControlGitApp.Controllers {
                             finalOutput += $"{lineNum} +        {newFile[i].Trim()} \n";
                         }
                         
-                        
-
                     }
                 } else {
                     finalOutput = "lmao";
@@ -305,7 +302,6 @@ namespace VersionControlGitApp.Controllers {
             // get active token and set it unactive
             Token tk = tokenDB.GetActiveToken(SystemInformation.UserName);
             if (tk != null) {
-
                 if (tk.Value == token) {
                     ConsoleLogger.UserPopup("Private token", "This token is already active");
                     return false;
@@ -313,7 +309,6 @@ namespace VersionControlGitApp.Controllers {
 
                 // update old to false
                bool updated = tokenDB.UpdateTokenByValue(tk.Value, 0);
-
                if (updated) {
                     Token updateToken = tokenDB.FindTokenByValue(token);
 

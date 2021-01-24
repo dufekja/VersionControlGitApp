@@ -100,10 +100,10 @@ namespace VersionControlGitApp {
 
         private void PullExternalRepository(object sende, RoutedEventArgs e) { 
             string repoPath = PathLabel.Text.ToString();
-            if (GitMethods.IsRepo(repoPath)) {
+            if (GitMethods.IsRepo(repoPath))
                 Task.Run(() => GitMethods.Pull(repoPath, client, this));
-            } else
-                ConsoleLogger.UserPopup(HEADERMSG_PULL_REPO, USERMSG_SELECTREPO);
+            else
+                ConsoleLogger.UserPopup(HEADERMSG_PULL_REPO, USERMSG_SELECTREPO);  
         }
 
         private void NewRepository(object sender, RoutedEventArgs e) {
@@ -131,11 +131,10 @@ namespace VersionControlGitApp {
 
         private void CreateNewBranch(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
-            if (GitMethods.IsRepo(repoPath)) {
+            if (GitMethods.IsRepo(repoPath))
                 Dispatcher.Invoke(() => MainWindowController.CreateNewBranchCommand(repoPath, this));
-            } else {
+            else
                 ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, USERMSG_SELECTREPO);
-            }
         }
 
         private void ChangeBranch(object sender, RoutedEventArgs e) {
