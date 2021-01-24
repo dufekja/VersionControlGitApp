@@ -185,7 +185,12 @@ namespace VersionControlGitApp.Windows {
 
                 Dispatcher.Invoke(() => SetRepoLabelsText(totalCommits, commitsFromLoggedUser));
 
-            }            
+            } else {
+
+                SetRepoLabelsText("There are no commits yet", "");
+                CartesianChart chart = (CartesianChart)this.MainGrid.FindName("Columnchart");
+                this.MainGrid.Children.Remove(chart);
+            }
 
             
 
@@ -221,11 +226,17 @@ namespace VersionControlGitApp.Windows {
                     commit = line;
                 }
             }
-            commits.RemoveAt(0);
+
             if (commit != "")
                 commits.Add(commit);
 
-            return commits;
+            if (commits != null && commits.Count > 1) {
+                commits.RemoveAt(0);
+                return commits;
+            }
+
+            return null;
+   
         }
 
         private void SetRepoLabelsText(string publicLabel, string privateLabel) {
