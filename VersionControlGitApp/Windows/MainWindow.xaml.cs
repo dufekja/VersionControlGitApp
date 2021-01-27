@@ -161,20 +161,20 @@ namespace VersionControlGitApp {
             }
         }
 
+        // merge current branch into selected
         private void MergeCurrentBranch(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
             MenuItem item = sender as MenuItem;
             string branch = item.Header.ToString();
 
             if (repoPath != "" && branch != "") {
-
-                MainWindowController.MergeCurrentBranchCommand(repoPath, branch, this);
-                
+                MainWindowController.MergeCurrentBranchCommand(repoPath, branch, this);         
             } else {
                 ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, USERMSG_SELECTREPO);
             }
         }
 
+        // delete current branch
         private void DeleteCurrentBranch(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
             if (repoPath != "") {

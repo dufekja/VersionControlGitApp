@@ -81,6 +81,18 @@ namespace VersionControlGitApp.Controllers {
         }
 
         /// <summary>
+        /// Set attributes in subfolders so they can be deleted
+        /// </summary>
+        /// <param name="dir">Directory info object</param>
+        public static void setAttributesNormal(DirectoryInfo dir) {
+            foreach (var subDir in dir.GetDirectories())
+                setAttributesNormal(subDir);
+            foreach (var file in dir.GetFiles()) {
+                file.Attributes = FileAttributes.Normal;
+            }
+        }
+
+        /// <summary>
         /// Parse string between 2 delimeters
         /// </summary>
         /// <param name="text">Given text</param>

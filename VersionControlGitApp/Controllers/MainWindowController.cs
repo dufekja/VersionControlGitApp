@@ -122,7 +122,13 @@ namespace VersionControlGitApp.Controllers {
                     MessageBoxButton.YesNo);
 
                 if (messageBoxResult == MessageBoxResult.Yes) {
-                    Directory.Delete(repoPath, true);
+                    DirectoryInfo dir = new DirectoryInfo(repoPath);
+
+                    if (dir.Exists) {
+                        Cmd.setAttributesNormal(dir);
+                        dir.Delete(true);
+                    }
+
                     ConsoleLogger.UserPopup(HEADERMSG_DELETE_CONF, $"{GitMethods.GetNameFromPath(repoPath)} deleted");
                 }
             }
