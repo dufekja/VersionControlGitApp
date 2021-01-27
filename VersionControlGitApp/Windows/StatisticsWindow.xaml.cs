@@ -85,7 +85,7 @@ namespace VersionControlGitApp.Windows {
                 $"Owned private repositories: {user.TotalPrivateRepos}")));
 
             // calculate commit activity for each repo
-            Task.Run(() => Dispatcher.Invoke(() => SetStatsLabel()));
+            Task.Run(() => Dispatcher.Invoke(() => SetPieChart()));
         }
 
         private List<string[]> GenerateYearlyUserCommitActivity() {
@@ -111,7 +111,7 @@ namespace VersionControlGitApp.Windows {
             return reposWithActivity;
         }
 
-        private void SetStatsLabel() {
+        private void SetPieChart() {
             List<string[]> repositories = GenerateYearlyUserCommitActivity();
 
             if (repositories != null) {

@@ -17,6 +17,7 @@ using VersionControlGitApp.Windows;
 
 using static VersionControlGitApp.Config;
 using MenuItem = System.Windows.Controls.MenuItem;
+using System.Linq;
 
 namespace VersionControlGitApp {
     public partial class MainWindow : Window {
@@ -269,6 +270,10 @@ namespace VersionControlGitApp {
             if (FilesToCommit.SelectedItem != null) {
                 string fileName = ((ComboBoxItem)FilesToCommit.SelectedItem).Content.ToString();
                 string path = PathLabel.Text.ToString();
+
+                if (fileName.Contains('"')) {
+                    fileName = fileName.Substring(1, fileName.Length - 2);
+                }
 
                 ConsoleLogger.StatusBarUpdate($"Showing {fileName} content", this);
 

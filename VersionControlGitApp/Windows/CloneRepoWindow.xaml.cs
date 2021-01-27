@@ -53,12 +53,11 @@ namespace VersionControlGitApp {
 
                 if (result.ToString() == "OK" && path != "") {
                     Task.Run(() => GitMethods.Clone(url, path, repoDB));
-                    ComboBoxItem item = new ComboBoxItem {
+                    ListBoxItem item = new ListBoxItem {
                         Content = GitMethods.GetNameFromURL(url),
                     };
 
                     win.RepoListBox.Items.Add(item);
-                    win.PathLabel.Text = path + @"\" + GitMethods.GetNameFromURL(url);
                     this.Close();
                 }
             } else {

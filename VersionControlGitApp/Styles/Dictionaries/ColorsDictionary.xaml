@@ -9,5 +9,4 @@
     <SolidColorBrush x:Key="GrayBackgroundColor">#525252</SolidColorBrush>
     <SolidColorBrush x:Key="AccentsColor">#ec625f</SolidColorBrush>
 
-
 </ResourceDictionary>
