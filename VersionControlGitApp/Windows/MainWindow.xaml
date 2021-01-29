@@ -53,7 +53,7 @@
                 IsMainMenu="True" Grid.Column="0">
 
                     <!-- Git menu -->
-                    <MenuItem Header="Git">
+                    <MenuItem Header="Git" Padding="6">
                         <Label Content="Change private token" 
                                Foreground="{StaticResource WhiteTextColor}"
                                FontSize="18"/>
@@ -61,25 +61,26 @@
                         <StackPanel Orientation="Horizontal">
                             
                             <TextBox x:Name="TokenTextBox" FontSize="12" 
-                                     Width="300" Padding="2,6,2,0"/>
+                                     Width="300" Padding="2,6,2,0"
+                                     Margin="0,0,0,8"/>
                             
                             <Button Content="Update" Click="UpdatePrivateToken"
                                     Width="60" Height="30"
-                                    Margin="12,0,0,0"/>
+                                    Margin="12,0,0,8"/>
                             
                         </StackPanel>
                     </MenuItem>
 
                     <!-- File menu -->
-                    <MenuItem Header="File">
-                        <MenuItem InputGestureText="Ctrl+Shift+N" Click="NewRepository" Header="New Repository"/>
-                        <MenuItem InputGestureText="Ctrl+Shift+A" Click="AddLocalRepository" Header="Add Local Repository"/>
-                        <MenuItem InputGestureText="Ctrl+Shift+C" Click="CloneRepository" Header="Clone Repository"/>
+                    <MenuItem Header="File" Padding="6">
+                        <MenuItem Header="New Repository" InputGestureText="Ctrl+Shift+N" Click="NewRepository" Padding="4"/>
+                        <MenuItem Header="Add Local Repository" InputGestureText="Ctrl+Shift+A" Click="AddLocalRepository" Padding="4"/>
+                        <MenuItem Header="Clone Repository" InputGestureText="Ctrl+Shift+C" Click="CloneRepository" Padding="4"/>
                     </MenuItem>
 
                     <!-- Branch menu -->
-                    <MenuItem Header="Branch">
-                        <MenuItem Header="New" InputGestureText="Ctrl+B+N" Click="CreateNewBranch"/>
+                    <MenuItem Header="Branch" Padding="6">
+                        <MenuItem Header="New" Click="CreateNewBranch" InputGestureText="Ctrl+B+N" Padding="4"/>
                         <MenuItem x:Name="ChangeBranchMenuItem" Header="Change">
                             <MenuItem.ItemContainerStyle>
                                 <Style TargetType="{x:Type MenuItem}">
@@ -95,16 +96,16 @@
                                 </Style>
                             </MenuItem.ItemContainerStyle>
                         </MenuItem>
-                        <MenuItem Header="Delete" InputGestureText="Ctrl+B+D" Click="DeleteCurrentBranch" Margin="0,3,0,0"/>
+                        <MenuItem Header="Delete" InputGestureText="Ctrl+B+D" Click="DeleteCurrentBranch"/>
                     </MenuItem>
 
                     <!-- Repository menu -->
                     <MenuItem Header="Repository">
                         <MenuItem Header="Fetch" InputGestureText="Ctrl+Shift+F" Click="FetchExternalRepository"/>
-                        <MenuItem InputGestureText="Ctrl+P+O" Click="PushLocalRepository" Header="Push"/>
-                        <MenuItem InputGestureText="Ctrl+P+I" Click="PullExternalRepository" Header="Pull"/>
-                        <MenuItem InputGestureText="Shift+R" Header="Remove" Click="RemoveRepository"/>
-                        <MenuItem InputGestureText="Ctrl+Shift+R" Header="Delete" Click="DeleteRepository" Margin="0,3,0,0"/>
+                        <MenuItem Header="Push" InputGestureText="Ctrl+P+O" Click="PushLocalRepository"/>
+                        <MenuItem Header="Pull" InputGestureText="Ctrl+P+I" Click="PullExternalRepository"/>
+                        <MenuItem Header="Remove" InputGestureText="Shift+R" Click="RemoveRepository"/>
+                        <MenuItem Header="Delete" InputGestureText="Ctrl+Shift+R" Click="DeleteRepository"/>
                     </MenuItem>
 
                     <!-- Statistics menu -->
