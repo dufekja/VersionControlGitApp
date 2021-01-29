@@ -53,21 +53,20 @@
                 IsMainMenu="True" Grid.Column="0">
 
                     <!-- Git menu -->
-                    <MenuItem Header="Git" Padding="6">
+                    <MenuItem Header="Git" Padding="6" Style="{StaticResource MenuItemNoHover}">
                         <Label Content="Change private token" 
                                Foreground="{StaticResource WhiteTextColor}"
                                FontSize="18"/>
-                        
+
                         <StackPanel Orientation="Horizontal">
-                            
                             <TextBox x:Name="TokenTextBox" FontSize="12" 
                                      Width="300" Padding="2,6,2,0"
-                                     Margin="0,0,0,8"/>
-                            
+                                     Margin="0,8,0,8"/>
+
                             <Button Content="Update" Click="UpdatePrivateToken"
                                     Width="60" Height="30"
-                                    Margin="12,0,0,8"/>
-                            
+                                    Margin="12,8,0,8"/>
+
                         </StackPanel>
                     </MenuItem>
 
@@ -81,37 +80,37 @@
                     <!-- Branch menu -->
                     <MenuItem Header="Branch" Padding="6">
                         <MenuItem Header="New" Click="CreateNewBranch" InputGestureText="Ctrl+B+N" Padding="4"/>
-                        <MenuItem x:Name="ChangeBranchMenuItem" Header="Change">
+                        <MenuItem x:Name="ChangeBranchMenuItem" Header="Change" Padding="4">
                             <MenuItem.ItemContainerStyle>
                                 <Style TargetType="{x:Type MenuItem}">
                                     <EventSetter Event="Click" Handler="ChangeBranch"/>
                                 </Style>
                             </MenuItem.ItemContainerStyle>
                         </MenuItem>
-                        <MenuItem Header="Rename" InputGestureText="Ctrl+B+R" Click="RenameCurrentBranch"/>
-                        <MenuItem x:Name="MergeBranchMenuItem" Header="Merge current to">
+                        <MenuItem Header="Rename" InputGestureText="Ctrl+B+R" Click="RenameCurrentBranch" Padding="4"/>
+                        <MenuItem x:Name="MergeBranchMenuItem" Header="Merge current to" Padding="4">
                             <MenuItem.ItemContainerStyle>
                                 <Style TargetType="{x:Type MenuItem}">
                                     <EventSetter Event="Click" Handler="MergeCurrentBranch"/>
                                 </Style>
                             </MenuItem.ItemContainerStyle>
                         </MenuItem>
-                        <MenuItem Header="Delete" InputGestureText="Ctrl+B+D" Click="DeleteCurrentBranch"/>
+                        <MenuItem Header="Delete" InputGestureText="Ctrl+B+D" Click="DeleteCurrentBranch" Padding="4"/>
                     </MenuItem>
 
                     <!-- Repository menu -->
-                    <MenuItem Header="Repository">
-                        <MenuItem Header="Fetch" InputGestureText="Ctrl+Shift+F" Click="FetchExternalRepository"/>
-                        <MenuItem Header="Push" InputGestureText="Ctrl+P+O" Click="PushLocalRepository"/>
-                        <MenuItem Header="Pull" InputGestureText="Ctrl+P+I" Click="PullExternalRepository"/>
-                        <MenuItem Header="Remove" InputGestureText="Shift+R" Click="RemoveRepository"/>
-                        <MenuItem Header="Delete" InputGestureText="Ctrl+Shift+R" Click="DeleteRepository"/>
+                    <MenuItem Header="Repository" Padding="6">
+                        <MenuItem Header="Fetch" InputGestureText="Ctrl+Shift+F" Click="FetchExternalRepository" Padding="4"/>
+                        <MenuItem Header="Push" InputGestureText="Ctrl+P+O" Click="PushLocalRepository" Padding="4"/>
+                        <MenuItem Header="Pull" InputGestureText="Ctrl+P+I" Click="PullExternalRepository" Padding="4"/>
+                        <MenuItem Header="Remove" InputGestureText="Shift+R" Click="RemoveRepository" Padding="4"/>
+                        <MenuItem Header="Delete" InputGestureText="Ctrl+Shift+R" Click="DeleteRepository" Padding="4"/>
                     </MenuItem>
 
                     <!-- Statistics menu -->
-                    <MenuItem Header="Statistics">
-                        <MenuItem Header="User" Click="OpenStatistics"/>
-                        <MenuItem Header="Repository" Click="OpenStatistics"/>
+                    <MenuItem Header="Statistics" Padding="6">
+                        <MenuItem Header="User" Click="OpenStatistics" Padding="4"/>
+                        <MenuItem Header="Repository" Click="OpenStatistics" Padding="4"/>
                     </MenuItem>
 
                 </Menu>
