@@ -259,5 +259,23 @@ namespace VersionControlGitApp.Controllers {
                 ConsoleLogger.UserPopup(HEADERMSG_PULL_REPO, $"Failed to pull data from external repository");
             }
         }
+
+        public static bool HaveCommits(string path) {
+            List<string> lines = RunAndRead("log", path);
+            bool haveCommits = false;
+
+            if (lines != null) {
+                foreach (string line in lines) {
+                    if (!line.Contains("fatal: ")) {
+                        haveCommits = true;
+                    }
+                }
+                
+                    
+            }
+
+            return haveCommits;
+        }
+
     }
 }

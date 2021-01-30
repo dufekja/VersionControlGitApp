@@ -115,6 +115,15 @@ namespace VersionControlGitApp.UIelements {
             }
         }
 
+        public static void ChangeAllBranchToolsStatus(string path, MainWindow win) {
+            bool haveCommits = Cmd.HaveCommits(path);
+
+            if (haveCommits)
+                win.Dispatcher.Invoke(() => win.AllBranchToolsMenuItem.IsEnabled = true);
+            else
+                win.Dispatcher.Invoke(() => win.AllBranchToolsMenuItem.IsEnabled = false);
+        }
+
         public static void ClearRepoPathOnEmpty(MainWindow win) {
             if (win.RepoListBox.Items.Count == 0) {
                 win.PathLabel.Text = "";

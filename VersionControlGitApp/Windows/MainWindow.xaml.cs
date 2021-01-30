@@ -59,6 +59,7 @@ namespace VersionControlGitApp {
 
                 // set commit button branch
                 MainWindowUI.ChangeCommitButtonBranch(path, this);
+                MainWindowUI.ChangeAllBranchToolsStatus(path, this);
 
                 // start thread to watch selected repo
                 repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
@@ -205,9 +206,11 @@ namespace VersionControlGitApp {
                 // set new path label and clear all old repo data
                 string repoPath = repos[0].Path.ToString();
                 Dispatcher.Invoke(() => MainWindowUI.SetDataForNewRepo(repoName, repoPath, this));
+                MainWindowUI.ChangeAllBranchToolsStatus(repoPath, this);
 
                 // start new thread which will watch new repo
                 newRepoChangesThreadState = RepoChangesThreadState.New;
+
                 string repo = "";
                 Dispatcher.Invoke(() => repo = PathLabel.Text.ToString());
                 repoChangesThread = new Thread(() => WaitForChangesOnRepo(repo));

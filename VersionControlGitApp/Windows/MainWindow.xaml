@@ -78,7 +78,7 @@
                     </MenuItem>
 
                     <!-- Branch menu -->
-                    <MenuItem Header="Branch" Padding="6">
+                    <MenuItem x:Name="AllBranchToolsMenuItem" Header="Branch" Padding="6">
                         <MenuItem Header="New" Click="CreateNewBranch" Padding="4"/>
                         <MenuItem x:Name="ChangeBranchMenuItem" Header="Change" Padding="4">
                             <MenuItem.ItemContainerStyle>
