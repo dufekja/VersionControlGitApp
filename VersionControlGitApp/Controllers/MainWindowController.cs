@@ -165,7 +165,6 @@ namespace VersionControlGitApp.Controllers {
             if (lines != null) {
                 new BranchEditWindow(lines, repoPath, "create", win).Show();
             }
-
         }
 
         /// <summary>
@@ -185,7 +184,6 @@ namespace VersionControlGitApp.Controllers {
                         ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, "Can't rename branch master");
                 }
             } catch { }
-
         }
 
         /// <summary>
@@ -217,7 +215,6 @@ namespace VersionControlGitApp.Controllers {
                     ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, $"Cannot merge to {branch}");
                 }   
             }
-
         }
 
         /// <summary>
