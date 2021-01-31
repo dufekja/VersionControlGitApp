@@ -65,6 +65,12 @@
                    Margin="0" Padding="0"/>
         </StackPanel>
 
+        <Label x:Name="LoadingLabel" Content="Loading"
+               Foreground="{StaticResource WhiteTextColor}"
+               FontSize="32"
+               Grid.Column="3" Grid.Row="4" Grid.ColumnSpan="2"
+               HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+
         <lvc:PieChart Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" Grid.RowSpan="8" 
                       x:Name="Piechart" Series="{Binding SeriesCollection}" 
                       LegendLocation="Right" InnerRadius="180" Margin="0 15">

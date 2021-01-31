@@ -19,6 +19,7 @@ using LiveCharts;
 using VersionControlGitApp.Controllers;
 using LiveCharts.Defaults;
 using static VersionControlGitApp.Config;
+using System.Threading;
 
 namespace VersionControlGitApp.Windows {
     public partial class StatisticsWindow : Window {
@@ -37,6 +38,9 @@ namespace VersionControlGitApp.Windows {
         public List<string> Labels { get; set; }
         public Func<int, string> Formatter { get; set; }
 
+        public static bool loading = true;
+        public static Thread chartThread;
+
 
         public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header, string _currentRepoPath) {
 
@@ -54,13 +58,16 @@ namespace VersionControlGitApp.Windows {
 
             InitializeComponent();
 
+            Task.Run(() => Loading());
+
             if (header == "User") {
 
                 // remove column chart 
                 CartesianChart chart = (CartesianChart)this.MainGrid.FindName("Columnchart");
                 this.MainGrid.Children.Remove(chart);
 
-                GenerateUserData();
+                chartThread = new Thread(() => GenerateUserData());
+                chartThread.Start();
 
             } else if (header == "Repository") {
 
@@ -72,20 +79,30 @@ namespace VersionControlGitApp.Windows {
                 Labels = new List<string>();
                 Formatter = value => value.ToString("N");
 
-                GenerateRepoData();
+                chartThread = new Thread(() => GenerateRepoData());
+                chartThread.Start();
+                
             }
 
         }
 
+        private void Loading() {
+            while (true) {
+                if (!loading)
+                    break;
+            }
+            Dispatcher.Invoke(() => LoadingLabel.Content = "");
+        }
+
         private void GenerateUserData() {
-            
+
             // set public and private repo labels count
-            Task.Run(() => Dispatcher.Invoke(() => SetRepoLabelsText(
+            Dispatcher.Invoke(() => SetRepoLabelsText(
                 $"Owned public repositories: {user.PublicRepos}", 
-                $"Owned private repositories: {user.TotalPrivateRepos}")));
+                $"Owned private repositories: {user.TotalPrivateRepos}"));
 
             // calculate commit activity for each repo
-            Task.Run(() => Dispatcher.Invoke(() => SetPieChart()));
+            Dispatcher.Invoke(() => SetPieChart());
         }
 
         private List<string[]> GenerateYearlyUserCommitActivity() {
@@ -128,6 +145,9 @@ namespace VersionControlGitApp.Windows {
 
                     SeriesCollection.Add(pie);
                 }
+
+                loading = false;
+
             } else {
                 ConsoleLogger.UserPopup(HEADERMSG_CHART_RELATED, "There are no repositories on user Github");
             }
@@ -135,8 +155,8 @@ namespace VersionControlGitApp.Windows {
         }
 
         private void GenerateRepoData() {
-            SetRepoLabelsText("", "");
-            Task.Run(() => Dispatcher.Invoke(() => GenerateRepoDataFunc()));
+            Dispatcher.Invoke(() => SetRepoLabelsText("", ""));
+            Dispatcher.Invoke(() => GenerateRepoDataFunc());
         }
 
         private void GenerateRepoDataFunc() {
@@ -182,6 +202,7 @@ namespace VersionControlGitApp.Windows {
                 commitsFromLoggedUser += $"{loggedUserCommitsCount}";
 
                 Dispatcher.Invoke(() => SetRepoLabelsText(totalCommits, commitsFromLoggedUser));
+                loading = false;
 
             } else {
 

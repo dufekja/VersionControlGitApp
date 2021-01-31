@@ -92,6 +92,14 @@ namespace VersionControlGitApp.UIelements {
             win.CommitButton.Content = "Commit to " + GitMethods.GetCurrentBranch(path);
         }
 
+        public static void RepoStatsBlocked(string repo, MainWindow win) {
+            // repository stats status
+            if (Cmd.HaveCommits(repo))
+               win.Dispatcher.Invoke(() => win.RepositoryStatsMenuItem.IsEnabled = true);
+            else
+                win.Dispatcher.Invoke(() => win.RepositoryStatsMenuItem.IsEnabled = false);
+        }
+
         public static void ListBoxLoad() {
 
             List<Repo> localRepos = repoDB.ReadDB(loggedUser);

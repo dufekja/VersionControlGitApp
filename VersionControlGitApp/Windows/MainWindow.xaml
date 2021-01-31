@@ -110,7 +110,7 @@
                     <!-- Statistics menu -->
                     <MenuItem Header="Statistics" Padding="6">
                         <MenuItem Header="User" Click="OpenStatistics" Padding="4"/>
-                        <MenuItem Header="Repository" Click="OpenStatistics" Padding="4"/>
+                        <MenuItem x:Name="RepositoryStatsMenuItem" Header="Repository" Click="OpenStatistics" Padding="4"/>
                     </MenuItem>
 
                 </Menu>

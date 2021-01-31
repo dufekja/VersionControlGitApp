@@ -57,9 +57,10 @@ namespace VersionControlGitApp {
             // if there is repo then watch for changes
             if (path != "") {
 
-                // set commit button branch
+                // branches and headers enable
                 MainWindowUI.ChangeCommitButtonBranch(path, this);
                 MainWindowUI.ChangeAllBranchToolsStatus(path, this);
+                MainWindowUI.RepoStatsBlocked(path, this);
 
                 // start thread to watch selected repo
                 repoChangesThread = new Thread(() => WaitForChangesOnRepo(path));
@@ -207,6 +208,7 @@ namespace VersionControlGitApp {
                 string repoPath = repos[0].Path.ToString();
                 Dispatcher.Invoke(() => MainWindowUI.SetDataForNewRepo(repoName, repoPath, this));
                 MainWindowUI.ChangeAllBranchToolsStatus(repoPath, this);
+                MainWindowUI.RepoStatsBlocked(repoPath, this);
 
                 // start new thread which will watch new repo
                 newRepoChangesThreadState = RepoChangesThreadState.New;
