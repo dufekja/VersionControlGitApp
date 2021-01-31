@@ -81,7 +81,8 @@ namespace VersionControlGitApp.Controllers {
                 string desc = win.CommitDescription.Text.ToString();
 
                 GitMethods.Commit(repoPath, summary, desc, win);
-                MainWindowUI.ClearCommitAndContext(win); 
+                MainWindowUI.ClearCommitAndContext(win);
+                MainWindowUI.ChangeAllBranchToolsStatus(repoPath, win);
             }
         }
 
@@ -140,7 +141,7 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="branch">Name of selected branch</param>
         /// <param name="repoPath">Repository path</param>
         /// <param name="win">MainWindow window object</param>
-        public static void ChangeBranchCommand(string branch, string repoPath, MainWindow win) {
+        public static void ChangeBranchCommand(string repoPath, string branch, MainWindow win) {
             string currentBranch = GitMethods.GetCurrentBranch(repoPath);
 
             ConsoleState state = ConsoleState.Error; 

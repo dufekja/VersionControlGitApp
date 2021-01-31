@@ -134,7 +134,11 @@ namespace VersionControlGitApp.Controllers {
                 }
 
                 if (state == ConsoleState.Success)
-                    ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, "Commit successful");
+                    if (Cmd.HaveCommits(path)) {
+                        ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, "Commit successful");
+                    } else {
+                        ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, "There is nothing to commit");
+                    }
                 else
                     ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, "There was an error");
             } else {
