@@ -156,10 +156,10 @@ namespace VersionControlGitApp.Windows {
 
         private void GenerateRepoData() {
             Dispatcher.Invoke(() => SetRepoLabelsText("", ""));
-            Dispatcher.Invoke(() => GenerateRepoDataFunc());
+            Dispatcher.Invoke(() => GenerateRepoDataCommand());
         }
 
-        private void GenerateRepoDataFunc() {
+        private void GenerateRepoDataCommand() {
             string userName = user.Login.ToLower();
             string totalCommits = $"Total commits in {currentRepo}: ";
             string commitsFromLoggedUser = $"Commits from {userName}: ";
