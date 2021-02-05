@@ -27,9 +27,9 @@ namespace VersionControlGitApp.Database {
         /// <summary>
         /// Save token into db
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="user"></param>
-        /// <param name="isActive"></param>
+        /// <param name="value">Token value</param>
+        /// <param name="user">Username</param>
+        /// <param name="isActive">Is active int (0,1)</param>
         /// <returns></returns>
         public bool WriteToken(string value, string user, int isActive) {
             try {
@@ -46,6 +46,11 @@ namespace VersionControlGitApp.Database {
 
         }
 
+        /// <summary>
+        /// Get first token of usser
+        /// </summary>
+        /// <param name="user">Username</param>
+        /// <returns>Returns token object</returns>
         public Token GetFirstToken(string user) {
             if (database.Table<Token>().Count() != 0) {
                 var tokens = database.Table<Token>();
@@ -54,6 +59,11 @@ namespace VersionControlGitApp.Database {
             return null;
         }
 
+        /// <summary>
+        /// Find token by user
+        /// </summary>
+        /// <param name="user">Username</param>
+        /// <returns>Returns list of all user tokens</returns>
         public List<Token> FindTokensByUser(string user) {
             var result = database.Query<Token>($"SELECT * FROM Tokens WHERE User='{user}'");
             if (result.Count == 0) {
@@ -63,6 +73,11 @@ namespace VersionControlGitApp.Database {
             }
         }
 
+        /// <summary>
+        /// Get user active token
+        /// </summary>
+        /// <param name="user">Username</param>
+        /// <returns>Return current user active token</returns>
         public Token GetActiveToken(string user) {
             var result = database.Query<Token>($"SELECT * FROM Tokens WHERE User='{user}'");
 
@@ -76,6 +91,11 @@ namespace VersionControlGitApp.Database {
             return null;
         }
 
+        /// <summary>
+        /// Find token by inserted value
+        /// </summary>
+        /// <param name="value">Token value</param>
+        /// <returns>Returns token object or null</returns>
         public Token FindTokenByValue(string value) {
             var result = database.Query<Token>($"SELECT * FROM Tokens WHERE Value='{value}'");
             if (result.Count == 0) {
@@ -90,6 +110,12 @@ namespace VersionControlGitApp.Database {
             }
         }
 
+        /// <summary>
+        /// Update token isActive value by token value
+        /// </summary>
+        /// <param name="value">Value of token</param>
+        /// <param name="isActive">Bool of new value</param>
+        /// <returns>Returns bool with success</returns>
         public bool UpdateTokenByValue(string value, int isActive) {
             try {
                 database.Query<Token>($"UPDATE Tokens SET IsActive='{isActive}' WHERE Value='{value}'");
