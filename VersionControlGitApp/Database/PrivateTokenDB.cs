@@ -24,6 +24,13 @@ namespace VersionControlGitApp.Database {
             database.CreateTable<Token>();
         }
 
+        /// <summary>
+        /// Save token into db
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="user"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
         public bool WriteToken(string value, string user, int isActive) {
             try {
                 database.Insert(new Token() {
