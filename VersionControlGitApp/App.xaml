@@ -6,6 +6,10 @@
     <Application.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="CustomFont">
+                <Setter Property="TextElement.FontFamily" Value="/Styles/Fonts/#Montserrat"/>
+            </Style>
+
             <!-- Import styles -->
             <ResourceDictionary.MergedDictionaries>
                 

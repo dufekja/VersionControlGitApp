@@ -61,7 +61,7 @@
             </Hyperlink>
         </Label>
 
-        <Label Content="Insert your private access token:" 
+        <Label Content="Insert your private access token:" Style="{StaticResource CustomFont}"
                Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" 
                HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Margin="8"
                 FontSize="25" Foreground="{StaticResource WhiteTextColor}"/>
