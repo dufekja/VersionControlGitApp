@@ -27,7 +27,8 @@
             <RowDefinition Height="32"/>
         </Grid.RowDefinitions>
 
-        <DockPanel MouseDown="DragWindownOnMouseDown" Background="{StaticResource GrayBackgroundColor}"
+        <DockPanel MouseDown="DragWindownOnMouseDown"
+                   Background="{StaticResource GrayBackgroundColor}"
                    Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6">
 
             <Grid DockPanel.Dock="Top" >
@@ -61,21 +62,25 @@
             </Hyperlink>
         </Label>
 
-        <Label Content="Insert your private access token:" Style="{StaticResource CustomFont}"
+        <Label Content="Insert your private access token:" 
                Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" 
-               HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Margin="8"
-                FontSize="25" Foreground="{StaticResource WhiteTextColor}"/>
+               HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+               Margin="8"
+               FontSize="25" FontWeight="Regular"
+               Foreground="{StaticResource WhiteTextColor}"/>
 
         <TextBox x:Name="TokenTextBox" FontSize="15"
                  Grid.Column="1" Grid.Row="4"
-                 Padding="8,0,8,0"
-                 HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Margin="8"
+                 Padding="8,0,8,0" Margin="8"
+                 HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center"
                  Background="{StaticResource BlackColor}" 
                  Foreground="{StaticResource WhiteTextColor}"
                  BorderBrush="{StaticResource AccentsColor}"/>
 
-        <Button Click="SubmitToken" Content="Submit" FontSize="24"
-                Grid.Column="2" Grid.Row="4"  Margin="8"/>
+        <Button Click="SubmitToken" Content="Submit" 
+                FontSize="24"
+                Grid.Column="2" Grid.Row="4"  
+                Margin="8"/>
         
     </Grid>
 </Window>

@@ -6,16 +6,12 @@
     <Application.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="CustomFont">
-                <Setter Property="TextElement.FontFamily" Value="/Styles/Fonts/#Montserrat"/>
-            </Style>
-
             <!-- Import styles -->
             <ResourceDictionary.MergedDictionaries>
-                
+
                 <ResourceDictionary Source="Styles/Dictionaries/ColorsDictionary.xaml"/>
                 <ResourceDictionary Source="Styles/Dictionaries/FontsDictionary.xaml"/>
-                
+
                 <ResourceDictionary Source="Styles/Dictionaries/ToolbarMenuDictionary.xaml"/>
                 <ResourceDictionary Source="Styles/Dictionaries/ComboBoxDictionary.xaml"/>
                 <ResourceDictionary Source="Styles/Dictionaries/ButtonsDictionary.xaml"/>
