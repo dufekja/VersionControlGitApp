@@ -32,21 +32,15 @@ namespace VersionControlGitApp.Windows {
         public static string currentRepo;
         public static string currentRepoPath;
 
-        public SeriesCollection SeriesCollection { get; set; }
+        public SeriesCollection PieSeriesCollection { get; set; }
 
         public SeriesCollection ColumnSeriesCollection { get; set; }
         public List<string> Labels { get; set; }
         public Func<int, string> Formatter { get; set; }
 
-        public static bool loading = true;
         public static Thread chartThread;
 
-
         public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header, string _currentRepoPath) {
-
-            // series for pie chart
-            SeriesCollection = new SeriesCollection();
-            DataContext = this;
 
             mainWin = _win;
             client = _client;
@@ -57,11 +51,13 @@ namespace VersionControlGitApp.Windows {
             currentRepo = GitMethods.GetNameFromPath(_currentRepoPath);
 
             InitializeComponent();
-
-            Task.Run(() => Loading());
+            DataContext = this;
 
             if (header == "User") {
 
+                // series for pie chart
+                PieSeriesCollection = new SeriesCollection();
+                
                 // remove column chart 
                 CartesianChart chart = (CartesianChart)this.MainGrid.FindName("Columnchart");
                 this.MainGrid.Children.Remove(chart);
@@ -75,23 +71,11 @@ namespace VersionControlGitApp.Windows {
                 PieChart chart = (PieChart)this.MainGrid.FindName("Piechart");
                 this.MainGrid.Children.Remove(chart);
 
-                ColumnSeriesCollection = new SeriesCollection();
-                Labels = new List<string>();
-                Formatter = value => value.ToString("N");
-
                 chartThread = new Thread(() => GenerateRepoData());
                 chartThread.Start();
                 
             }
 
-        }
-
-        private void Loading() {
-            while (true) {
-                if (!loading)
-                    break;
-            }
-            Dispatcher.Invoke(() => LoadingLabel.Content = "");
         }
 
         private void GenerateUserData() {
@@ -143,10 +127,10 @@ namespace VersionControlGitApp.Windows {
                         DataLabels = true
                     };
 
-                    SeriesCollection.Add(pie);
+                    PieSeriesCollection.Add(pie);
                 }
 
-                loading = false;
+                Dispatcher.Invoke(() => LoadingLabel.Content = "");
 
             } else {
                 ConsoleLogger.UserPopup(HEADERMSG_CHART_RELATED, "There are no repositories on user Github");
@@ -187,28 +171,35 @@ namespace VersionControlGitApp.Windows {
                     }
                 }
 
-                //adding series will update and animate the chart automatically
-                ColumnSeriesCollection.Add(new ColumnSeries {
-                    Title = "Commits: ",
-                    Values = new ChartValues<int>() { }
-                });
-                
+                // create new colmn series and labels list
+                Labels = new List<string>();
+                ColumnSeriesCollection = new SeriesCollection() {
+                    new ColumnSeries() {
+                        Title = "Commits: ",
+                        Values = new ChartValues<int>() {}
+                    }
+                };
+
                 foreach (var pair in finalChartParse) {
-                    Labels.Add(pair.Key);
+                    Labels.Add($"{pair.Key}");
                     ColumnSeriesCollection[0].Values.Add(pair.Value);
                 }
 
+                Formatter = value => value.ToString("N");
+                DataContext = this;
+
                 totalCommits += $"{commits.Count}";
                 commitsFromLoggedUser += $"{loggedUserCommitsCount}";
-
+                
                 Dispatcher.Invoke(() => SetRepoLabelsText(totalCommits, commitsFromLoggedUser));
-                loading = false;
+                Dispatcher.Invoke(() => LoadingLabel.Content = "");
 
             } else {
 
                 SetRepoLabelsText("There are no commits yet", "");
                 CartesianChart chart = (CartesianChart)this.MainGrid.FindName("Columnchart");
                 this.MainGrid.Children.Remove(chart);
+                Dispatcher.Invoke(() => LoadingLabel.Content = "");
             }
 
             

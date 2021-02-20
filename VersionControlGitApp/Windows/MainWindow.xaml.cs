@@ -244,7 +244,9 @@ namespace VersionControlGitApp {
                 Cmd.Run(command, path);
             }
 
-            Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(this));
+            try {
+                Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(this));
+            } catch {}
 
             ConsoleLogger.StatusBarUpdate("Waiting on changes in repository", this);
         }

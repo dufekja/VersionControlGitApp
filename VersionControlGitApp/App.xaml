@@ -23,7 +23,7 @@
                 <ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Size/s.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Weight/normal.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/base.xaml" />
-                
+
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

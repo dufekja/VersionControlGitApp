@@ -72,7 +72,7 @@
                HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
 
         <lvc:PieChart Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" Grid.RowSpan="8" 
-                      x:Name="Piechart" Series="{Binding SeriesCollection}" 
+                      x:Name="Piechart" Series="{Binding PieSeriesCollection}" 
                       LegendLocation="Right" InnerRadius="180" Margin="0 15">
 
             <lvc:PieChart.ChartLegend>
@@ -89,11 +89,11 @@
                              Foreground="{StaticResource BlackColor}">
             
             <lvc:CartesianChart.AxisX>
-                <lvc:Axis Title="Date" Labels="{Binding Labels}" Foreground="{StaticResource WhiteTextColor}" ></lvc:Axis>
+                <lvc:Axis Title="Date" Labels="{Binding Labels}" Foreground="{StaticResource WhiteTextColor}"/>
             </lvc:CartesianChart.AxisX>
             
             <lvc:CartesianChart.AxisY>
-                <lvc:Axis Title="Commits" LabelFormatter="{Binding Formatter}" Foreground="{StaticResource WhiteTextColor}" ></lvc:Axis>
+                <lvc:Axis Title="Commits" LabelFormatter="{Binding Formatter}" Foreground="{StaticResource WhiteTextColor}"/>
             </lvc:CartesianChart.AxisY>
         </lvc:CartesianChart>
 

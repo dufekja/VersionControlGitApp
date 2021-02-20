@@ -83,6 +83,8 @@ namespace VersionControlGitApp.Controllers {
                 GitMethods.Commit(repoPath, summary, desc, win);
                 MainWindowUI.ClearCommitAndContext(win);
                 MainWindowUI.ChangeAllBranchToolsStatus(repoPath, win);
+
+                win.Dispatcher.Invoke(() => win.RepositoryStatsMenuItem.IsEnabled = true);
             }
         }
 
