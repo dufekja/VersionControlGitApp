@@ -63,7 +63,7 @@
                                      Width="300" Padding="2,6,2,0"
                                      Margin="0,8,0,8"/>
 
-                            <Button Content="Update" Click="UpdatePrivateToken"
+                            <Button Content="Submit" Click="UpdatePrivateToken"
                                     Width="60" Height="30"
                                     Margin="12,8,0,8"/>
 
@@ -182,7 +182,7 @@
         <!-- Github user nick -->
         <Label 
             Foreground="{StaticResource WhiteTextColor}" 
-            Grid.Column="1" Grid.Row="1" Margin="-12,24,4,0"
+            Grid.Column="1" Grid.Row="1" Margin="-12,6,4,0"
             VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
             VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Padding="0">
 
