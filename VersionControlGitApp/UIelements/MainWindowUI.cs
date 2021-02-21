@@ -174,12 +174,12 @@ namespace VersionControlGitApp.UIelements {
         public static void ClearCommitAndContext(MainWindow win) {
             win.CommitSummary.Text = "";
             win.CommitDescription.Text = "";
-            win.FileContent.Text = "";
+            win.FileContent.Blocks.Clear();
         }
 
         public static void SetDataForNewRepo(string repoName, string repoPath, MainWindow win) {
             win.PathLabel.Text = repoPath;
-            win.FileContent.Text = "";
+            win.FileContent.Blocks.Clear();
             FilesToCommitRefresh(win);
             ChangeCommitButtonBranch(repoPath, win);
             LoadRepoBranches(repoPath, win);

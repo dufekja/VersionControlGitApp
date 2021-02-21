@@ -237,66 +237,6 @@ namespace VersionControlGitApp.Controllers {
         }
 
         /// <summary>
-        /// Get all changes between last commit and current version of repository
-        /// </summary>
-        /// <param name="file">File name</param>
-        /// <param name="path">Repostory path</param>
-        /// <returns>Returns diff output</returns>
-        public static string GetAllFileChanges(string file, string path) {
-            string finalOutput = "";
-            List<string> diffOutput = Cmd.RunAndRead($"blame {file}", path);
-
-            if (diffOutput != null) {
-                List<string> newFile = new List<string>(File.ReadAllText($@"{path}\{file}").Split('\n'));
-                List<string> oldFile = new List<string>();
-
-                for (int x = 0; x < diffOutput.Count; x++) {
-                    if (!diffOutput[x].Contains("00000000")) {
-                        oldFile.Add(diffOutput[x].Split(new[] { $" {x + 1}) " }, StringSplitOptions.None)[1]);
-                    }
-                }
-
-                int oldFileCount = oldFile.Count;
-                int newFileCount = newFile.Count;
-                bool linesAdded = false;
-
-                for (int y = 0; y < Math.Abs(oldFileCount - newFileCount); y++) {
-                    // lines was added
-                    if (oldFileCount < newFileCount) {
-                        oldFile.Add(null);
-                        linesAdded = true;
-                    } else {
-                        newFile.Add(null);
-                    }
-                }
-
-                if (linesAdded) {
-                    for (int i = 0; i < newFileCount; i++) {
-                        string lineNum = $"{i + 1}";
-                        var oldLine = oldFile[i];
-                        var newLine = newFile[i];
-
-                        if (oldLine == null) {
-                            finalOutput += $"{lineNum} +        {newFile[i].Trim()} \n";
-                        } else if (oldLine.Trim() == newLine.Trim()) { 
-                            finalOutput += $"{lineNum}          {oldFile[i]} \n";
-                        } else {
-                            finalOutput += $"{lineNum} -        {oldFile[i]} \n";
-                            finalOutput += $"{lineNum} +        {newFile[i].Trim()} \n";
-                        }
-                        
-                    }
-                } else {
-                    finalOutput = "lmao";
-                }
-
-               
-            }
-
-            return finalOutput;
-        }
-
-        /// <summary>
         /// Updates private token of logged user
         /// </summary>
         /// <param name="token">Private token</param>
@@ -312,8 +252,8 @@ namespace VersionControlGitApp.Controllers {
                 }
 
                 // update old to false
-               bool updated = tokenDB.UpdateTokenByValue(tk.Value, 0);
-               if (updated) {
+                bool updated = tokenDB.UpdateTokenByValue(tk.Value, 0);
+                if (updated) {
                     Token updateToken = tokenDB.FindTokenByValue(token);
 
                     if (updateToken != null) {
@@ -327,6 +267,60 @@ namespace VersionControlGitApp.Controllers {
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Get all changes between last commit and current version of repository
+        /// </summary>
+        /// <param name="file">File name</param>
+        /// <param name="path">Repostory path</param>
+        /// <returns>Returns diff output</returns>
+        public static List<string> GetAllFileChanges(string file, string path) {
+            List<string> diffOutput = Cmd.RunAndRead($"diff HEAD {file}", path);
+            List<string> changeChunks = new List<string>();
+            bool read = false;
+
+            foreach (string line in diffOutput) {
+                if (read) {
+                    if (!line.Contains("No newline at")) { 
+                        changeChunks.Add(line);
+                    }
+                } else if (line.Contains("@@ -")) {
+                    read = true;
+                }
+            }
+
+            List<string> lineNumbered = new List<string>();
+            char prevSymbol = ' ';
+            int lineNum = 1;
+            foreach (string line in changeChunks) {
+                char symbol = line[0];
+
+                    // empty symbol
+                if (symbol == ' ') {
+                    lineNumbered.Add($"{lineNum}.    {line}");
+                    prevSymbol = ' ';
+                    lineNum++;
+
+                    // minus symbol
+                } else if (symbol == '-') {
+                    lineNumbered.Add($"{lineNum}.    {line}");
+                    lineNum++;
+                    prevSymbol = '-';
+
+                    // add symbol
+                } else if (symbol == '+') {
+                    if (prevSymbol == ' ' || prevSymbol == '+') {
+                        lineNumbered.Add($"{lineNum}.    {line}");
+                        lineNum++;
+                    } else {
+                        lineNumbered.Add($"{lineNum - 1}.    {line}");
+                    }
+                    prevSymbol = '+';
+                }
+            }
+
+            return lineNumbered;
         }
 
     }

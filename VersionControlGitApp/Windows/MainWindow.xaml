@@ -217,15 +217,21 @@
                Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="4"/>
 
         <!-- Current selected file content -->
-        <TextBox x:Name="FileContent" IsReadOnly="True" Focusable="True" 
+        <RichTextBox  Focusable="True"
                 Margin="12,13,12,3"
-                VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
-                HorizontalContentAlignment="Left" VerticalContentAlignment="Top"
                 Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="8" 
                 Foreground="{StaticResource WhiteTextColor}"
-                Background="{StaticResource BlackColor}"
-                BorderBrush="{StaticResource AccentsColor}">
-        </TextBox>
+                Background="{StaticResource BlackColor}">
+
+            <FlowDocument x:Name="FileContent"/>
+
+            <RichTextBox.Resources>
+                <Style TargetType="{x:Type Paragraph}">
+                    <Setter Property="Margin" Value="0"/>
+                </Style>
+            </RichTextBox.Resources>
+
+        </RichTextBox>
 
         <!-- Listbox with added repositories -->
         <ScrollViewer

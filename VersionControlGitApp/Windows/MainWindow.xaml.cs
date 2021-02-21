@@ -18,6 +18,8 @@ using VersionControlGitApp.Windows;
 using static VersionControlGitApp.Config;
 using MenuItem = System.Windows.Controls.MenuItem;
 using System.Linq;
+using System.Windows.Media;
+using System.Windows.Documents;
 
 namespace VersionControlGitApp {
     public partial class MainWindow : Window {
@@ -285,8 +287,30 @@ namespace VersionControlGitApp {
                 ConsoleLogger.StatusBarUpdate($"Showing {fileName} content", this);
 
                 if (File.Exists($@"{path}\{fileName}")) {
-                    string text = GitMethods.GetAllFileChanges(fileName, path);
-                    FileContent.Text = text;
+                    List<string> textInput = GitMethods.GetAllFileChanges(fileName, path);
+                    FileContent.Blocks.Clear();
+                    Brush color = Brushes.White;
+
+                    foreach (string line in textInput) {
+                        if (line.Contains(".    -")) {
+                            color = Brushes.Red;
+                        } else if (line.Contains(".    +")) {
+                            color = Brushes.Green;
+                        } else {
+                            color = Brushes.GhostWhite;
+                        }
+
+                        Paragraph paragraph = new Paragraph() { 
+                            Margin = new Thickness(2)
+                        };
+                        Run textFormat = new Run() {
+                            Text = $"{line}",
+                            Foreground = color,
+                        };
+
+                        paragraph.Inlines.Add(textFormat);
+                        FileContent.Blocks.Add(paragraph);
+                    }
 
                 } else {
                     ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, $"File: {fileName} don't exists");
