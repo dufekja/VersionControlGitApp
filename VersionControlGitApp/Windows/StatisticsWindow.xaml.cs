@@ -34,6 +34,7 @@ namespace VersionControlGitApp.Windows {
 
         public SeriesCollection PieSeriesCollection { get; set; }
 
+        // column chart data
         public SeriesCollection ColumnSeriesCollection { get; set; }
         public List<string> Labels { get; set; }
         public Func<int, string> Formatter { get; set; }
@@ -51,8 +52,7 @@ namespace VersionControlGitApp.Windows {
             currentRepo = GitMethods.GetNameFromPath(_currentRepoPath);
 
             InitializeComponent();
-            DataContext = this;
-
+ 
             if (header == "User") {
 
                 // series for pie chart
@@ -78,6 +78,9 @@ namespace VersionControlGitApp.Windows {
 
         }
 
+        /// <summary>
+        /// Call methods to obtain data for user statistics
+        /// </summary>
         private void GenerateUserData() {
 
             // set public and private repo labels count
@@ -89,6 +92,10 @@ namespace VersionControlGitApp.Windows {
             Dispatcher.Invoke(() => SetPieChart());
         }
 
+        /// <summary>
+        /// Returns coommits made in repository by year timespan
+        /// </summary>
+        /// <returns>Returns list with repo tuples</returns>
         private List<string[]> GenerateYearlyUserCommitActivity() {
             IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
             if (repos == null)
@@ -112,6 +119,9 @@ namespace VersionControlGitApp.Windows {
             return reposWithActivity;
         }
 
+        /// <summary>
+        /// Get data from user and generate pie chart
+        /// </summary>
         private void SetPieChart() {
             List<string[]> repositories = GenerateYearlyUserCommitActivity();
 
@@ -130,6 +140,8 @@ namespace VersionControlGitApp.Windows {
                     PieSeriesCollection.Add(pie);
                 }
 
+                DataContext = this;
+
                 Dispatcher.Invoke(() => LoadingLabel.Content = "");
 
             } else {
@@ -138,11 +150,18 @@ namespace VersionControlGitApp.Windows {
   
         }
 
+        /// <summary>
+        /// Call methods to obtain repository data
+        /// </summary>
         private void GenerateRepoData() {
+            // invoke chart and repo labels info
             Dispatcher.Invoke(() => SetRepoLabelsText("", ""));
             Dispatcher.Invoke(() => GenerateRepoDataCommand());
         }
 
+        /// <summary>
+        /// Obtain single repository data from git log function and fill columnt chart with it
+        /// </summary>
         private void GenerateRepoDataCommand() {
             string userName = user.Login.ToLower();
             string totalCommits = $"Total commits in {currentRepo}: ";
@@ -153,6 +172,8 @@ namespace VersionControlGitApp.Windows {
             Dictionary<string, int> finalChartParse = new Dictionary<string, int>();
 
             if (commits != null) {
+
+                // parse text commits to dictionary
                 int loggedUserCommitsCount = 0;
                 foreach (string commit in commits) {
                     if (commit.Contains(userName)) {
@@ -171,15 +192,17 @@ namespace VersionControlGitApp.Windows {
                     }
                 }
 
-                // create new colmn series and labels list
-                Labels = new List<string>();
-                ColumnSeriesCollection = new SeriesCollection() {
-                    new ColumnSeries() {
+                // create new column series collection (same colored columns)
+                ColumnSeriesCollection = new SeriesCollection {
+                    new ColumnSeries {
                         Title = "Commits: ",
-                        Values = new ChartValues<int>() {}
+                        Values = new ChartValues<int> {}
                     }
                 };
 
+                Labels = new List<string> { };
+
+                // fill in data
                 foreach (var pair in finalChartParse) {
                     Labels.Add($"{pair.Key}");
                     ColumnSeriesCollection[0].Values.Add(pair.Value);
@@ -188,9 +211,11 @@ namespace VersionControlGitApp.Windows {
                 Formatter = value => value.ToString("N");
                 DataContext = this;
 
+                // global info labels
                 totalCommits += $"{commits.Count}";
                 commitsFromLoggedUser += $"{loggedUserCommitsCount}";
                 
+                // set global labels
                 Dispatcher.Invoke(() => SetRepoLabelsText(totalCommits, commitsFromLoggedUser));
                 Dispatcher.Invoke(() => LoadingLabel.Content = "");
 
@@ -203,7 +228,7 @@ namespace VersionControlGitApp.Windows {
             }
 
             
-            // for reading repo stats from github
+            // for reading repo stats from github (slower version)
             /*IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
             long repoID = 0;
             foreach (var repo in repos) {
@@ -220,6 +245,10 @@ namespace VersionControlGitApp.Windows {
 
         }
 
+        /// <summary>
+        /// Call git log and return lines crom cmd
+        /// </summary>
+        /// <returns>Returns list of lines from cmd</returns>
         private List<string> GetCommitsFromGitLog() {
             List<string> lines = Cmd.RunAndRead("log", currentRepoPath);
 
@@ -249,6 +278,11 @@ namespace VersionControlGitApp.Windows {
    
         }
 
+        /// <summary>
+        /// Method to set global info labels
+        /// </summary>
+        /// <param name="publicLabel">First label</param>
+        /// <param name="privateLabel">Second label</param>
         private void SetRepoLabelsText(string publicLabel, string privateLabel) {
             PublicReposLabel.Content = $"{publicLabel}";
             PrivateReposLabel.Content = $"{privateLabel}";

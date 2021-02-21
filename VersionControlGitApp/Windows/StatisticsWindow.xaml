@@ -73,27 +73,31 @@
 
         <lvc:PieChart Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" Grid.RowSpan="8" 
                       x:Name="Piechart" Series="{Binding PieSeriesCollection}" 
-                      LegendLocation="Right" InnerRadius="180" Margin="0 15">
+                      LegendLocation="Right" 
+                      InnerRadius="180" Margin="0,15">
 
             <lvc:PieChart.ChartLegend>
-                <lvc:DefaultLegend Foreground="{StaticResource WhiteTextColor}" 
-                                   BulletSize="16"></lvc:DefaultLegend>
+                <lvc:DefaultLegend Foreground="{StaticResource WhiteTextColor}" BulletSize="16"/>
             </lvc:PieChart.ChartLegend>
+            
             <lvc:PieChart.DataTooltip>
-                <lvc:DefaultTooltip BulletSize="16"></lvc:DefaultTooltip>
+                <lvc:DefaultTooltip BulletSize="16"/>
             </lvc:PieChart.DataTooltip>
         </lvc:PieChart>
 
         <lvc:CartesianChart  Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" Grid.RowSpan="8" 
-                             x:Name="Columnchart" Series="{Binding ColumnSeriesCollection}" LegendLocation="None"
+                             x:Name="Columnchart" 
+                             Series="{Binding ColumnSeriesCollection}" LegendLocation="None"
                              Foreground="{StaticResource BlackColor}">
             
             <lvc:CartesianChart.AxisX>
-                <lvc:Axis Title="Date" Labels="{Binding Labels}" Foreground="{StaticResource WhiteTextColor}"/>
+                <lvc:Axis Title="Date" Labels="{Binding Labels}" 
+                          Foreground="{StaticResource WhiteTextColor}"/>
             </lvc:CartesianChart.AxisX>
             
             <lvc:CartesianChart.AxisY>
-                <lvc:Axis Title="Commits" LabelFormatter="{Binding Formatter}" Foreground="{StaticResource WhiteTextColor}"/>
+                <lvc:Axis Title="Commits" LabelFormatter="{Binding Formatter}" 
+                          Foreground="{StaticResource WhiteTextColor}"/>
             </lvc:CartesianChart.AxisY>
         </lvc:CartesianChart>
 
