@@ -90,6 +90,12 @@
                              Series="{Binding ColumnSeriesCollection}" LegendLocation="None"
                              Foreground="{StaticResource BlackColor}">
             
+            <lvc:CartesianChart.SeriesColors>
+                <lvc:ColorsCollection>
+                    <Color >#ec625f</Color>
+                </lvc:ColorsCollection>
+            </lvc:CartesianChart.SeriesColors>
+
             <lvc:CartesianChart.AxisX>
                 <lvc:Axis Title="Date" Labels="{Binding Labels}" 
                           Foreground="{StaticResource WhiteTextColor}"/>
