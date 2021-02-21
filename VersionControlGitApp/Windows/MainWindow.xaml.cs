@@ -288,9 +288,14 @@ namespace VersionControlGitApp {
 
                 if (File.Exists($@"{path}\{fileName}")) {
                     List<string> textInput = GitMethods.GetAllFileChanges(fileName, path);
-                    FileContent.Blocks.Clear();
-                    Brush color = Brushes.White;
 
+                    var textRange = RichTextBox.Selection;
+                    var start = textRange.Start;
+                    var end = textRange.End;
+                   
+                    FileContent.Blocks.Clear();
+
+                    var color = Brushes.White;
                     foreach (string line in textInput) {
                         if (line.Contains(".    -")) {
                             color = Brushes.Red;
@@ -307,9 +312,13 @@ namespace VersionControlGitApp {
                             Text = $"{line}",
                             Foreground = color,
                         };
-
+                        
                         paragraph.Inlines.Add(textFormat);
                         FileContent.Blocks.Add(paragraph);
+                    }
+
+                    if (start != null && end != null) {
+                        textRange.Select(start, end);
                     }
 
                 } else {
