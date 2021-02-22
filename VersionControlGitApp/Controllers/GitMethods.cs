@@ -105,6 +105,7 @@ namespace VersionControlGitApp.Controllers {
         public static void Init(string path, LocalRepoDB repoDB) {
             string command = $"init {path}";
             ConsoleState state = Cmd.Run(command, path);
+
             if (state == ConsoleState.Success) {
                 AddLocalRepo(path, repoDB);
             }
@@ -123,6 +124,8 @@ namespace VersionControlGitApp.Controllers {
 
             if (lines != null) {
                 if (msg.Length > 0) {
+                    
+                    // build commit string for git commit command in cmd 
                     string command = "commit -m ";
                     command += '"' + msg;
 
@@ -193,11 +196,14 @@ namespace VersionControlGitApp.Controllers {
             bool repoExists = GithubController.RepoExists(client, name);
 
             if (repoExists) {
+                // run dry git fetch command
                 List<string> lines = Cmd.RunAndRead("fetch --dry-run", path);
+
                 string output = "";
                 foreach (string line in lines) {
                     output += line;
                 }
+
                 ConsoleLogger.StatusBarUpdate("External repository fetched", win);
                 ConsoleLogger.UserPopup(HEADERMSG_FETCH_REPO, $"{output}");
             } else {
@@ -274,53 +280,73 @@ namespace VersionControlGitApp.Controllers {
         /// </summary>
         /// <param name="file">File name</param>
         /// <param name="path">Repostory path</param>
-        /// <returns>Returns diff output</returns>
-        public static List<string> GetAllFileChanges(string file, string path) {
-            List<string> diffOutput = Cmd.RunAndRead($"diff HEAD {file}", path);
-            List<string> changeChunks = new List<string>();
-            bool read = false;
+        /// <returns>Returns diff output in list of each line - each line contains linenum, line and symbol</returns>
+        public static List<string[]> GetAllFileChanges(string file, string path) {
 
-            foreach (string line in diffOutput) {
-                if (read) {
-                    if (!line.Contains("No newline at")) { 
-                        changeChunks.Add(line);
+            List<string[]> lineNumbered = new List<string[]>();
+
+            // check for commits
+            if (Cmd.HaveCommits(path)) {
+
+                // read cmd git diff output
+                List<string> diffOutput = Cmd.RunAndRead($"diff HEAD {file}", path);
+                List<string> changeChunks = new List<string>();
+                bool read = false;
+
+                // remove not needed lines
+                foreach (string line in diffOutput) {
+                    if (read) {
+                        if (!line.Contains("No newline at")) {
+                            changeChunks.Add(line);
+                        }
+                    } else if (line.Contains("@@ -")) {
+                        read = true;
                     }
-                } else if (line.Contains("@@ -")) {
-                    read = true;
                 }
-            }
 
-            List<string> lineNumbered = new List<string>();
-            char prevSymbol = ' ';
-            int lineNum = 1;
-            foreach (string line in changeChunks) {
-                char symbol = line[0];
+                // sort coloring and lines
+                char prevSymbol = ' ';
+                int lineNum = 1;
+                foreach (string line in changeChunks) {
+                    char symbol = line[0];
 
                     // empty symbol
-                if (symbol == ' ') {
-                    lineNumbered.Add($"{lineNum}.    {line}");
-                    prevSymbol = ' ';
-                    lineNum++;
-
-                    // minus symbol
-                } else if (symbol == '-') {
-                    lineNumbered.Add($"{lineNum}.    {line}");
-                    lineNum++;
-                    prevSymbol = '-';
-
-                    // add symbol
-                } else if (symbol == '+') {
-                    if (prevSymbol == ' ' || prevSymbol == '+') {
-                        lineNumbered.Add($"{lineNum}.    {line}");
+                    if (symbol == ' ') {
+                        lineNumbered.Add(new string[] { $"{lineNum}.", $"   {line}", " " });
+                        prevSymbol = ' ';
                         lineNum++;
-                    } else {
-                        lineNumbered.Add($"{lineNum - 1}.    {line}");
+
+                        // minus symbol
+                    } else if (symbol == '-') {
+                        lineNumbered.Add(new string[] { $"{lineNum}.", $"   {line}", "-" });
+                        lineNum++;
+                        prevSymbol = '-';
+
+                        // add symbol
+                    } else if (symbol == '+') {
+                        if (prevSymbol == ' ' || prevSymbol == '+') {
+                            lineNumbered.Add(new string[] { $"{lineNum}.", $"   {line}", "+" });
+                            lineNum++;
+                        } else {
+                            lineNumbered.Add(new string[] { $"{lineNum - 1}.", $"   {line}", "+" });
+                        }
+                        prevSymbol = '+';
                     }
-                    prevSymbol = '+';
+                }
+
+            } else {
+                // in case of no commits show new file output
+                List<string> newFile = new List<string>(File.ReadAllText($@"{path}\{file}").Split('\n'));
+                int lineNum = 1;
+
+                foreach (string line in newFile) {
+                    lineNumbered.Add(new string[] { $"{lineNum}.", $"   {line.Trim()}", "+" });
+                    lineNum++;
                 }
             }
 
             return lineNumbered;
+            
         }
 
     }

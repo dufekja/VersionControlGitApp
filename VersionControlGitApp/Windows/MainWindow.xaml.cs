@@ -287,7 +287,7 @@ namespace VersionControlGitApp {
                 ConsoleLogger.StatusBarUpdate($"Showing {fileName} content", this);
 
                 if (File.Exists($@"{path}\{fileName}")) {
-                    List<string> textInput = GitMethods.GetAllFileChanges(fileName, path);
+                    List<string[]> textInput = GitMethods.GetAllFileChanges(fileName, path);
 
                     var textRange = RichTextBox.Selection;
                     var start = textRange.Start;
@@ -295,25 +295,34 @@ namespace VersionControlGitApp {
                    
                     FileContent.Blocks.Clear();
 
-                    var color = Brushes.White;
-                    foreach (string line in textInput) {
-                        if (line.Contains(".    -")) {
+                    var color = Brushes.GhostWhite;
+                    foreach (var item in textInput) {
+
+                        if (item[2] == "-") {
                             color = Brushes.Red;
-                        } else if (line.Contains(".    +")) {
+                        } else if (item[2] == "+") {
                             color = Brushes.Green;
                         } else {
                             color = Brushes.GhostWhite;
                         }
 
-                        Paragraph paragraph = new Paragraph() { 
+                        Paragraph paragraph = new Paragraph() {
                             Margin = new Thickness(2)
                         };
+
+                        Run lineNumber = new Run() {
+                            Text = $"{item[0]}",
+                            Foreground = Brushes.GhostWhite,
+                        };
+
                         Run textFormat = new Run() {
-                            Text = $"{line}",
+                            Text = $"{item[1]}",
                             Foreground = color,
                         };
-                        
+
+                        paragraph.Inlines.Add(lineNumber);
                         paragraph.Inlines.Add(textFormat);
+
                         FileContent.Blocks.Add(paragraph);
                     }
 
