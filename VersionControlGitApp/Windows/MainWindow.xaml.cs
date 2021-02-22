@@ -116,10 +116,11 @@ namespace VersionControlGitApp {
         }
 
         private void CommitRepository(object sender, RoutedEventArgs e) {
-            if (GitMethods.IsRepo(PathLabel.Text.ToString()))
+            if (GitMethods.IsRepo(PathLabel.Text.ToString())) {
                 Dispatcher.Invoke(() => MainWindowController.CommitRepositoryCommand(PathLabel.Text.ToString(), this));
-            else
+            } else {
                 ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, USERMSG_SELECTREPO);
+            }
         }
 
         private void RemoveRepository(object sender, RoutedEventArgs e) {
@@ -128,18 +129,21 @@ namespace VersionControlGitApp {
 
         private void DeleteRepository(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
-            if (GitMethods.IsRepo(repoPath)) 
+            if (GitMethods.IsRepo(repoPath)) {
                 Dispatcher.Invoke(() => MainWindowController.DeleteRepositoryCommand(repoPath));
-            else
+            } else {
                 ConsoleLogger.UserPopup(HEADERMSG_DELETE_REPO, USERMSG_SELECTREPO);
+            }
+                
         }
 
         private void CreateNewBranch(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
-            if (GitMethods.IsRepo(repoPath))
+            if (GitMethods.IsRepo(repoPath)) {
                 Dispatcher.Invoke(() => MainWindowController.CreateNewBranchCommand(repoPath, this));
-            else
+            } else {
                 ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, USERMSG_SELECTREPO);
+            }
         }
 
         private void ChangeBranch(object sender, RoutedEventArgs e) {
@@ -239,6 +243,7 @@ namespace VersionControlGitApp {
             }
         }
 
+        // add tracked files using git add
         private void AddTrackedFiles(List<string> untrackedFiles, string path) {
 
             foreach (string file in untrackedFiles) {
@@ -247,6 +252,7 @@ namespace VersionControlGitApp {
             }
 
             try {
+                // refresh UI with new files to commit
                 Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(this));
             } catch {}
 
@@ -275,8 +281,11 @@ namespace VersionControlGitApp {
 
         }
 
+        // run if user select new file contents to show
         private void FilesToCommit_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (FilesToCommit.SelectedItem != null) {
+                
+                // get selected filename 
                 string fileName = ((ComboBoxItem)FilesToCommit.SelectedItem).Content.ToString();
                 string path = PathLabel.Text.ToString();
 
@@ -286,7 +295,10 @@ namespace VersionControlGitApp {
 
                 ConsoleLogger.StatusBarUpdate($"Showing {fileName} content", this);
 
+                // added file exists check
                 if (File.Exists($@"{path}\{fileName}")) {
+
+                    // gel all file changes
                     List<string[]> textInput = GitMethods.GetAllFileChanges(fileName, path);
 
                     var textRange = RichTextBox.Selection;
@@ -295,9 +307,11 @@ namespace VersionControlGitApp {
                    
                     FileContent.Blocks.Clear();
 
+                    // run trought file changes
                     var color = Brushes.GhostWhite;
                     foreach (var item in textInput) {
 
+                        // choose color based on symbol
                         if (item[2] == "-") {
                             color = Brushes.Red;
                         } else if (item[2] == "+") {
@@ -306,24 +320,16 @@ namespace VersionControlGitApp {
                             color = Brushes.GhostWhite;
                         }
 
-                        Paragraph paragraph = new Paragraph() {
-                            Margin = new Thickness(2)
-                        };
+                        // create richboxtext elements 
+                        Paragraph paragraph = new Paragraph() { Margin = new Thickness(2) };
+                        Run lineNumber = new Run() { Text = $"{item[0]}", Foreground = Brushes.GhostWhite };
+                        Run textFormat = new Run() {Text = $"{item[1]}", Foreground = color};
 
-                        Run lineNumber = new Run() {
-                            Text = $"{item[0]}",
-                            Foreground = Brushes.GhostWhite,
-                        };
-
-                        Run textFormat = new Run() {
-                            Text = $"{item[1]}",
-                            Foreground = color,
-                        };
-
+                        // add formats to paragraph and insert into richbox
                         paragraph.Inlines.Add(lineNumber);
                         paragraph.Inlines.Add(textFormat);
-
                         FileContent.Blocks.Add(paragraph);
+
                     }
 
                     if (start != null && end != null) {
@@ -341,13 +347,20 @@ namespace VersionControlGitApp {
             string header = ((MenuItem)sender).Header.ToString();
             string repoPath = PathLabel.Text.ToString();
 
-            if (header == "Repository")
-                if (repoPath != "")
+            // check clicked header name
+            if (header == "Repository") {
+                if (repoPath != "") {
+                    // open statistic for repository
                     new StatisticsWindow(this, client, user, repoDB, header, repoPath).Show();
-                else
+                } else {
                     ConsoleLogger.UserPopup("Repository statistics", "You need to select repository first");
-            else
+                }
+                    
+            } else {
+                // open statistics for user
                 new StatisticsWindow(this, client, user, repoDB, header, repoPath).Show();
+            }
+                
         }
 
         private void UpdatePrivateToken(object sender, RoutedEventArgs e) {
@@ -355,8 +368,11 @@ namespace VersionControlGitApp {
             TokenTextBox.Text = "";
 
             if (token != "" && token.Length == 40) {
+                // update token in database
                 bool updated = GitMethods.UpdatePrivateTokenCommand(token, tokenDB);
+
                 if (updated) {
+                    // authenticate user with new token
                     Dispatcher.Invoke(() => client = GithubController.Authenticate(client, token, this));
                     ConsoleLogger.UserPopup("Private token", "Private token updated and set to active");
                 }
