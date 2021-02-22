@@ -301,10 +301,12 @@ namespace VersionControlGitApp {
                     // gel all file changes
                     List<string[]> textInput = GitMethods.GetAllFileChanges(fileName, path);
 
+                    /*
                     var textRange = RichTextBox.Selection;
                     var start = textRange.Start;
                     var end = textRange.End;
-                   
+                   */
+
                     FileContent.Blocks.Clear();
 
                     // run trought file changes
@@ -332,9 +334,11 @@ namespace VersionControlGitApp {
 
                     }
 
+                    /*
                     if (start != null && end != null) {
                         textRange.Select(start, end);
                     }
+                    */
 
                 } else {
                     ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, $"File: {fileName} don't exists");
