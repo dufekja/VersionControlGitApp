@@ -24,6 +24,7 @@ namespace VersionControlGitApp.Controllers {
             bool exist = false;
             List<Repo> repos = repoDB.FindByName(GetNameFromPath(path));
 
+            // check if repo already exists in db
             if (repos != null) {
                 foreach (Repo repo in repos) {
                     if (repo.Path == path) {
@@ -93,8 +94,10 @@ namespace VersionControlGitApp.Controllers {
             if (!Directory.Exists(dirPath))
                 Directory.CreateDirectory(dirPath);
 
+            // run repo clone
             string command = $"clone {URL} {dirPath}";
             ConsoleState state = Cmd.Run(command, path);
+
             if (state == ConsoleState.Success) {
                 AddLocalRepo(dirPath, repoDB);
             }
@@ -105,10 +108,11 @@ namespace VersionControlGitApp.Controllers {
         /// </summary>
         /// <param name="path">Path to repository</param>
         /// <param name="repoDB">RepoDB object</param>
+        /// <returns>Returns state of init command</returns>
         public static ConsoleState Init(string path, LocalRepoDB repoDB) {
-
             ConsoleState state = ConsoleState.Error;
 
+            // repo must be one word
             string repo = GetNameFromPath(path);
             if (!repo.Trim().Contains(' ')) {
 
@@ -140,7 +144,7 @@ namespace VersionControlGitApp.Controllers {
 
             if (lines != null) {
                 if (msg.Length > 0) {
-                    
+
                     // build commit string for git commit command in cmd 
                     string command = "commit -m ";
                     command += '"' + msg;
@@ -152,14 +156,15 @@ namespace VersionControlGitApp.Controllers {
                     state = Cmd.Run(command, path);
                 }
 
-                if (state == ConsoleState.Success)
+                if (state == ConsoleState.Success) {
                     if (Cmd.HaveCommits(path)) {
                         ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, "Commit successful");
                     } else {
                         ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, "There is nothing to commit");
                     }
-                else
+                } else {
                     ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, "There was an error");
+                }   
             } else {
                 ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, "There are no files to commit");
             }  
@@ -178,12 +183,14 @@ namespace VersionControlGitApp.Controllers {
 
             if (!repoExists) {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
-                    $"{name} not found. Would you like to create it ?",
+                    $"{name} not found. Would you like to create it?",
                     $"{name} not found",
                     MessageBoxButton.YesNo);
 
+                // create new repo and push it
                 if (messageBoxResult == MessageBoxResult.Yes) {
                     ConsoleLogger.StatusBarUpdate("Pushing external repository", win);
+
                     client.Repository.Create(new NewRepository(name));
                     Task.Run(() => Cmd.PushRepo(client, name, path, win));
                 }
@@ -249,6 +256,8 @@ namespace VersionControlGitApp.Controllers {
         /// <returns>Returns current repository branch</returns>
         public static string GetCurrentBranch(string path) {
             List<string> lines = GetBranches(path);
+
+            // if no branches then master else go trough all branches and find *branch
             if (lines != null)
                 foreach (string line in lines) {
                     if (line.Contains("*")) {
@@ -355,6 +364,7 @@ namespace VersionControlGitApp.Controllers {
                 List<string> newFile = new List<string>(File.ReadAllText($@"{path}\{file}").Split('\n'));
                 int lineNum = 1;
 
+                // add every line as new 
                 foreach (string line in newFile) {
                     lineNumbered.Add(new string[] { $"{lineNum}.", $"   {line.Trim()}", "+" });
                     lineNum++;

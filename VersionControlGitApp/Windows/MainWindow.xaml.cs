@@ -33,8 +33,12 @@ namespace VersionControlGitApp {
 
         public static Thread repoChangesThread;
         public static RepoChangesThreadState newRepoChangesThreadState = RepoChangesThreadState.New;
-        
 
+        /// <summary>
+        /// Main window constructor
+        /// </summary>
+        /// <param name="token">Token value</param>
+        /// <param name="_tokenDB">Instance of token database</param>
         public MainWindow(string token, PrivateTokenDB _tokenDB) {
             InitializeComponent();
 
@@ -45,9 +49,6 @@ namespace VersionControlGitApp {
 
             // auth user using token
             client = GithubController.Authenticate(client, token, this);
-
-            // get current token
-            //client.Connection.Credentials.GetToken()
 
             // get user based on token and set name + picture
             user = client.User.Current().Result;
@@ -78,43 +79,82 @@ namespace VersionControlGitApp {
             Task.Run(() => AllReposListener());
         }
 
+        /// <summary>
+        /// add local repository action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void AddLocalRepository(object sender, RoutedEventArgs e) {
             MainWindowController.AddLocalRepositoryCommand(repoDB, this);
         }
 
+        /// <summary>
+        /// clone repository action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void CloneRepository(object sender, RoutedEventArgs e) {
             new CloneRepoWindow(repoDB, client, this).Show();   
         }
 
+        /// <summary>
+        /// fetch repository action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void FetchExternalRepository(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
             if (GitMethods.IsRepo(repoPath)) {
                 ConsoleLogger.StatusBarUpdate("Fetching external repository", this);
                 Task.Run(() => GitMethods.Fetch(repoPath, client, this));
-            } else
+            } else {
                 ConsoleLogger.UserPopup(HEADERMSG_FETCH_REPO, USERMSG_SELECTREPO);
+            }     
         }
 
+        /// <summary>
+        /// push repository action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void PushLocalRepository(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
             if (GitMethods.IsRepo(repoPath)) {
                 Task.Run(() => GitMethods.Push(repoPath, client, this));
-            } else
+            } else {
                 ConsoleLogger.UserPopup(HEADERMSG_PUSH_REPO, USERMSG_SELECTREPO);
+            }
         }
 
+        /// <summary>
+        /// pull repository action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void PullExternalRepository(object sende, RoutedEventArgs e) { 
             string repoPath = PathLabel.Text.ToString();
-            if (GitMethods.IsRepo(repoPath))
+            if (GitMethods.IsRepo(repoPath)) {
                 Task.Run(() => GitMethods.Pull(repoPath, client, this));
-            else
-                ConsoleLogger.UserPopup(HEADERMSG_PULL_REPO, USERMSG_SELECTREPO);  
+            } else {
+                ConsoleLogger.UserPopup(HEADERMSG_PULL_REPO, USERMSG_SELECTREPO);
+            }
+                
         }
 
+        /// <summary>
+        /// new repository action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void NewRepository(object sender, RoutedEventArgs e) {
             MainWindowController.NewRepositoryCommand(repoDB);
         }
 
+        /// <summary>
+        /// commit repository action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void CommitRepository(object sender, RoutedEventArgs e) {
             if (GitMethods.IsRepo(PathLabel.Text.ToString())) {
                 Dispatcher.Invoke(() => MainWindowController.CommitRepositoryCommand(PathLabel.Text.ToString(), this));
@@ -123,10 +163,20 @@ namespace VersionControlGitApp {
             }
         }
 
+        /// <summary>
+        /// remove repository action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void RemoveRepository(object sender, RoutedEventArgs e) {
             MainWindowController.RemoveRepositoryCommand(PathLabel.Text.ToString(), repoDB, this);
         }
 
+        /// <summary>
+        /// delete repository action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void DeleteRepository(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
             if (GitMethods.IsRepo(repoPath)) {
@@ -137,6 +187,11 @@ namespace VersionControlGitApp {
                 
         }
 
+        /// <summary>
+        /// create new branch action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void CreateNewBranch(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
             if (GitMethods.IsRepo(repoPath)) {
@@ -146,6 +201,11 @@ namespace VersionControlGitApp {
             }
         }
 
+        /// <summary>
+        /// change currently selected branch action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void ChangeBranch(object sender, RoutedEventArgs e) {
 
             // get repopath and clicked menuitem branch name
@@ -160,6 +220,11 @@ namespace VersionControlGitApp {
             }
         }
 
+        /// <summary>
+        /// rename currently selected branch
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void RenameCurrentBranch(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
             if (repoPath != "") {
@@ -169,7 +234,11 @@ namespace VersionControlGitApp {
             }
         }
 
-        // merge current branch into selected
+        /// <summary>
+        /// merge currently selected branch into selected
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void MergeCurrentBranch(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
             MenuItem item = sender as MenuItem;
@@ -182,7 +251,11 @@ namespace VersionControlGitApp {
             }
         }
 
-        // delete current branch
+        /// <summary>
+        /// delete currently selected branch
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void DeleteCurrentBranch(object sender, RoutedEventArgs e) {
             string repoPath = PathLabel.Text.ToString();
             if (repoPath != "") {
@@ -192,7 +265,11 @@ namespace VersionControlGitApp {
             }
         }
 
-        // trigger when selection changed in RepoListBox
+        /// <summary>
+        /// trigger when selection changed in RepoListBox
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void RepoListBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 
             // get new selected repo name
@@ -206,6 +283,10 @@ namespace VersionControlGitApp {
             }
         }
 
+        /// <summary>
+        /// change repo watching thread to watch new repository
+        /// </summary>
+        /// <param name="repoName">Repository name</param>
         private void ChangeThreadWithNewRepo(string repoName) {
             List<Repo> repos = repoDB.FindByName(repoName);
             if (repos != null) {
@@ -228,7 +309,9 @@ namespace VersionControlGitApp {
             }
         }
 
-        // thread watching repositories
+        /// <summary>
+        /// thread watching repositories
+        /// </summary>
         private void AllReposListener() {
             while (true) {
                 Thread.Sleep(2500);
@@ -243,7 +326,11 @@ namespace VersionControlGitApp {
             }
         }
 
-        // add tracked files using git add
+        /// <summary>
+        /// add tracked files using git add
+        /// </summary>
+        /// <param name="untrackedFiles">List of all untracked files</param>
+        /// <param name="path">Current repository path</param>
         private void AddTrackedFiles(List<string> untrackedFiles, string path) {
 
             foreach (string file in untrackedFiles) {
@@ -259,7 +346,10 @@ namespace VersionControlGitApp {
             ConsoleLogger.StatusBarUpdate("Waiting on changes in repository", this);
         }
 
-        // thread watching files in selected repo
+        /// <summary>
+        /// thread watching files in selected repo
+        /// </summary>
+        /// <param name="path">Current repository path</param>
         private void WaitForChangesOnRepo(string path) {
             ConsoleLogger.Info("MainWindow.WaitForChangesOnRepo", $"Called with state: {newRepoChangesThreadState}");
 
@@ -281,7 +371,11 @@ namespace VersionControlGitApp {
 
         }
 
-        // run if user select new file contents to show
+        /// <summary>
+        /// run if user select new file contents to show
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void FilesToCommit_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (FilesToCommit.SelectedItem != null) {
                 
@@ -335,6 +429,11 @@ namespace VersionControlGitApp {
             }
         }
 
+        /// <summary>
+        /// Open statistics window action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void OpenStatistics(object sender, RoutedEventArgs e) {
             string header = ((MenuItem)sender).Header.ToString();
             string repoPath = PathLabel.Text.ToString();
@@ -355,6 +454,11 @@ namespace VersionControlGitApp {
                 
         }
 
+        /// <summary>
+        /// Update private token action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void UpdatePrivateToken(object sender, RoutedEventArgs e) {
             string token = TokenTextBox.Text.ToString();
             TokenTextBox.Text = "";
@@ -371,18 +475,32 @@ namespace VersionControlGitApp {
 
             } else {
                 ConsoleLogger.UserPopup("Private token", "Please insert valid token");
-            }
-            
+            }    
         }
 
+        /// <summary>
+        /// Minimize window action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void Window_Minimized(object sender, RoutedEventArgs e) {
             WindowState = WindowState.Minimized;
         }
 
+        /// <summary>
+        /// Close window action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void Window_Closed(object sender, RoutedEventArgs e) {
             Environment.Exit(Environment.ExitCode);
         }
 
+        /// <summary>
+        /// Drag window on mouse down action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void DragWindownOnMouseDown(object sender, MouseButtonEventArgs e) {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
                 DragMove();

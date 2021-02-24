@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace VersionControlGitApp {
     public static class Config {
 
+        /* State enumerators */ 
         public enum RepoChangesThreadState {
             New,
             Repeating,
@@ -18,6 +19,7 @@ namespace VersionControlGitApp {
             Error
         }
 
+        /* Public constant variables */
         public const string GITHUB_PATH = "https://github.com/";
         public const string GITEXE = "git.exe";
 
@@ -43,6 +45,7 @@ namespace VersionControlGitApp {
         public const string DELETED = "D ";
         public const string DELETEDMODIFIED = "DM ";
 
+        /* Dictionary with month string to number */
         public static Dictionary<string, int> monthsIndexes = new Dictionary<string, int>() {
             { "Jan", 1 },
             { "Feb", 2 },
