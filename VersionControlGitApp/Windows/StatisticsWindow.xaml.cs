@@ -41,6 +41,15 @@ namespace VersionControlGitApp.Windows {
 
         public static Thread chartThread;
 
+        /// <summary>
+        /// Statistics window constructor
+        /// </summary>
+        /// <param name="_win">Reference to instance of mainwindow thread</param>
+        /// <param name="_client">Github client instance</param>
+        /// <param name="_user">User instance</param>
+        /// <param name="_repoDB">Reference to repository database instance</param>
+        /// <param name="_header">Type of statistics to show</param>
+        /// <param name="_currentRepoPath">Currently selected repository</param>
         public StatisticsWindow(MainWindow _win, GitHubClient _client, User _user, LocalRepoDB _repoDB, string _header, string _currentRepoPath) {
 
             mainWin = _win;
@@ -53,6 +62,7 @@ namespace VersionControlGitApp.Windows {
 
             InitializeComponent();
  
+            // in case of user statistics
             if (header == "User") {
 
                 // series for pie chart
@@ -65,6 +75,7 @@ namespace VersionControlGitApp.Windows {
                 chartThread = new Thread(() => GenerateUserData());
                 chartThread.Start();
 
+            // in case of repository statistics
             } else if (header == "Repository") {
 
                 // remove pie chart 
@@ -103,12 +114,17 @@ namespace VersionControlGitApp.Windows {
 
             List<string[]> reposWithActivity = new List<string[]>();
             foreach (var repo in repos) {
+
+                // get activity for past year
                 var yearCommitActivity = client.Repository.Statistics.GetCommitActivity(repo.Id).Result;
                 int totalYearActivity = 0;
 
+                // add week activity
                 foreach (var week in yearCommitActivity.Activity) {
                     totalYearActivity += week.Total;
                 }
+
+                // create repository tuples with name and commits for past year
                 string[] repoTuple = new string[2];
                 repoTuple[0] = $"{repo.Name}";
                 repoTuple[1] = $"{totalYearActivity}";
@@ -127,10 +143,10 @@ namespace VersionControlGitApp.Windows {
 
             if (repositories != null) {
                 foreach (string[] repo in repositories) {
-                    //adding values or series will update and animate the chart automatically
 
                     ObservableValue commits = new ObservableValue(int.Parse(repo[1])); 
 
+                    // new pie chart series
                     var pie = new PieSeries() {
                         Title = repo[0],
                         Values = new ChartValues<ObservableValue> { commits },
@@ -180,6 +196,7 @@ namespace VersionControlGitApp.Windows {
                         loggedUserCommitsCount++;
                     }
 
+                    // parse data from given string 
                     string date = Cmd.Explode(commit, "Date:   ", "   ");
                     string month = date.Substring(4, 3);
                     string year = date.Substring(20, 4);
@@ -208,6 +225,7 @@ namespace VersionControlGitApp.Windows {
                     ColumnSeriesCollection[0].Values.Add(pair.Value);
                 }
 
+                // format to Y axis
                 Formatter = value => value.ToString("N");
                 DataContext = this;
 
@@ -220,28 +238,11 @@ namespace VersionControlGitApp.Windows {
                 Dispatcher.Invoke(() => LoadingLabel.Content = "");
 
             } else {
-
                 SetRepoLabelsText("There are no commits yet", "");
                 CartesianChart chart = (CartesianChart)this.MainGrid.FindName("Columnchart");
                 this.MainGrid.Children.Remove(chart);
                 Dispatcher.Invoke(() => LoadingLabel.Content = "");
             }
-
-            
-            // for reading repo stats from github (slower version)
-            /*IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
-            long repoID = 0;
-            foreach (var repo in repos) {
-                if (repo.Name == currentRepo) {
-                    repoID = repo.Id;
-                    break;
-                }
-            }
-
-            if (repoID != 0) {
-
-            Dispatcher.Invoke(() => StatsLabel.Content = $"{currentRepo} - {repoID}");
-            client.Repository.Statistics.GetCommitActivity();*/
 
         }
 
@@ -257,6 +258,8 @@ namespace VersionControlGitApp.Windows {
 
             List<string> commits = new List<string>();
             string commit = "";
+
+            // add every line that contains author reference
             foreach (string line in lines) {
                 if (!line.Contains("Author:")) {
                     commit += line;
@@ -288,14 +291,29 @@ namespace VersionControlGitApp.Windows {
             PrivateReposLabel.Content = $"{privateLabel}";
         }
 
+        /// <summary>
+        /// Minimize window action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void Window_Minimized(object sender, RoutedEventArgs e) {
             WindowState = WindowState.Minimized;
         }
 
+        /// <summary>
+        /// Close window action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void Window_Closed(object sender, RoutedEventArgs e) {
             this.Close();
         }
 
+        /// <summary>
+        /// Drag window on mouse down action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void DragWindownOnMouseDown(object sender, MouseButtonEventArgs e) {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
                 this.DragMove();
