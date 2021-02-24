@@ -27,11 +27,19 @@ namespace VersionControlGitApp.Controllers {
             string path = fbd.SelectedPath;
 
             if (result == DialogResult.OK) {
-                bool ok = GitMethods.AddLocalRepo(path, repoDB);
-                if (ok == true) {
-                    MainWindowUI.LoadPathLabel(path);
-                    MainWindowUI.ChangeCommitButtonBranch(path, win);
+
+                string name = GitMethods.GetNameFromPath(path);
+                if (!name.Trim().Contains(' ')) {
+
+                    bool ok = GitMethods.AddLocalRepo(path, repoDB);
+                    if (ok == true) {
+                        MainWindowUI.LoadPathLabel(path);
+                        MainWindowUI.ChangeCommitButtonBranch(path, win);
+                    }
+                } else {
+                    ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, "Repository cannpot contain spaces");
                 }
+                
             } else {
                 ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, ERROR_MSG);
             }
@@ -48,9 +56,12 @@ namespace VersionControlGitApp.Controllers {
             string repoPath = fbd.SelectedPath;
 
             if (result == DialogResult.OK && !GitMethods.IsRepo(repoPath)) {
-                GitMethods.Init(repoPath, repoDB);
-                MainWindowUI.LoadPathLabel(repoPath);
-                ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, $"Repostiory {GitMethods.GetNameFromPath(repoPath)} added");
+                ConsoleState state = GitMethods.Init(repoPath, repoDB);
+                if (state == ConsoleState.Success) {
+                    MainWindowUI.LoadPathLabel(repoPath);
+                    ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, $"Repostiory {GitMethods.GetNameFromPath(repoPath)} added");
+                }
+                
             } else {
                 string repoName = GitMethods.GetNameFromPath(repoPath);
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(

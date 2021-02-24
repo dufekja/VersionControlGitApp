@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,14 +21,16 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="repoDB">Initiated repodDB object</param>
         public static bool AddLocalRepo(string path, LocalRepoDB repoDB) {
             bool created = false;
-            bool exist = false; 
+            bool exist = false;
             List<Repo> repos = repoDB.FindByName(GetNameFromPath(path));
 
-            if (repos != null)
+            if (repos != null) {
                 foreach (Repo repo in repos) {
-                    if (repo.Path == path)
+                    if (repo.Path == path) {
                         exist = true;
+                    }     
                 }
+            }
 
             if (IsRepo(path) && !exist) {
                 Repo repo = new Repo() {
@@ -102,13 +105,26 @@ namespace VersionControlGitApp.Controllers {
         /// </summary>
         /// <param name="path">Path to repository</param>
         /// <param name="repoDB">RepoDB object</param>
-        public static void Init(string path, LocalRepoDB repoDB) {
-            string command = $"init {path}";
-            ConsoleState state = Cmd.Run(command, path);
+        public static ConsoleState Init(string path, LocalRepoDB repoDB) {
 
-            if (state == ConsoleState.Success) {
-                AddLocalRepo(path, repoDB);
+            ConsoleState state = ConsoleState.Error;
+
+            string repo = GetNameFromPath(path);
+            if (!repo.Trim().Contains(' ')) {
+
+                string command = $"init {path}";
+                state = Cmd.Run(command, path);
+
+                if (state == ConsoleState.Success) {
+                    AddLocalRepo(path, repoDB);
+                }
+
+            } else {
+                ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, "Repository cannot contain spaces");
             }
+
+            return state;
+           
         }
 
         /// <summary>
