@@ -17,6 +17,12 @@ namespace VersionControlGitApp {
         public static List<UserRepository> userRepos;
         public static MainWindow win;
 
+        /// <summary>
+        /// Clone repostiory window construcotr
+        /// </summary>
+        /// <param name="_repoDB">Repository database instance</param>
+        /// <param name="client">Client instance</param>
+        /// <param name="_win">Reference to mainwindow thread instance</param>
         public CloneRepoWindow(LocalRepoDB _repoDB, GitHubClient client, MainWindow _win) {
             InitializeComponent();
 
@@ -26,13 +32,17 @@ namespace VersionControlGitApp {
             // select textbox
             URL.Focus();
 
+            // get user repositories
             userRepos = GithubController.GetAllRepos(client);
             bool isFirst = true;
+
+            // parse them into combobox
             foreach (UserRepository repo in userRepos) {
                 ComboBoxItem item = new ComboBoxItem {
                     Content = repo.GetName(),
                     Tag = repo.GetHtmlUrl()
                 };
+
                 if (isFirst) {
                     item.IsSelected = true;
                     isFirst = false;
@@ -43,6 +53,11 @@ namespace VersionControlGitApp {
 
         }
 
+        /// <summary>
+        /// Clone repository action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void CloneRepository(object sender, RoutedEventArgs e) {
             string url = URL.Text.ToString();
 
@@ -66,19 +81,39 @@ namespace VersionControlGitApp {
            
         }
 
+        /// <summary>
+        /// Change url text when selected different repository in combobox
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void ExternalRepoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             string selectedRepo = ((ComboBoxItem)ExternalRepoComboBox.SelectedItem).Tag.ToString() + ".git";
             URL.Text = selectedRepo;
         }
 
+        /// <summary>
+        /// Minimize window action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void Window_Minimized(object sender, RoutedEventArgs e) {
             WindowState = WindowState.Minimized;
         }
 
+        /// <summary>
+        /// Close window action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void Window_Closed(object sender, RoutedEventArgs e) {
             Close();
         }
 
+        /// <summary>
+        /// Drag window on mouse down action
+        /// </summary>
+        /// <param name="sender">Object that triggered action</param>
+        /// <param name="e">All added arguments</param>
         private void DragWindownOnMouseDown(object sender, MouseButtonEventArgs e) {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
                 DragMove();
