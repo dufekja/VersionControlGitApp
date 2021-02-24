@@ -18,6 +18,13 @@ namespace VersionControlGitApp.UIelements {
         public static LocalRepoDB repoDB;
         public static string loggedUser;
 
+        /// <summary>
+        /// Initialize mainwindow UI elements
+        /// </summary>
+        /// <param name="_win">Reference to main window thread instance</param>
+        /// <param name="_user">User instance</param>
+        /// <param name="_repoDB">Repository database instance</param>
+        /// <param name="_loggedUser">Logged user name</param>
         public static void InitUIElements(MainWindow _win, User _user, LocalRepoDB _repoDB, string _loggedUser) {
 
             win = _win;
@@ -32,6 +39,9 @@ namespace VersionControlGitApp.UIelements {
             ListBoxLoad();
         }
 
+        /// <summary>
+        /// Load user image from github
+        /// </summary>
         public static void LoadUserAvatar() {
             var bi = new BitmapImage();
             bi.BeginInit();
@@ -40,6 +50,10 @@ namespace VersionControlGitApp.UIelements {
             win.UserImage.Source = bi;
         }
 
+        /// <summary>
+        /// Change path label in main window
+        /// </summary>
+        /// <param name="path">Path to repository </param>
         public static void LoadPathLabel(string path) {
             ListBoxItem item = new ListBoxItem {
                 Content = GitMethods.GetNameFromPath(path),
@@ -50,6 +64,11 @@ namespace VersionControlGitApp.UIelements {
             win.PathLabel.Text = path;
         }
 
+        /// <summary>
+        /// Refresh repository branches in tool panel
+        /// </summary>
+        /// <param name="path">Path to repository</param>
+        /// <param name="win">Main window thread instance</param>
         public static void LoadRepoBranches(string path, MainWindow win) {
             win.MergeBranchMenuItem.Items.Clear();
             win.ChangeBranchMenuItem.Items.Clear();
@@ -76,22 +95,35 @@ namespace VersionControlGitApp.UIelements {
                 }
             }
 
-            //disable with one branch
-            if (win.ChangeBranchMenuItem.Items.Count > 0)
+            // disable with one branch
+            if (win.ChangeBranchMenuItem.Items.Count > 0) {
                 win.ChangeBranchMenuItem.IsEnabled = true;
-            else
+            } else {
                 win.ChangeBranchMenuItem.IsEnabled = false;
-
-            if (win.MergeBranchMenuItem.Items.Count > 0)
+            }
+                
+            if (win.MergeBranchMenuItem.Items.Count > 0) {
                 win.MergeBranchMenuItem.IsEnabled = true;
-            else
+            } else {
                 win.MergeBranchMenuItem.IsEnabled = false;
+            }
+                
         }
 
+        /// <summary>
+        /// Refresh commit button label
+        /// </summary>
+        /// <param name="path">Repository path</param>
+        /// <param name="win">Main window thread instance</param>
         public static void ChangeCommitButtonBranch(string path, MainWindow win) {
             win.CommitButton.Content = "Commit to " + GitMethods.GetCurrentBranch(path);
         }
 
+        /// <summary>
+        /// Block repository stats if no commits action
+        /// </summary>
+        /// <param name="repo">Currently selected repository</param>
+        /// <param name="win">Main window thread instance</param>
         public static void RepoStatsBlocked(string repo, MainWindow win) {
             // repository stats status
             if (Cmd.HaveCommits(repo))
@@ -100,11 +132,16 @@ namespace VersionControlGitApp.UIelements {
                 win.Dispatcher.Invoke(() => win.RepositoryStatsMenuItem.IsEnabled = false);
         }
 
+        /// <summary>
+        /// Load repository list box
+        /// </summary>
         public static void ListBoxLoad() {
 
+            // get list of local repos from database
             List<Repo> localRepos = repoDB.ReadDB(loggedUser);
             bool isSelected = false;
 
+            // fill listbox with data
             if (localRepos.Count > 0) {
                 win.RepoListBox.Items.Clear();
                 foreach (Repo repo in localRepos) {
@@ -123,21 +160,35 @@ namespace VersionControlGitApp.UIelements {
             }
         }
 
+        /// <summary>
+        /// Enable or disable branch actions
+        /// </summary>
+        /// <param name="repo">Currently selected repository</param>
+        /// <param name="win">Main window thread instance</param>
         public static void ChangeAllBranchToolsStatus(string path, MainWindow win) {
             bool haveCommits = Cmd.HaveCommits(path);
 
-            if (haveCommits)
+            if (haveCommits) {
                 win.Dispatcher.Invoke(() => win.AllBranchToolsMenuItem.IsEnabled = true);
-            else
+            } else {
                 win.Dispatcher.Invoke(() => win.AllBranchToolsMenuItem.IsEnabled = false);
+            }
         }
 
+        /// <summary>
+        /// Clear path label if no repositories in listbox
+        /// </summary>
+        /// <param name="win">Main window thread instance</param>
         public static void ClearRepoPathOnEmpty(MainWindow win) {
             if (win.RepoListBox.Items.Count == 0) {
                 win.PathLabel.Text = "";
             }
         }
 
+        /// <summary>
+        /// Files to commit refresh action
+        /// </summary>
+        /// <param name="win">Main window thread instance</param>
         public static void FilesToCommitRefresh(MainWindow win) {
 
             string path = "";
@@ -152,6 +203,7 @@ namespace VersionControlGitApp.UIelements {
                     selected = ((ComboBoxItem)win.FilesToCommit.SelectedItem).Content.ToString();
                 }
 
+                // fill combobox with files to commit
                 List<ComboBoxItem> newComboBoxItems = new List<ComboBoxItem>();
                 foreach (string name in modifiedFiles) {
                     bool isSelected = false;
@@ -171,12 +223,22 @@ namespace VersionControlGitApp.UIelements {
             }
         }
 
+        /// <summary>
+        /// Clear context of commit summary and description
+        /// </summary>
+        /// <param name="win">Main window thread instance</param>
         public static void ClearCommitAndContext(MainWindow win) {
             win.CommitSummary.Text = "";
             win.CommitDescription.Text = "";
             win.FileContent.Blocks.Clear();
         }
 
+        /// <summary>
+        /// On repository change action
+        /// </summary>
+        /// <param name="repoName">New repository name</param>
+        /// <param name="repoPath">New repository path</param>
+        /// <param name="win">Main window thread instance</param>
         public static void SetDataForNewRepo(string repoName, string repoPath, MainWindow win) {
             win.PathLabel.Text = repoPath;
             win.FileContent.Blocks.Clear();
