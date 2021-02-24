@@ -162,10 +162,12 @@ namespace VersionControlGitApp.Controllers {
             win.Dispatcher.Invoke(() => MainWindowUI.LoadRepoBranches(repoPath, win));
             win.Dispatcher.Invoke(() => MainWindowUI.ChangeCommitButtonBranch(repoPath, win));
             
-            if (state == ConsoleState.Success && currentBranch != branch)
+            if (state == ConsoleState.Success && currentBranch != branch) {
                 ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, $"Swapped to branch '{branch}'");
-            else
+            } else {
                 ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, $"Can't swap to same branch");
+            }
+
         }
 
         /// <summary>
@@ -245,7 +247,7 @@ namespace VersionControlGitApp.Controllers {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
                     $"Do you want to delete {currentBranch} ?",
                     HEADERMSG_DELETE_CONF,
-                    System.Windows.MessageBoxButton.YesNo);
+                    MessageBoxButton.YesNo);
 
                 if (messageBoxResult == MessageBoxResult.Yes) {
                     Cmd.Run("checkout master", repoPath);

@@ -200,6 +200,7 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="path">Repository path</param>
         public static void PushRepo(GitHubClient client, string name, string path, MainWindow win) {
 
+            // wait 5 seconds for connection in repo pushing
             int counter = 0;
             while (true) {
                 Thread.Sleep(1000);
@@ -234,6 +235,7 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="path">External repository path</param>
         public static void PullRepo(GitHubClient client, string path, MainWindow win) {
 
+            // wait 5 seconds for connection in repo pulling
             int counter = 0;
             string name = GitMethods.GetNameFromPath(path);
             while (true) {
@@ -260,6 +262,11 @@ namespace VersionControlGitApp.Controllers {
             }
         }
 
+        /// <summary>
+        /// Checks if repository has commits
+        /// </summary>
+        /// <param name="path">Repository path</param>
+        /// <returns>Returns bool if repository have commits</returns>
         public static bool HaveCommits(string path) {
             List<string> lines = RunAndRead("log", path);
             bool haveCommits = false;
@@ -269,9 +276,7 @@ namespace VersionControlGitApp.Controllers {
                     if (!line.Contains("fatal: ")) {
                         haveCommits = true;
                     }
-                }
-                
-                    
+                }      
             }
 
             return haveCommits;

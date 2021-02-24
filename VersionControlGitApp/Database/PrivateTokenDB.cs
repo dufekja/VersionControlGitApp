@@ -6,6 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace VersionControlGitApp.Database {
+
+    /// <summary>
+    /// Tokens table structure
+    /// </summary>
     [Table("Tokens")]
     public class Token {
         [PrimaryKey, AutoIncrement] public int ID { get; set; }
@@ -127,6 +131,5 @@ namespace VersionControlGitApp.Database {
         }
 
     }
-
 
 }

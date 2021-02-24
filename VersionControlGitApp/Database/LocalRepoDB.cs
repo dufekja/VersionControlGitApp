@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 using VersionControlGitApp.Logging;
 
 namespace VersionControlGitApp.Database {
+
+    /// <summary>
+    /// Repositories table structure
+    /// </summary>
     [Table("Repositories")]
     public class Repo {
         [PrimaryKey, AutoIncrement] public int ID { get; set; }
