@@ -21,7 +21,7 @@ namespace VersionControlGitApp.Database {
     }
 
     public class LocalRepoDB {
-        public static SQLiteConnection database = new SQLiteConnection("./repos.db3");
+        public static SQLiteConnection database = new SQLiteConnection($@"{Config.DATAPATH}\repos.db3");
 
         /// <summary>
         /// Init repository database

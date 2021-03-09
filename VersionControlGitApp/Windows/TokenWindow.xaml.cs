@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Database;
 using VersionControlGitApp.Logging;
 
@@ -26,8 +27,11 @@ namespace VersionControlGitApp {
         /// </summary>
         public TokenWindow() {
 
-            // get logged user and init token database
+            // get logged user and init token database 
             user = System.Windows.Forms.SystemInformation.UserName;
+
+            Cmd.SetDBPath();
+
             tokenDB = new PrivateTokenDB();
             tokenDB.InitDB();
 
@@ -39,7 +43,6 @@ namespace VersionControlGitApp {
                         GoMainWindow(token.Value);
                 }
             }
-            
 
             InitializeComponent();
         }

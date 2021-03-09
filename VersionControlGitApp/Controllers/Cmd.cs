@@ -156,6 +156,19 @@ namespace VersionControlGitApp.Controllers {
         }
 
         /// <summary>
+        /// Set database path to appdata (each user have theirs DB)
+        /// </summary>
+        public static void SetDBPath() {
+            // set datapath to local user
+            DATAPATH = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\VersionControlGitApp";
+
+            // create app directory if there is none yet
+            if (!Directory.Exists(DATAPATH)) {
+                Directory.CreateDirectory(DATAPATH);
+            }
+        }
+
+        /// <summary>
         /// Add file to watching index
         /// </summary>
         /// <param name="files">List of files</param>

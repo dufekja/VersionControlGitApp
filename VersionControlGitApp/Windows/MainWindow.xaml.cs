@@ -46,7 +46,7 @@ namespace VersionControlGitApp {
             tokenDB = _tokenDB;
             repoDB.InitDB();
             loggedUser = SystemInformation.UserName;
-
+            
             // auth user using token
             client = GithubController.Authenticate(client, token, this);
 

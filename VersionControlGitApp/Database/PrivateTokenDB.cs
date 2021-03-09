@@ -19,7 +19,7 @@ namespace VersionControlGitApp.Database {
     }
     
     public class PrivateTokenDB {
-        public static SQLiteConnection database = new SQLiteConnection("./tokens.db3");
+        public static SQLiteConnection database = new SQLiteConnection($@"{Config.DATAPATH}\tokens.db3");
 
         /// <summary>
         /// Init token database
