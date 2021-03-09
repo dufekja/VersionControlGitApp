@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionControlGitApp", "VersionControlGitApp.csproj", "{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "VersionControlGitAppBuild", "..\VersionControlGitAppSetup\VersionControlGitAppSetup.vdproj", "{30E1B018-4D6F-4CD3-963A-BFF4D4B808E5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,13 +21,6 @@ Global
 		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Release|Default.ActiveCfg = Release|Any CPU
 		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Release|Default.Build.0 = Release|Any CPU
-		{30E1B018-4D6F-4CD3-963A-BFF4D4B808E5}.Debug|Any CPU.ActiveCfg = Debug
-		{30E1B018-4D6F-4CD3-963A-BFF4D4B808E5}.Debug|Default.ActiveCfg = Debug
-		{30E1B018-4D6F-4CD3-963A-BFF4D4B808E5}.Debug|Default.Build.0 = Debug
-		{30E1B018-4D6F-4CD3-963A-BFF4D4B808E5}.Release|Any CPU.ActiveCfg = Release
-		{30E1B018-4D6F-4CD3-963A-BFF4D4B808E5}.Release|Any CPU.Build.0 = Release
-		{30E1B018-4D6F-4CD3-963A-BFF4D4B808E5}.Release|Default.ActiveCfg = Release
-		{30E1B018-4D6F-4CD3-963A-BFF4D4B808E5}.Release|Default.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
