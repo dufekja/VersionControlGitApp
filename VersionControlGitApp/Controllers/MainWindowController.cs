@@ -140,7 +140,7 @@ namespace VersionControlGitApp.Controllers {
                     DirectoryInfo dir = new DirectoryInfo(repoPath);
 
                     if (dir.Exists) {
-                        Cmd.setAttributesNormal(dir);
+                        Cmd.SetAttributesNormal(dir);
                         dir.Delete(true);
                     }
 

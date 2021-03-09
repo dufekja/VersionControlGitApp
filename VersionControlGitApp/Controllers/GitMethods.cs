@@ -149,10 +149,12 @@ namespace VersionControlGitApp.Controllers {
                     string command = "commit -m ";
                     command += '"' + msg;
 
-                    if (desc.Length > 0)
+                    if (desc.Length > 0) {
                         command += '\n' + desc + '"';
-                    else
+                    }  else {
                         command += '"';
+                    }
+                        
                     state = Cmd.Run(command, path);
                 }
 

@@ -84,9 +84,11 @@ namespace VersionControlGitApp.Controllers {
         /// Set attributes in subfolders so they can be deleted
         /// </summary>
         /// <param name="dir">Directory info object</param>
-        public static void setAttributesNormal(DirectoryInfo dir) {
-            foreach (var subDir in dir.GetDirectories())
-                setAttributesNormal(subDir);
+        public static void SetAttributesNormal(DirectoryInfo dir) {
+            foreach (var subDir in dir.GetDirectories()) {
+                SetAttributesNormal(subDir);
+            }
+                
             foreach (var file in dir.GetFiles()) {
                 file.Attributes = FileAttributes.Normal;
             }
@@ -151,10 +153,11 @@ namespace VersionControlGitApp.Controllers {
                 }
             }
 
-            if (wasModified)
+            if (wasModified) {
                 return output;
-            else
+            } else {
                 return null;
+            }
         }
 
         /// <summary>
@@ -204,10 +207,11 @@ namespace VersionControlGitApp.Controllers {
                 } 
             }
 
-            if (wasModified)
+            if (wasModified) {
                 return output;
-            else
+            } else {
                 return null;
+            }
         }
 
         /// <summary>
@@ -226,10 +230,12 @@ namespace VersionControlGitApp.Controllers {
 
                 win.Dispatcher.Invoke(() => ConsoleLogger.StatusBarUpdate($"Pushing repository | Time: {counter}s", win));
 
-                if (repoExists || counter > 5)
+                if (repoExists || counter > 5) {
                     break;
-                else
+                } else {
                     counter++;
+                }
+                    
             }
 
             
@@ -262,10 +268,12 @@ namespace VersionControlGitApp.Controllers {
 
                 win.Dispatcher.Invoke(() => ConsoleLogger.StatusBarUpdate($"Pulling repository | Time: {counter}s", win));
 
-                if (repoExists || counter > 5)
+                if (repoExists || counter > 5) {
                     break;
-                else
+                } else {
                     counter++;
+                }
+                    
             }
             
             if (counter < 5) {
