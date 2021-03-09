@@ -224,7 +224,7 @@
                Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="4"/>
 
         <!-- Current selected file content -->
-        <RichTextBox x:Name="RichTextBox" Focusable="True"
+        <RichTextBox x:Name="RichTextBox" Focusable="False"
                 Margin="12,13,12,3"
                 Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="8" 
                 Foreground="{StaticResource WhiteTextColor}"

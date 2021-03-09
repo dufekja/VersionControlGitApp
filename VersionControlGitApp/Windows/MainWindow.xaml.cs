@@ -331,11 +331,22 @@ namespace VersionControlGitApp {
         /// </summary>
         /// <param name="untrackedFiles">List of all untracked files</param>
         /// <param name="path">Current repository path</param>
-        private void AddTrackedFiles(List<string> untrackedFiles, string path) {
+        private void AddTrackedFiles(List<string> untrackedFiles, List<string> removedFiles, string path) {
 
             foreach (string file in untrackedFiles) {
+
+                ConsoleLogger.Info("here", $"{file} added");
                 string command = "add " + '"' + file.Trim() + '"';
                 Cmd.Run(command, path);
+            }
+
+            if (removedFiles != null) {
+                foreach(string file in removedFiles) {
+                    ConsoleLogger.Info("here", $"{file} deleted");
+                    
+                    string command = "rm " + '"' + file.Trim() + '"';
+                    Cmd.Run(command, path);
+                }
             }
 
             try {
@@ -362,8 +373,9 @@ namespace VersionControlGitApp {
 
                 // If there are untracked files in currently watched repo -> track them
                 List<string> untrackedFiles = Cmd.UntrackedFiles(path);
+                List<string> removedFiles = Cmd.RemovedFiles(path);
                 if (untrackedFiles != null) {
-                    AddTrackedFiles(untrackedFiles, path);
+                    AddTrackedFiles(untrackedFiles, removedFiles, path);
                 } else {
                     ConsoleLogger.Info("MainWindow.WaitForChangesOnRepo", $"No untracked files");
                 }
@@ -424,6 +436,7 @@ namespace VersionControlGitApp {
 
                 } else {
                     ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, $"File: {fileName} don't exists");
+                    FilesToCommit.SelectedItem = null;
                 }
                 
             }

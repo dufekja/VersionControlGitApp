@@ -38,11 +38,9 @@ namespace VersionControlGitApp.Controllers {
                     }
                 } else {
                     ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, "Repository cannpot contain spaces");
-                }
-                
-            } else {
-                ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, ERROR_MSG);
+                } 
             }
+
         }
 
         /// <summary>
@@ -55,29 +53,32 @@ namespace VersionControlGitApp.Controllers {
 
             string repoPath = fbd.SelectedPath;
 
-            if (result == DialogResult.OK && !GitMethods.IsRepo(repoPath)) {
-                ConsoleState state = GitMethods.Init(repoPath, repoDB);
-                if (state == ConsoleState.Success) {
-                    MainWindowUI.LoadPathLabel(repoPath);
-                    ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, $"Repostiory {GitMethods.GetNameFromPath(repoPath)} added");
-                }
-                
-            } else {
-                string repoName = GitMethods.GetNameFromPath(repoPath);
-                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
-                    $"{repoName} is already repository. Would you like to add it ?",
-                    $"{repoName} is already repository",
-                    MessageBoxButton.YesNo);
-
-                if (messageBoxResult == MessageBoxResult.Yes) {
-                    bool success = GitMethods.AddLocalRepo(repoPath, repoDB);
-                    if (success) {
+            if (result == DialogResult.OK) {
+                if (!GitMethods.IsRepo(repoPath)) {
+                    ConsoleState state = GitMethods.Init(repoPath, repoDB);
+                    if (state == ConsoleState.Success) {
                         MainWindowUI.LoadPathLabel(repoPath);
-                        ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, $"Repository {repoName} added");
-                    } else {
-                        ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, ERROR_MSG);
+                        ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, $"Repostiory {GitMethods.GetNameFromPath(repoPath)} added");
+                    }
+                } else {
+                    string repoName = GitMethods.GetNameFromPath(repoPath);
+
+                    MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
+                        $"{repoName} is already repository. Would you like to add it ?",
+                        $"{repoName} is already repository",
+                        MessageBoxButton.YesNo);
+
+                    if (messageBoxResult == MessageBoxResult.Yes) {
+                        bool success = GitMethods.AddLocalRepo(repoPath, repoDB);
+                        if (success) {
+                            MainWindowUI.LoadPathLabel(repoPath);
+                            ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, $"Repository {repoName} added");
+                        } else {
+                            ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, ERROR_MSG);
+                        }
                     }
                 }
+
             }
         }
 

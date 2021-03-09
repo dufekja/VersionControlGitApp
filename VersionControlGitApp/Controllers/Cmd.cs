@@ -118,7 +118,9 @@ namespace VersionControlGitApp.Controllers {
                 return null;
 
             foreach (string line in modifiedFiles) {
-                output.Add(line.Substring(3));
+                if (!line.Contains("AD ")) {
+                    output.Add(line.Substring(3));
+                }
             }
 
             return output;
@@ -190,13 +192,16 @@ namespace VersionControlGitApp.Controllers {
             bool wasModified = false;
 
             foreach (string line in files) {
-                if (line.Contains("D ")) {
+                if (line.Contains("AD ")) {
+                    output.Add(line.Replace("AD ", "").Trim());
+                    wasModified = true;
+                } else if (line.Contains("D ")) {
                     output.Add(line.Replace("D ", "").Trim());
                     wasModified = true;
                 } else if (line.Contains("MD ")) {
                     output.Add(line.Replace("MD ", "").Trim());
                     wasModified = true;
-                }
+                } 
             }
 
             if (wasModified)
