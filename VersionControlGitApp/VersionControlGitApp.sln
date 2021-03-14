@@ -5,32 +5,36 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionControlGitApp", "VersionControlGitApp.csproj", "{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupVersionControlGitApp", "..\SetupVersionControlGitApp\SetupVersionControlGitApp.vdproj", "{FE76449C-9837-44FB-84EF-D267D0F96AEB}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "VersionControlGitAppRelease", "..\SetupVersionControlGitApp\SetupVersionControlGitApp.vdproj", "{FE76449C-9837-44FB-84EF-D267D0F96AEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|Default = Debug|Default
 		Release|Any CPU = Release|Any CPU
+		Release|Default = Release|Default
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Debug|Default.ActiveCfg = Debug|Any CPU
+		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Debug|Default.Build.0 = Debug|Any CPU
 		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Release|Default.ActiveCfg = Release|Any CPU
+		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Release|Default.Build.0 = Release|Any CPU
 		{FE76449C-9837-44FB-84EF-D267D0F96AEB}.Debug|Any CPU.ActiveCfg = Debug
+		{FE76449C-9837-44FB-84EF-D267D0F96AEB}.Debug|Default.ActiveCfg = Debug
+		{FE76449C-9837-44FB-84EF-D267D0F96AEB}.Debug|Default.Build.0 = Debug
 		{FE76449C-9837-44FB-84EF-D267D0F96AEB}.Release|Any CPU.ActiveCfg = Release
+		{FE76449C-9837-44FB-84EF-D267D0F96AEB}.Release|Default.ActiveCfg = Release
+		{FE76449C-9837-44FB-84EF-D267D0F96AEB}.Release|Default.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E2DBA3E3-A10C-44F8-A36F-84B46673C975}
-	EndGlobalSection
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Debug|Default = Debug|Default
-		Release|Any CPU = Release|Any CPU
-		Release|Default = Release|Default
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
