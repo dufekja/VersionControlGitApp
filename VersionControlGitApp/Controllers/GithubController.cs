@@ -61,5 +61,18 @@ namespace VersionControlGitApp.Controllers {
             return false;
         }
 
+        /// <summary>
+        /// Method to set user globals into system
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="path"></param>
+        public static void SetGlobals(User user, string path) {
+            string login = user.Login.ToString();
+            string email = user.Email.ToString();
+
+            Cmd.Run("config --global user.name " + login, path);
+            Cmd.Run("config --global user.email " + email, path);
+        }
+
     }
 }

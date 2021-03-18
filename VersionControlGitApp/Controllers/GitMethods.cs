@@ -191,11 +191,14 @@ namespace VersionControlGitApp.Controllers {
 
                 // create new repo and push it
                 if (messageBoxResult == MessageBoxResult.Yes) {
-                    ConsoleLogger.StatusBarUpdate("Pushing external repository", win);
-
                     client.Repository.Create(new NewRepository(name));
+
+                    ConsoleLogger.StatusBarUpdate("Pushing external repository", win);
                     Task.Run(() => Cmd.PushRepo(client, name, path, win));
                 }
+            } else {
+                ConsoleLogger.StatusBarUpdate("Pushing external repository", win);
+                Task.Run(() => Cmd.PushRepo(client, name, path, win));
             }
         }
 
@@ -205,7 +208,7 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="path">Selected repository path</param>
         /// <param name="client">Github client</param>
         /// <param name="win">Reference to MainWindow object</param>
-        public static void Pull(string path, GitHubClient client, MainWindow win) {
+        public static void Pull(string path, GitHubClient client, MainWindow win) { 
             ConsoleLogger.StatusBarUpdate("Pulling external repository", win);
             Task.Run(() => Cmd.PullRepo(client, path, win));
         }

@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="CloneRepoWindow" 
         WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" WindowStartupLocation="CenterScreen"
-        MinHeight="300" MinWidth="500" Height="300" Width="500" MaxHeight="400" MaxWidth="600"
+        MinHeight="300" MinWidth="600" Height="300" Width="600" MaxHeight="400" MaxWidth="600"
         Background="{StaticResource DarkBackgroundColor}">
 
     <Grid>

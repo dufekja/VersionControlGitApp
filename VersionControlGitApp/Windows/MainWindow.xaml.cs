@@ -57,6 +57,9 @@ namespace VersionControlGitApp {
             // get path from pathlabel
             string path = PathLabel.Text.ToString();
 
+            // set global git name and email
+            GithubController.SetGlobals(user, path);
+
             // if there is repo then watch for changes
             if (path != "") {
 

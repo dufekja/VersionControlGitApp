@@ -27,6 +27,7 @@ Global
 		{FE76449C-9837-44FB-84EF-D267D0F96AEB}.Debug|Default.ActiveCfg = Debug
 		{FE76449C-9837-44FB-84EF-D267D0F96AEB}.Debug|Default.Build.0 = Debug
 		{FE76449C-9837-44FB-84EF-D267D0F96AEB}.Release|Any CPU.ActiveCfg = Release
+		{FE76449C-9837-44FB-84EF-D267D0F96AEB}.Release|Any CPU.Build.0 = Release
 		{FE76449C-9837-44FB-84EF-D267D0F96AEB}.Release|Default.ActiveCfg = Release
 		{FE76449C-9837-44FB-84EF-D267D0F96AEB}.Release|Default.Build.0 = Release
 	EndGlobalSection
@@ -35,6 +36,12 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E2DBA3E3-A10C-44F8-A36F-84B46673C975}
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Default = Debug|Default
+		Release|Any CPU = Release|Any CPU
+		Release|Default = Release|Default
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
