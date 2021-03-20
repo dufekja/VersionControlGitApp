@@ -35,7 +35,7 @@
 
             <Grid DockPanel.Dock="Top" >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="440"/>
+                    <ColumnDefinition Width="540"/>
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="30"/>
                 </Grid.ColumnDefinitions>

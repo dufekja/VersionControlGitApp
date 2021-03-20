@@ -2432,13 +2432,6 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="disposables"/> is <c>null</c>.</exception>
             <exception cref="T:System.ArgumentException">Any of the disposables in the <paramref name="disposables"/> collection is <c>null</c>.</exception>
         </member>
-        <member name="M:System.Reactive.Disposables.CompositeDisposable.Init(System.Collections.Generic.IEnumerable{System.IDisposable},System.Int32)">
-            <summary>
-            Initialize the inner disposable list and count fields.
-            </summary>
-            <param name="disposables">The enumerable sequence of disposables.</param>
-            <param name="capacityHint">The number of items expected from <paramref name="disposables"/></param>
-        </member>
         <member name="P:System.Reactive.Disposables.CompositeDisposable.Count">
             <summary>
             Gets the number of disposables contained in the <see cref="T:System.Reactive.Disposables.CompositeDisposable"/>.
@@ -2601,15 +2594,6 @@
             <paramref name="fieldRef" /> was already disposed.
             </summary>
         </member>
-        <member name="M:System.Reactive.Disposables.Disposable.SetSingle(System.IDisposable@,System.IDisposable)">
-            <summary>
-            Assigns <paramref name="value" /> to <paramref name="fieldRef" />.
-            </summary>
-            <returns>true if <paramref name="fieldRef" /> was assigned to <paramref name="value" /> and has not
-            been assigned before.</returns>
-            <returns>false if <paramref name="fieldRef" /> has been already disposed.</returns>
-            <exception cref="T:System.InvalidOperationException"><paramref name="fieldRef" /> has already been assigned a value.</exception>
-        </member>
         <member name="M:System.Reactive.Disposables.Disposable.TrySetSingle(System.IDisposable@,System.IDisposable)">
             <summary>
             Tries to assign <paramref name="value" /> to <paramref name="fieldRef" />.
@@ -2632,19 +2616,10 @@
             <returns>true if <paramref name="value" /> was successfully assigned to <paramref name="fieldRef" />.</returns>
             <returns>false <paramref name="fieldRef" /> has been disposed.</returns>
         </member>
-        <member name="M:System.Reactive.Disposables.Disposable.GetIsDisposed(System.IDisposable@)">
+        <member name="M:System.Reactive.Disposables.Disposable.Dispose(System.IDisposable@)">
             <summary>
-            Gets a value indicating whether <paramref name="fieldRef" /> has been disposed.
+            Disposes <paramref name="fieldRef" />. 
             </summary>
-            <returns>true if <paramref name="fieldRef" /> has been disposed.</returns>
-            <returns>false if <paramref name="fieldRef" /> has not been disposed.</returns>
-        </member>
-        <member name="M:System.Reactive.Disposables.Disposable.TryDispose(System.IDisposable@)">
-            <summary>
-            Tries to dispose <paramref name="fieldRef" />. 
-            </summary>
-            <returns>true if <paramref name="fieldRef" /> was not disposed previously and was successfully disposed.</returns>
-            <returns>false if <paramref name="fieldRef" /> was disposed previously.</returns>
         </member>
         <member name="T:System.Reactive.Disposables.ICancelable">
             <summary>
@@ -2678,6 +2653,27 @@
             <remarks>If the <see cref="T:System.Reactive.Disposables.MultipleAssignmentDisposable"/> has already been disposed, assignment to this property causes immediate disposal of the given disposable object.</remarks>
         </member>
         <member name="M:System.Reactive.Disposables.MultipleAssignmentDisposable.Dispose">
+            <summary>
+            Disposes the underlying disposable as well as all future replacements.
+            </summary>
+        </member>
+        <member name="T:System.Reactive.Disposables.MultipleAssignmentDisposableValue">
+            <summary>
+            Represents a disposable resource whose underlying disposable resource can be swapped for another disposable resource.
+            </summary>
+        </member>
+        <member name="P:System.Reactive.Disposables.MultipleAssignmentDisposableValue.IsDisposed">
+            <summary>
+            Gets a value that indicates whether the object is disposed.
+            </summary>
+        </member>
+        <member name="P:System.Reactive.Disposables.MultipleAssignmentDisposableValue.Disposable">
+            <summary>
+            Gets or sets the underlying disposable. After disposal, the result of getting this property is undefined.
+            </summary>
+            <remarks>If the <see cref="T:System.Reactive.Disposables.MultipleAssignmentDisposable"/> has already been disposed, assignment to this property causes immediate disposal of the given disposable object.</remarks>
+        </member>
+        <member name="M:System.Reactive.Disposables.MultipleAssignmentDisposableValue.Dispose">
             <summary>
             Disposes the underlying disposable as well as all future replacements.
             </summary>
@@ -2785,6 +2781,27 @@
             Disposes the underlying disposable as well as all future replacements.
             </summary>
         </member>
+        <member name="T:System.Reactive.Disposables.SerialDisposableValue">
+            <summary>
+            Represents a disposable resource whose underlying disposable resource can be replaced by another disposable resource, causing automatic disposal of the previous underlying disposable resource.
+            </summary>
+        </member>
+        <member name="P:System.Reactive.Disposables.SerialDisposableValue.IsDisposed">
+            <summary>
+            Gets a value that indicates whether the object is disposed.
+            </summary>
+        </member>
+        <member name="P:System.Reactive.Disposables.SerialDisposableValue.Disposable">
+            <summary>
+            Gets or sets the underlying disposable.
+            </summary>
+            <remarks>If the SerialDisposable has already been disposed, assignment to this property causes immediate disposal of the given disposable object. Assigning this property disposes the previous disposable object.</remarks>
+        </member>
+        <member name="M:System.Reactive.Disposables.SerialDisposableValue.Dispose">
+            <summary>
+            Disposes the underlying disposable as well as all future replacements.
+            </summary>
+        </member>
         <member name="T:System.Reactive.Disposables.SingleAssignmentDisposable">
             <summary>
             Represents a disposable resource which only allows a single assignment of its underlying disposable resource.
@@ -2808,6 +2825,28 @@
             <exception cref="T:System.InvalidOperationException">Thrown if the <see cref="T:System.Reactive.Disposables.SingleAssignmentDisposable"/> has already been assigned to.</exception>
         </member>
         <member name="M:System.Reactive.Disposables.SingleAssignmentDisposable.Dispose">
+            <summary>
+            Disposes the underlying disposable.
+            </summary>
+        </member>
+        <member name="T:System.Reactive.Disposables.SingleAssignmentDisposableValue">
+            <summary>
+            Represents a disposable resource which only allows a single assignment of its underlying disposable resource.
+            If an underlying disposable resource has already been set, future attempts to set the underlying disposable resource will throw an <see cref="T:System.InvalidOperationException"/>.
+            </summary>
+        </member>
+        <member name="P:System.Reactive.Disposables.SingleAssignmentDisposableValue.IsDisposed">
+            <summary>
+            Gets a value that indicates whether the object is disposed.
+            </summary>
+        </member>
+        <member name="P:System.Reactive.Disposables.SingleAssignmentDisposableValue.Disposable">
+            <summary>
+            Gets or sets the underlying disposable. After disposal, the result of getting this property is undefined.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown if the <see cref="T:System.Reactive.Disposables.SingleAssignmentDisposable"/> has already been assigned to.</exception>
+        </member>
+        <member name="M:System.Reactive.Disposables.SingleAssignmentDisposableValue.Dispose">
             <summary>
             Disposes the underlying disposable.
             </summary>
@@ -3162,6 +3201,13 @@
             Gets the event data that was generated by the event.
             </summary>
         </member>
+        <member name="M:System.Reactive.EventPattern`2.Deconstruct(`0@,`1@)">
+            <summary>
+            Deconstructs the event pattern value into a sender and event data.
+            </summary>
+            <param name="sender">The sender object that raised the event.</param>
+            <param name="e">The event data that was generated by the event.</param>
+        </member>
         <member name="M:System.Reactive.EventPattern`2.Equals(System.Reactive.EventPattern{`0,`1})">
             <summary>
             Determines whether the current <see cref="T:System.Reactive.EventPattern`2"/> object represents the same event as a specified <see cref="T:System.Reactive.EventPattern`2"/> object.
@@ -3304,32 +3350,6 @@
             <param name="field">The target field to try to set atomically.</param>
             <param name="ex">The exception to set, not null (not verified).</param>
             <returns>True if the operation succeeded, false if the target was not null.</returns>
-        </member>
-        <member name="M:System.Reactive.ExceptionHelper.Terminate(System.Exception@)">
-            <summary>
-            Atomically swaps in the Terminated exception into the field and
-            returns the previous exception in that field (which could be the
-            Terminated instance too).
-            </summary>
-            <param name="field">The target field to terminate.</param>
-            <returns>The previous exception in that field before the termination.</returns>
-        </member>
-        <member name="M:System.Reactive.ExceptionHelper.TryAddException(System.Exception@,System.Exception)">
-            <summary>
-            Atomically sets the field to the given new exception or combines
-            it with any pre-existing exception as a new AggregateException
-            unless the field contains the Terminated instance.
-            </summary>
-            <param name="field">The field to set or combine with.</param>
-            <param name="ex">The exception to combine with.</param>
-            <returns>True if successful, false if the field contains the Terminated instance.</returns>
-            <remarks>This type of atomic aggregation helps with operators that
-            want to delay all errors until all of their sources terminate in some way.</remarks>
-        </member>
-        <member name="T:System.Reactive.ExceptionHelper.TerminatedException">
-            <summary>
-            The class indicating a terminal state as an Exception type.
-            </summary>
         </member>
         <member name="T:System.Reactive.HalfSerializer">
             <summary>
@@ -5718,7 +5738,7 @@
         </member>
         <member name="M:System.Reactive.Linq.Observable.FromAsync``1(System.Func{System.Threading.Tasks.Task{``0}})">
             <summary>
-            Converts to asynchronous function into an observable sequence. Each subscription to the resulting sequence causes the function to be started.
+            Converts an asynchronous function into an observable sequence. Each subscription to the resulting sequence causes the function to be started.
             </summary>
             <typeparam name="TResult">The type of the result returned by the asynchronous function.</typeparam>
             <param name="functionAsync">Asynchronous function to convert.</param>
@@ -5727,7 +5747,7 @@
         </member>
         <member name="M:System.Reactive.Linq.Observable.FromAsync``1(System.Func{System.Threading.Tasks.Task{``0}},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Converts to asynchronous function into an observable sequence. Each subscription to the resulting sequence causes the function to be started.
+            Converts an asynchronous function into an observable sequence. Each subscription to the resulting sequence causes the function to be started.
             </summary>
             <typeparam name="TResult">The type of the result returned by the asynchronous function.</typeparam>
             <param name="functionAsync">Asynchronous function to convert.</param>
@@ -5737,7 +5757,7 @@
         </member>
         <member name="M:System.Reactive.Linq.Observable.FromAsync``1(System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task{``0}})">
             <summary>
-            Converts to asynchronous function into an observable sequence. Each subscription to the resulting sequence causes the function to be started.
+            Converts an asynchronous function into an observable sequence. Each subscription to the resulting sequence causes the function to be started.
             The CancellationToken passed to the asynchronous function is tied to the observable sequence's subscription that triggered the function's invocation and can be used for best-effort cancellation.
             </summary>
             <typeparam name="TResult">The type of the result returned by the asynchronous function.</typeparam>
@@ -5748,7 +5768,7 @@
         </member>
         <member name="M:System.Reactive.Linq.Observable.FromAsync``1(System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task{``0}},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Converts to asynchronous function into an observable sequence. Each subscription to the resulting sequence causes the function to be started.
+            Converts an asynchronous function into an observable sequence. Each subscription to the resulting sequence causes the function to be started.
             The CancellationToken passed to the asynchronous function is tied to the observable sequence's subscription that triggered the function's invocation and can be used for best-effort cancellation.
             </summary>
             <typeparam name="TResult">The type of the result returned by the asynchronous function.</typeparam>
@@ -5760,7 +5780,7 @@
         </member>
         <member name="M:System.Reactive.Linq.Observable.FromAsync(System.Func{System.Threading.Tasks.Task})">
             <summary>
-            Converts to asynchronous action into an observable sequence. Each subscription to the resulting sequence causes the action to be started.
+            Converts an asynchronous action into an observable sequence. Each subscription to the resulting sequence causes the action to be started.
             </summary>
             <param name="actionAsync">Asynchronous action to convert.</param>
             <returns>An observable sequence exposing a Unit value upon completion of the action, or an exception.</returns>
@@ -5768,7 +5788,7 @@
         </member>
         <member name="M:System.Reactive.Linq.Observable.FromAsync(System.Func{System.Threading.Tasks.Task},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Converts to asynchronous action into an observable sequence. Each subscription to the resulting sequence causes the action to be started.
+            Converts an asynchronous action into an observable sequence. Each subscription to the resulting sequence causes the action to be started.
             </summary>
             <param name="actionAsync">Asynchronous action to convert.</param>
             <param name="scheduler">Scheduler on which to notify observers.</param>
@@ -5777,7 +5797,7 @@
         </member>
         <member name="M:System.Reactive.Linq.Observable.FromAsync(System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task})">
             <summary>
-            Converts to asynchronous action into an observable sequence. Each subscription to the resulting sequence causes the action to be started.
+            Converts an asynchronous action into an observable sequence. Each subscription to the resulting sequence causes the action to be started.
             The CancellationToken passed to the asynchronous action is tied to the observable sequence's subscription that triggered the action's invocation and can be used for best-effort cancellation.
             </summary>
             <param name="actionAsync">Asynchronous action to convert.</param>
@@ -5787,7 +5807,7 @@
         </member>
         <member name="M:System.Reactive.Linq.Observable.FromAsync(System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Reactive.Concurrency.IScheduler)">
             <summary>
-            Converts to asynchronous action into an observable sequence. Each subscription to the resulting sequence causes the action to be started.
+            Converts an asynchronous action into an observable sequence. Each subscription to the resulting sequence causes the action to be started.
             The CancellationToken passed to the asynchronous action is tied to the observable sequence's subscription that triggered the action's invocation and can be used for best-effort cancellation.
             </summary>
             <param name="actionAsync">Asynchronous action to convert.</param>
@@ -9284,122 +9304,6 @@
             <returns>An observable sequence with the results form matching several patterns.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="plans"/> is null.</exception>
         </member>
-        <member name="M:System.Reactive.Linq.Observable.Amb``1(System.IObservable{``0},System.IObservable{``0})">
-            <summary>
-            Propagates the observable sequence that reacts first.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequences.</typeparam>
-            <param name="first">First observable sequence.</param>
-            <param name="second">Second observable sequence.</param>
-            <returns>An observable sequence that surfaces either of the given sequences, whichever reacted first.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.Observable.Amb``1(System.IObservable{``0}[])">
-            <summary>
-            Propagates the observable sequence that reacts first.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequences.</typeparam>
-            <param name="sources">Observable sources competing to react first.</param>
-            <returns>An observable sequence that surfaces any of the given sequences, whichever reacted first.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.Observable.Amb``1(System.Collections.Generic.IEnumerable{System.IObservable{``0}})">
-            <summary>
-            Propagates the observable sequence that reacts first.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequences.</typeparam>
-            <param name="sources">Observable sources competing to react first.</param>
-            <returns>An observable sequence that surfaces any of the given sequences, whichever reacted first.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.Observable.Buffer``2(System.IObservable{``0},System.Func{System.IObservable{``1}})">
-            <summary>
-            Projects each element of an observable sequence into consecutive non-overlapping buffers.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequence, and in the lists in the result sequence.</typeparam>
-            <typeparam name="TBufferClosing">The type of the elements in the sequences indicating buffer closing events.</typeparam>
-            <param name="source">Source sequence to produce buffers over.</param>
-            <param name="bufferClosingSelector">A function invoked to define the boundaries of the produced buffers. A new buffer is started when the previous one is closed.</param>
-            <returns>An observable sequence of buffers.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="bufferClosingSelector"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.Observable.Buffer``3(System.IObservable{``0},System.IObservable{``1},System.Func{``1,System.IObservable{``2}})">
-            <summary>
-            Projects each element of an observable sequence into zero or more buffers.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequence, and in the lists in the result sequence.</typeparam>
-            <typeparam name="TBufferOpening">The type of the elements in the sequence indicating buffer opening events, also passed to the closing selector to obtain a sequence of buffer closing events.</typeparam>
-            <typeparam name="TBufferClosing">The type of the elements in the sequences indicating buffer closing events.</typeparam>
-            <param name="source">Source sequence to produce buffers over.</param>
-            <param name="bufferOpenings">Observable sequence whose elements denote the creation of new buffers.</param>
-            <param name="bufferClosingSelector">A function invoked to define the closing of each produced buffer.</param>
-            <returns>An observable sequence of buffers.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="bufferOpenings"/> or <paramref name="bufferClosingSelector"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.Observable.Buffer``2(System.IObservable{``0},System.IObservable{``1})">
-            <summary>
-            Projects each element of an observable sequence into consecutive non-overlapping buffers.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequence, and in the lists in the result sequence.</typeparam>
-            <typeparam name="TBufferBoundary">The type of the elements in the sequences indicating buffer boundary events.</typeparam>
-            <param name="source">Source sequence to produce buffers over.</param>
-            <param name="bufferBoundaries">Sequence of buffer boundary markers. The current buffer is closed and a new buffer is opened upon receiving a boundary marker.</param>
-            <returns>An observable sequence of buffers.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="bufferBoundaries"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.Observable.Catch``2(System.IObservable{``0},System.Func{``1,System.IObservable{``0}})">
-            <summary>
-            Continues an observable sequence that is terminated by an exception of the specified type with the observable sequence produced by the handler.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequence and sequences returned by the exception handler function.</typeparam>
-            <typeparam name="TException">The type of the exception to catch and handle. Needs to derive from <see cref="T:System.Exception"/>.</typeparam>
-            <param name="source">Source sequence.</param>
-            <param name="handler">Exception handler function, producing another observable sequence.</param>
-            <returns>An observable sequence containing the source sequence's elements, followed by the elements produced by the handler's resulting observable sequence in case an exception occurred.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="handler"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.Observable.Catch``1(System.IObservable{``0},System.IObservable{``0})">
-            <summary>
-            Continues an observable sequence that is terminated by an exception with the next observable sequence.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequence and handler sequence.</typeparam>
-            <param name="first">First observable sequence whose exception (if any) is caught.</param>
-            <param name="second">Second observable sequence used to produce results when an error occurred in the first sequence.</param>
-            <returns>An observable sequence containing the first sequence's elements, followed by the elements of the second sequence in case an exception occurred.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.Observable.Catch``1(System.IObservable{``0}[])">
-            <summary>
-            Continues an observable sequence that is terminated by an exception with the next observable sequence.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source and handler sequences.</typeparam>
-            <param name="sources">Observable sequences to catch exceptions for.</param>
-            <returns>An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.Observable.Catch``1(System.Collections.Generic.IEnumerable{System.IObservable{``0}})">
-            <summary>
-            Continues an observable sequence that is terminated by an exception with the next observable sequence.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source and handler sequences.</typeparam>
-            <param name="sources">Observable sequences to catch exceptions for.</param>
-            <returns>An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.Observable.CombineLatest``3(System.IObservable{``0},System.IObservable{``1},System.Func{``0,``1,``2})">
-            <summary>
-            Merges two observable sequences into one observable sequence by using the selector function whenever one of the observable sequences produces an element.
-            </summary>
-            <typeparam name="TSource1">The type of the elements in the first source sequence.</typeparam>
-            <typeparam name="TSource2">The type of the elements in the second source sequence.</typeparam>
-            <typeparam name="TResult">The type of the elements in the result sequence, returned by the selector function.</typeparam>
-            <param name="first">First observable source.</param>
-            <param name="second">Second observable source.</param>
-            <param name="resultSelector">Function to invoke whenever either of the sources produces an element.</param>
-            <returns>An observable sequence containing the result of combining elements of both sources using the specified result selector function.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="resultSelector"/> is null.</exception>
-            <remarks>If a non-empty source completes, its very last value will be used for creating subsequent combinations until all sources terminate.</remarks>
-        </member>
         <member name="M:System.Reactive.Linq.Observable.CombineLatest``4(System.IObservable{``0},System.IObservable{``1},System.IObservable{``2},System.Func{``0,``1,``2,``3})">
             <summary>
             Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences produces an element.
@@ -9806,6 +9710,122 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="source1"/> or <paramref name="source2"/> or <paramref name="source3"/> or <paramref name="source4"/> or <paramref name="source5"/> or <paramref name="source6"/> or <paramref name="source7"/> or <paramref name="source8"/> or <paramref name="source9"/> or <paramref name="source10"/> or <paramref name="source11"/> or <paramref name="source12"/> or <paramref name="source13"/> or <paramref name="source14"/> or <paramref name="source15"/> or <paramref name="source16"/> or <paramref name="resultSelector"/> is null.</exception>
             <remarks>If a non-empty source completes, its very last value will be used for creating subsequent combinations until all sources terminate.</remarks>
         </member>
+        <member name="M:System.Reactive.Linq.Observable.Amb``1(System.IObservable{``0},System.IObservable{``0})">
+            <summary>
+            Propagates the observable sequence that reacts first.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequences.</typeparam>
+            <param name="first">First observable sequence.</param>
+            <param name="second">Second observable sequence.</param>
+            <returns>An observable sequence that surfaces either of the given sequences, whichever reacted first.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.Observable.Amb``1(System.IObservable{``0}[])">
+            <summary>
+            Propagates the observable sequence that reacts first.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequences.</typeparam>
+            <param name="sources">Observable sources competing to react first.</param>
+            <returns>An observable sequence that surfaces any of the given sequences, whichever reacted first.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.Observable.Amb``1(System.Collections.Generic.IEnumerable{System.IObservable{``0}})">
+            <summary>
+            Propagates the observable sequence that reacts first.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequences.</typeparam>
+            <param name="sources">Observable sources competing to react first.</param>
+            <returns>An observable sequence that surfaces any of the given sequences, whichever reacted first.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.Observable.Buffer``2(System.IObservable{``0},System.Func{System.IObservable{``1}})">
+            <summary>
+            Projects each element of an observable sequence into consecutive non-overlapping buffers.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequence, and in the lists in the result sequence.</typeparam>
+            <typeparam name="TBufferClosing">The type of the elements in the sequences indicating buffer closing events.</typeparam>
+            <param name="source">Source sequence to produce buffers over.</param>
+            <param name="bufferClosingSelector">A function invoked to define the boundaries of the produced buffers. A new buffer is started when the previous one is closed.</param>
+            <returns>An observable sequence of buffers.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="bufferClosingSelector"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.Observable.Buffer``3(System.IObservable{``0},System.IObservable{``1},System.Func{``1,System.IObservable{``2}})">
+            <summary>
+            Projects each element of an observable sequence into zero or more buffers.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequence, and in the lists in the result sequence.</typeparam>
+            <typeparam name="TBufferOpening">The type of the elements in the sequence indicating buffer opening events, also passed to the closing selector to obtain a sequence of buffer closing events.</typeparam>
+            <typeparam name="TBufferClosing">The type of the elements in the sequences indicating buffer closing events.</typeparam>
+            <param name="source">Source sequence to produce buffers over.</param>
+            <param name="bufferOpenings">Observable sequence whose elements denote the creation of new buffers.</param>
+            <param name="bufferClosingSelector">A function invoked to define the closing of each produced buffer.</param>
+            <returns>An observable sequence of buffers.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="bufferOpenings"/> or <paramref name="bufferClosingSelector"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.Observable.Buffer``2(System.IObservable{``0},System.IObservable{``1})">
+            <summary>
+            Projects each element of an observable sequence into consecutive non-overlapping buffers.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequence, and in the lists in the result sequence.</typeparam>
+            <typeparam name="TBufferBoundary">The type of the elements in the sequences indicating buffer boundary events.</typeparam>
+            <param name="source">Source sequence to produce buffers over.</param>
+            <param name="bufferBoundaries">Sequence of buffer boundary markers. The current buffer is closed and a new buffer is opened upon receiving a boundary marker.</param>
+            <returns>An observable sequence of buffers.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="bufferBoundaries"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.Observable.Catch``2(System.IObservable{``0},System.Func{``1,System.IObservable{``0}})">
+            <summary>
+            Continues an observable sequence that is terminated by an exception of the specified type with the observable sequence produced by the handler.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequence and sequences returned by the exception handler function.</typeparam>
+            <typeparam name="TException">The type of the exception to catch and handle. Needs to derive from <see cref="T:System.Exception"/>.</typeparam>
+            <param name="source">Source sequence.</param>
+            <param name="handler">Exception handler function, producing another observable sequence.</param>
+            <returns>An observable sequence containing the source sequence's elements, followed by the elements produced by the handler's resulting observable sequence in case an exception occurred.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="handler"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.Observable.Catch``1(System.IObservable{``0},System.IObservable{``0})">
+            <summary>
+            Continues an observable sequence that is terminated by an exception with the next observable sequence.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequence and handler sequence.</typeparam>
+            <param name="first">First observable sequence whose exception (if any) is caught.</param>
+            <param name="second">Second observable sequence used to produce results when an error occurred in the first sequence.</param>
+            <returns>An observable sequence containing the first sequence's elements, followed by the elements of the second sequence in case an exception occurred.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.Observable.Catch``1(System.IObservable{``0}[])">
+            <summary>
+            Continues an observable sequence that is terminated by an exception with the next observable sequence.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source and handler sequences.</typeparam>
+            <param name="sources">Observable sequences to catch exceptions for.</param>
+            <returns>An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.Observable.Catch``1(System.Collections.Generic.IEnumerable{System.IObservable{``0}})">
+            <summary>
+            Continues an observable sequence that is terminated by an exception with the next observable sequence.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source and handler sequences.</typeparam>
+            <param name="sources">Observable sequences to catch exceptions for.</param>
+            <returns>An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.Observable.CombineLatest``3(System.IObservable{``0},System.IObservable{``1},System.Func{``0,``1,``2})">
+            <summary>
+            Merges two observable sequences into one observable sequence by using the selector function whenever one of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TSource1">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSource2">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TResult">The type of the elements in the result sequence, returned by the selector function.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="resultSelector">Function to invoke whenever either of the sources produces an element.</param>
+            <returns>An observable sequence containing the result of combining elements of both sources using the specified result selector function.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="resultSelector"/> is null.</exception>
+            <remarks>If a non-empty source completes, its very last value will be used for creating subsequent combinations until all sources terminate.</remarks>
+        </member>
         <member name="M:System.Reactive.Linq.Observable.CombineLatest``2(System.Collections.Generic.IEnumerable{System.IObservable{``0}},System.Func{System.Collections.Generic.IList{``0},``1})">
             <summary>
             Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences produces an element.
@@ -10153,6 +10173,48 @@
             <typeparam name="TResult">The type of the elements in the result sequence, returned by the selector function.</typeparam>
             <param name="first">First observable source.</param>
             <param name="second">Second observable source.</param>
+            <param name="resultSelector">Function to invoke for each consecutive pair of elements from the first and second source.</param>
+            <returns>An observable sequence containing the result of pairwise combining the elements of the first and second source using the specified result selector function.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="resultSelector"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.Observable.Zip``2(System.Collections.Generic.IEnumerable{System.IObservable{``0}},System.Func{System.Collections.Generic.IList{``0},``1})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequences.</typeparam>
+            <typeparam name="TResult">The type of the elements in the result sequence, returned by the selector function.</typeparam>
+            <param name="sources">Observable sources.</param>
+            <param name="resultSelector">Function to invoke for each series of elements at corresponding indexes in the sources.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using the specified result selector function.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> or <paramref name="resultSelector"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.Observable.Zip``1(System.Collections.Generic.IEnumerable{System.IObservable{``0}})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequences, and in the lists in the result sequence.</typeparam>
+            <param name="sources">Observable sources.</param>
+            <returns>An observable sequence containing lists of elements at corresponding indexes.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.Observable.Zip``1(System.IObservable{``0}[])">
+            <summary>
+            Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequences, and in the lists in the result sequence.</typeparam>
+            <param name="sources">Observable sources.</param>
+            <returns>An observable sequence containing lists of elements at corresponding indexes.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.Observable.Zip``3(System.IObservable{``0},System.Collections.Generic.IEnumerable{``1},System.Func{``0,``1,``2})">
+            <summary>
+            Merges an observable sequence and an enumerable sequence into one observable sequence by using the selector function.
+            </summary>
+            <typeparam name="TSource1">The type of the elements in the first observable source sequence.</typeparam>
+            <typeparam name="TSource2">The type of the elements in the second enumerable source sequence.</typeparam>
+            <typeparam name="TResult">The type of the elements in the result sequence, returned by the selector function.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second enumerable source.</param>
             <param name="resultSelector">Function to invoke for each consecutive pair of elements from the first and second source.</param>
             <returns>An observable sequence containing the result of pairwise combining the elements of the first and second source using the specified result selector function.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="resultSelector"/> is null.</exception>
@@ -10548,48 +10610,6 @@
             <param name="resultSelector">Function to invoke for each series of elements at corresponding indexes in the sources.</param>
             <returns>An observable sequence containing the result of combining elements of the sources using the specified result selector function.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="source1"/> or <paramref name="source2"/> or <paramref name="source3"/> or <paramref name="source4"/> or <paramref name="source5"/> or <paramref name="source6"/> or <paramref name="source7"/> or <paramref name="source8"/> or <paramref name="source9"/> or <paramref name="source10"/> or <paramref name="source11"/> or <paramref name="source12"/> or <paramref name="source13"/> or <paramref name="source14"/> or <paramref name="source15"/> or <paramref name="source16"/> or <paramref name="resultSelector"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.Observable.Zip``2(System.Collections.Generic.IEnumerable{System.IObservable{``0}},System.Func{System.Collections.Generic.IList{``0},``1})">
-            <summary>
-            Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequences.</typeparam>
-            <typeparam name="TResult">The type of the elements in the result sequence, returned by the selector function.</typeparam>
-            <param name="sources">Observable sources.</param>
-            <param name="resultSelector">Function to invoke for each series of elements at corresponding indexes in the sources.</param>
-            <returns>An observable sequence containing the result of combining elements of the sources using the specified result selector function.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> or <paramref name="resultSelector"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.Observable.Zip``1(System.Collections.Generic.IEnumerable{System.IObservable{``0}})">
-            <summary>
-            Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequences, and in the lists in the result sequence.</typeparam>
-            <param name="sources">Observable sources.</param>
-            <returns>An observable sequence containing lists of elements at corresponding indexes.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.Observable.Zip``1(System.IObservable{``0}[])">
-            <summary>
-            Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequences, and in the lists in the result sequence.</typeparam>
-            <param name="sources">Observable sources.</param>
-            <returns>An observable sequence containing lists of elements at corresponding indexes.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.Observable.Zip``3(System.IObservable{``0},System.Collections.Generic.IEnumerable{``1},System.Func{``0,``1,``2})">
-            <summary>
-            Merges an observable sequence and an enumerable sequence into one observable sequence by using the selector function.
-            </summary>
-            <typeparam name="TSource1">The type of the elements in the first observable source sequence.</typeparam>
-            <typeparam name="TSource2">The type of the elements in the second enumerable source sequence.</typeparam>
-            <typeparam name="TResult">The type of the elements in the result sequence, returned by the selector function.</typeparam>
-            <param name="first">First observable source.</param>
-            <param name="second">Second enumerable source.</param>
-            <param name="resultSelector">Function to invoke for each consecutive pair of elements from the first and second source.</param>
-            <returns>An observable sequence containing the result of pairwise combining the elements of the first and second source using the specified result selector function.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="resultSelector"/> is null.</exception>
         </member>
         <member name="M:System.Reactive.Linq.Observable.Append``1(System.IObservable{``0},``0)">
             <summary>
@@ -12991,6 +13011,371 @@
             Because all source sequence elements end up in one of the windows, some windows won't have a zero time span. This is a side-effect of the asynchrony introduced
             by the scheduler, where the action to close the current window and to create a new window may not execute immediately, despite the TimeSpan.Zero due time.
             </remarks>
+        </member>
+        <member name="T:System.Reactive.Linq.ObservableEx">
+            <summary>
+            Provides a set of static methods for writing in-memory queries over observable sequences.
+            </summary>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.CombineLatest``2(System.IObservable{``0},System.IObservable{``1})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.CombineLatest``3(System.IObservable{``0},System.IObservable{``1},System.IObservable{``2})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.CombineLatest``4(System.IObservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.CombineLatest``5(System.IObservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.CombineLatest``6(System.IObservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.CombineLatest``7(System.IObservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.CombineLatest``8(System.IObservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.WithLatestFrom``2(System.IObservable{``0},System.IObservable{``1})">
+            <summary>
+            Merges two observable sequences into one observable sequence by combining each element from the first source with the latest element from the second source, if any.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <returns>An observable sequence containing the result of combining each element of the first source with the latest element from the second source, if any, as a tuple value.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.Zip``2(System.IObservable{``0},System.Collections.Generic.IEnumerable{``1})">
+            <summary>
+            Merges an observable sequence and an enumerable sequence into one observable sequence of tuple values.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first observable source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second enumerable source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second enumerable source.</param>
+            <returns>An observable sequence containing the result of pairwise combining the elements of the first and second source as a tuple value.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.Zip``2(System.IObservable{``0},System.IObservable{``1})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.Zip``3(System.IObservable{``0},System.IObservable{``1},System.IObservable{``2})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.Zip``4(System.IObservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.Zip``5(System.IObservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.Zip``6(System.IObservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.Zip``7(System.IObservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.Zip``8(System.IObservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.Create``1(System.Func{System.IObserver{``0},System.Collections.Generic.IEnumerable{System.IObservable{System.Object}}})">
+            <summary>
+            Subscribes to each observable sequence returned by the iteratorMethod in sequence and returns the observable sequence of values sent to the observer given to the iteratorMethod.
+            </summary>
+            <typeparam name="TResult">The type of the elements in the produced sequence.</typeparam>
+            <param name="iteratorMethod">Iterator method that produces elements in the resulting sequence by calling the given observer.</param>
+            <returns>An observable sequence obtained by running the iterator and returning the elements that were sent to the observer.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="iteratorMethod"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.Create(System.Func{System.Collections.Generic.IEnumerable{System.IObservable{System.Object}}})">
+            <summary>
+            Subscribes to each observable sequence returned by the iteratorMethod in sequence and produces a Unit value on the resulting sequence for each step of the iteration.
+            </summary>
+            <param name="iteratorMethod">Iterator method that drives the resulting observable sequence.</param>
+            <returns>An observable sequence obtained by running the iterator and returning Unit values for each iteration step.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="iteratorMethod"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.Expand``1(System.IObservable{``0},System.Func{``0,System.IObservable{``0}},System.Reactive.Concurrency.IScheduler)">
+            <summary>
+            Expands an observable sequence by recursively invoking selector, using the specified scheduler to enumerate the queue of obtained sequences.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequence and each of the recursively expanded sources obtained by running the selector function.</typeparam>
+            <param name="source">Source sequence with the initial elements.</param>
+            <param name="selector">Selector function to invoke for each produced element, resulting in another sequence to which the selector will be invoked recursively again.</param>
+            <param name="scheduler">Scheduler on which to perform the expansion by enumerating the internal queue of obtained sequences.</param>
+            <returns>An observable sequence containing all the elements produced by the recursive expansion.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="selector"/> or <paramref name="scheduler"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.Expand``1(System.IObservable{``0},System.Func{``0,System.IObservable{``0}})">
+            <summary>
+            Expands an observable sequence by recursively invoking selector.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequence and each of the recursively expanded sources obtained by running the selector function.</typeparam>
+            <param name="source">Source sequence with the initial elements.</param>
+            <param name="selector">Selector function to invoke for each produced element, resulting in another sequence to which the selector will be invoked recursively again.</param>
+            <returns>An observable sequence containing all the elements produced by the recursive expansion.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="selector"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.ForkJoin``3(System.IObservable{``0},System.IObservable{``1},System.Func{``0,``1,``2})">
+            <summary>
+            Runs two observable sequences in parallel and combines their last elements.
+            </summary>
+            <typeparam name="TSource1">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSource2">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TResult">The type of the elements in the result sequence, returned by the selector function.</typeparam>
+            <param name="first">First observable sequence.</param>
+            <param name="second">Second observable sequence.</param>
+            <param name="resultSelector">Result selector function to invoke with the last elements of both sequences.</param>
+            <returns>An observable sequence with the result of calling the selector function with the last elements of both input sequences.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="resultSelector"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.ForkJoin``1(System.IObservable{``0}[])">
+            <summary>
+            Runs all specified observable sequences in parallel and collects their last elements.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequences.</typeparam>
+            <param name="sources">Observable sequence to collect the last elements for.</param>
+            <returns>An observable sequence with an array collecting the last elements of all the input sequences.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.ForkJoin``1(System.Collections.Generic.IEnumerable{System.IObservable{``0}})">
+            <summary>
+            Runs all observable sequences in the enumerable sources sequence in parallel and collect their last elements.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequences.</typeparam>
+            <param name="sources">Observable sequence to collect the last elements for.</param>
+            <returns>An observable sequence with an array collecting the last elements of all the input sequences.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.Let``2(System.IObservable{``0},System.Func{System.IObservable{``0},System.IObservable{``1}})">
+            <summary>
+            Returns an observable sequence that is the result of invoking the selector on the source sequence, without sharing subscriptions.
+            This operator allows for a fluent style of writing queries that use the same sequence multiple times.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequence.</typeparam>
+            <typeparam name="TResult">The type of the elements in the result sequence.</typeparam>
+            <param name="source">Source sequence that will be shared in the selector function.</param>
+            <param name="selector">Selector function which can use the source sequence as many times as needed, without sharing subscriptions to the source sequence.</param>
+            <returns>An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="selector"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.ManySelect``2(System.IObservable{``0},System.Func{System.IObservable{``0},``1},System.Reactive.Concurrency.IScheduler)">
+            <summary>
+            Comonadic bind operator.
+            </summary>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.ManySelect``2(System.IObservable{``0},System.Func{System.IObservable{``0},``1})">
+            <summary>
+            Comonadic bind operator.
+            </summary>
+        </member>
+        <member name="M:System.Reactive.Linq.ObservableEx.ToListObservable``1(System.IObservable{``0})">
+            <summary>
+            Immediately subscribes to source and retains the elements in the observable sequence.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequence.</typeparam>
+            <param name="source">Source sequence.</param>
+            <returns>Object that's both an observable sequence and a list which can be used to access the source sequence's elements.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is null.</exception>
         </member>
         <member name="T:System.Reactive.Linq.Qbservable">
             <summary>
@@ -22985,111 +23370,6 @@
             <returns>An observable sequence with the results form matching several patterns.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="provider"/> or <paramref name="plans"/> is null.</exception>
         </member>
-        <member name="T:System.Reactive.Linq.ObservableEx">
-            <summary>
-            Provides a set of static methods for writing in-memory queries over observable sequences.
-            </summary>
-        </member>
-        <member name="M:System.Reactive.Linq.ObservableEx.Create``1(System.Func{System.IObserver{``0},System.Collections.Generic.IEnumerable{System.IObservable{System.Object}}})">
-            <summary>
-            Subscribes to each observable sequence returned by the iteratorMethod in sequence and returns the observable sequence of values sent to the observer given to the iteratorMethod.
-            </summary>
-            <typeparam name="TResult">The type of the elements in the produced sequence.</typeparam>
-            <param name="iteratorMethod">Iterator method that produces elements in the resulting sequence by calling the given observer.</param>
-            <returns>An observable sequence obtained by running the iterator and returning the elements that were sent to the observer.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="iteratorMethod"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.ObservableEx.Create(System.Func{System.Collections.Generic.IEnumerable{System.IObservable{System.Object}}})">
-            <summary>
-            Subscribes to each observable sequence returned by the iteratorMethod in sequence and produces a Unit value on the resulting sequence for each step of the iteration.
-            </summary>
-            <param name="iteratorMethod">Iterator method that drives the resulting observable sequence.</param>
-            <returns>An observable sequence obtained by running the iterator and returning Unit values for each iteration step.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="iteratorMethod"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.ObservableEx.Expand``1(System.IObservable{``0},System.Func{``0,System.IObservable{``0}},System.Reactive.Concurrency.IScheduler)">
-            <summary>
-            Expands an observable sequence by recursively invoking selector, using the specified scheduler to enumerate the queue of obtained sequences.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequence and each of the recursively expanded sources obtained by running the selector function.</typeparam>
-            <param name="source">Source sequence with the initial elements.</param>
-            <param name="selector">Selector function to invoke for each produced element, resulting in another sequence to which the selector will be invoked recursively again.</param>
-            <param name="scheduler">Scheduler on which to perform the expansion by enumerating the internal queue of obtained sequences.</param>
-            <returns>An observable sequence containing all the elements produced by the recursive expansion.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="selector"/> or <paramref name="scheduler"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.ObservableEx.Expand``1(System.IObservable{``0},System.Func{``0,System.IObservable{``0}})">
-            <summary>
-            Expands an observable sequence by recursively invoking selector.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequence and each of the recursively expanded sources obtained by running the selector function.</typeparam>
-            <param name="source">Source sequence with the initial elements.</param>
-            <param name="selector">Selector function to invoke for each produced element, resulting in another sequence to which the selector will be invoked recursively again.</param>
-            <returns>An observable sequence containing all the elements produced by the recursive expansion.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="selector"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.ObservableEx.ForkJoin``3(System.IObservable{``0},System.IObservable{``1},System.Func{``0,``1,``2})">
-            <summary>
-            Runs two observable sequences in parallel and combines their last elements.
-            </summary>
-            <typeparam name="TSource1">The type of the elements in the first source sequence.</typeparam>
-            <typeparam name="TSource2">The type of the elements in the second source sequence.</typeparam>
-            <typeparam name="TResult">The type of the elements in the result sequence, returned by the selector function.</typeparam>
-            <param name="first">First observable sequence.</param>
-            <param name="second">Second observable sequence.</param>
-            <param name="resultSelector">Result selector function to invoke with the last elements of both sequences.</param>
-            <returns>An observable sequence with the result of calling the selector function with the last elements of both input sequences.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="resultSelector"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.ObservableEx.ForkJoin``1(System.IObservable{``0}[])">
-            <summary>
-            Runs all specified observable sequences in parallel and collects their last elements.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequences.</typeparam>
-            <param name="sources">Observable sequence to collect the last elements for.</param>
-            <returns>An observable sequence with an array collecting the last elements of all the input sequences.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.ObservableEx.ForkJoin``1(System.Collections.Generic.IEnumerable{System.IObservable{``0}})">
-            <summary>
-            Runs all observable sequences in the enumerable sources sequence in parallel and collect their last elements.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequences.</typeparam>
-            <param name="sources">Observable sequence to collect the last elements for.</param>
-            <returns>An observable sequence with an array collecting the last elements of all the input sequences.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.ObservableEx.Let``2(System.IObservable{``0},System.Func{System.IObservable{``0},System.IObservable{``1}})">
-            <summary>
-            Returns an observable sequence that is the result of invoking the selector on the source sequence, without sharing subscriptions.
-            This operator allows for a fluent style of writing queries that use the same sequence multiple times.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequence.</typeparam>
-            <typeparam name="TResult">The type of the elements in the result sequence.</typeparam>
-            <param name="source">Source sequence that will be shared in the selector function.</param>
-            <param name="selector">Selector function which can use the source sequence as many times as needed, without sharing subscriptions to the source sequence.</param>
-            <returns>An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="selector"/> is null.</exception>
-        </member>
-        <member name="M:System.Reactive.Linq.ObservableEx.ManySelect``2(System.IObservable{``0},System.Func{System.IObservable{``0},``1},System.Reactive.Concurrency.IScheduler)">
-            <summary>
-            Comonadic bind operator.
-            </summary>
-        </member>
-        <member name="M:System.Reactive.Linq.ObservableEx.ManySelect``2(System.IObservable{``0},System.Func{System.IObservable{``0},``1})">
-            <summary>
-            Comonadic bind operator.
-            </summary>
-        </member>
-        <member name="M:System.Reactive.Linq.ObservableEx.ToListObservable``1(System.IObservable{``0})">
-            <summary>
-            Immediately subscribes to source and retains the elements in the observable sequence.
-            </summary>
-            <typeparam name="TSource">The type of the elements in the source sequence.</typeparam>
-            <param name="source">Source sequence.</param>
-            <returns>Object that's both an observable sequence and a list which can be used to access the source sequence's elements.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is null.</exception>
-        </member>
         <member name="M:System.Reactive.Linq.ObservableImpl.Amb`1.AmbCoordinator.TryWin(System.Boolean)">
             <summary>
             Try winning the race for the right of emission.
@@ -23255,6 +23535,778 @@
             <summary>
             Comonadic bind operator.
             </summary>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.WithLatestFrom``2(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1})">
+            <summary>
+            Merges two observable sequences into one observable sequence by combining each element from the first source with the latest element from the second source, if any.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <returns>An observable sequence containing the result of combining each element of the first source with the latest element from the second source, if any, as a tuple value.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``2(System.Reactive.Linq.IQbservable{``0},System.Collections.Generic.IEnumerable{``1})">
+            <summary>
+            Merges an observable sequence and an enumerable sequence into one observable sequence of tuple values.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first observable source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second enumerable source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second enumerable source.</param>
+            <returns>An observable sequence containing the result of pairwise combining the elements of the first and second source as a tuple value.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.CombineLatest``2(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.CombineLatest``3(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.CombineLatest``4(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.CombineLatest``5(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.CombineLatest``6(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.CombineLatest``7(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.CombineLatest``8(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.CombineLatest``9(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.CombineLatest``10(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8},System.IObservable{``9})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <typeparam name="TTenth">The type of the elements in the tenth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <param name="tenth">Tenth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> or <paramref name="tenth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.CombineLatest``11(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8},System.IObservable{``9},System.IObservable{``10})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <typeparam name="TTenth">The type of the elements in the tenth source sequence.</typeparam>
+            <typeparam name="TEleventh">The type of the elements in the eleventh source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <param name="tenth">Tenth observable source.</param>
+            <param name="eleventh">Eleventh observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> or <paramref name="tenth"/> or <paramref name="eleventh"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.CombineLatest``12(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8},System.IObservable{``9},System.IObservable{``10},System.IObservable{``11})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <typeparam name="TTenth">The type of the elements in the tenth source sequence.</typeparam>
+            <typeparam name="TEleventh">The type of the elements in the eleventh source sequence.</typeparam>
+            <typeparam name="TTwelfth">The type of the elements in the twelfth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <param name="tenth">Tenth observable source.</param>
+            <param name="eleventh">Eleventh observable source.</param>
+            <param name="twelfth">Twelfth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> or <paramref name="tenth"/> or <paramref name="eleventh"/> or <paramref name="twelfth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.CombineLatest``13(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8},System.IObservable{``9},System.IObservable{``10},System.IObservable{``11},System.IObservable{``12})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <typeparam name="TTenth">The type of the elements in the tenth source sequence.</typeparam>
+            <typeparam name="TEleventh">The type of the elements in the eleventh source sequence.</typeparam>
+            <typeparam name="TTwelfth">The type of the elements in the twelfth source sequence.</typeparam>
+            <typeparam name="TThirteenth">The type of the elements in the thirteenth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <param name="tenth">Tenth observable source.</param>
+            <param name="eleventh">Eleventh observable source.</param>
+            <param name="twelfth">Twelfth observable source.</param>
+            <param name="thirteenth">Thirteenth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> or <paramref name="tenth"/> or <paramref name="eleventh"/> or <paramref name="twelfth"/> or <paramref name="thirteenth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.CombineLatest``14(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8},System.IObservable{``9},System.IObservable{``10},System.IObservable{``11},System.IObservable{``12},System.IObservable{``13})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <typeparam name="TTenth">The type of the elements in the tenth source sequence.</typeparam>
+            <typeparam name="TEleventh">The type of the elements in the eleventh source sequence.</typeparam>
+            <typeparam name="TTwelfth">The type of the elements in the twelfth source sequence.</typeparam>
+            <typeparam name="TThirteenth">The type of the elements in the thirteenth source sequence.</typeparam>
+            <typeparam name="TFourteenth">The type of the elements in the fourteenth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <param name="tenth">Tenth observable source.</param>
+            <param name="eleventh">Eleventh observable source.</param>
+            <param name="twelfth">Twelfth observable source.</param>
+            <param name="thirteenth">Thirteenth observable source.</param>
+            <param name="fourteenth">Fourteenth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> or <paramref name="tenth"/> or <paramref name="eleventh"/> or <paramref name="twelfth"/> or <paramref name="thirteenth"/> or <paramref name="fourteenth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.CombineLatest``15(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8},System.IObservable{``9},System.IObservable{``10},System.IObservable{``11},System.IObservable{``12},System.IObservable{``13},System.IObservable{``14})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <typeparam name="TTenth">The type of the elements in the tenth source sequence.</typeparam>
+            <typeparam name="TEleventh">The type of the elements in the eleventh source sequence.</typeparam>
+            <typeparam name="TTwelfth">The type of the elements in the twelfth source sequence.</typeparam>
+            <typeparam name="TThirteenth">The type of the elements in the thirteenth source sequence.</typeparam>
+            <typeparam name="TFourteenth">The type of the elements in the fourteenth source sequence.</typeparam>
+            <typeparam name="TFifteenth">The type of the elements in the fifteenth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <param name="tenth">Tenth observable source.</param>
+            <param name="eleventh">Eleventh observable source.</param>
+            <param name="twelfth">Twelfth observable source.</param>
+            <param name="thirteenth">Thirteenth observable source.</param>
+            <param name="fourteenth">Fourteenth observable source.</param>
+            <param name="fifteenth">Fifteenth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> or <paramref name="tenth"/> or <paramref name="eleventh"/> or <paramref name="twelfth"/> or <paramref name="thirteenth"/> or <paramref name="fourteenth"/> or <paramref name="fifteenth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.CombineLatest``16(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8},System.IObservable{``9},System.IObservable{``10},System.IObservable{``11},System.IObservable{``12},System.IObservable{``13},System.IObservable{``14},System.IObservable{``15})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever any of the observable sequences produces an element.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <typeparam name="TTenth">The type of the elements in the tenth source sequence.</typeparam>
+            <typeparam name="TEleventh">The type of the elements in the eleventh source sequence.</typeparam>
+            <typeparam name="TTwelfth">The type of the elements in the twelfth source sequence.</typeparam>
+            <typeparam name="TThirteenth">The type of the elements in the thirteenth source sequence.</typeparam>
+            <typeparam name="TFourteenth">The type of the elements in the fourteenth source sequence.</typeparam>
+            <typeparam name="TFifteenth">The type of the elements in the fifteenth source sequence.</typeparam>
+            <typeparam name="TSixteenth">The type of the elements in the sixteenth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <param name="tenth">Tenth observable source.</param>
+            <param name="eleventh">Eleventh observable source.</param>
+            <param name="twelfth">Twelfth observable source.</param>
+            <param name="thirteenth">Thirteenth observable source.</param>
+            <param name="fourteenth">Fourteenth observable source.</param>
+            <param name="fifteenth">Fifteenth observable source.</param>
+            <param name="sixteenth">Sixteenth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> or <paramref name="tenth"/> or <paramref name="eleventh"/> or <paramref name="twelfth"/> or <paramref name="thirteenth"/> or <paramref name="fourteenth"/> or <paramref name="fifteenth"/> or <paramref name="sixteenth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``2(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``3(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``4(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``5(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``6(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``7(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``8(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``9(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``10(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8},System.IObservable{``9})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <typeparam name="TTenth">The type of the elements in the tenth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <param name="tenth">Tenth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> or <paramref name="tenth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``11(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8},System.IObservable{``9},System.IObservable{``10})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <typeparam name="TTenth">The type of the elements in the tenth source sequence.</typeparam>
+            <typeparam name="TEleventh">The type of the elements in the eleventh source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <param name="tenth">Tenth observable source.</param>
+            <param name="eleventh">Eleventh observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> or <paramref name="tenth"/> or <paramref name="eleventh"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``12(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8},System.IObservable{``9},System.IObservable{``10},System.IObservable{``11})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <typeparam name="TTenth">The type of the elements in the tenth source sequence.</typeparam>
+            <typeparam name="TEleventh">The type of the elements in the eleventh source sequence.</typeparam>
+            <typeparam name="TTwelfth">The type of the elements in the twelfth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <param name="tenth">Tenth observable source.</param>
+            <param name="eleventh">Eleventh observable source.</param>
+            <param name="twelfth">Twelfth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> or <paramref name="tenth"/> or <paramref name="eleventh"/> or <paramref name="twelfth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``13(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8},System.IObservable{``9},System.IObservable{``10},System.IObservable{``11},System.IObservable{``12})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <typeparam name="TTenth">The type of the elements in the tenth source sequence.</typeparam>
+            <typeparam name="TEleventh">The type of the elements in the eleventh source sequence.</typeparam>
+            <typeparam name="TTwelfth">The type of the elements in the twelfth source sequence.</typeparam>
+            <typeparam name="TThirteenth">The type of the elements in the thirteenth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <param name="tenth">Tenth observable source.</param>
+            <param name="eleventh">Eleventh observable source.</param>
+            <param name="twelfth">Twelfth observable source.</param>
+            <param name="thirteenth">Thirteenth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> or <paramref name="tenth"/> or <paramref name="eleventh"/> or <paramref name="twelfth"/> or <paramref name="thirteenth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``14(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8},System.IObservable{``9},System.IObservable{``10},System.IObservable{``11},System.IObservable{``12},System.IObservable{``13})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <typeparam name="TTenth">The type of the elements in the tenth source sequence.</typeparam>
+            <typeparam name="TEleventh">The type of the elements in the eleventh source sequence.</typeparam>
+            <typeparam name="TTwelfth">The type of the elements in the twelfth source sequence.</typeparam>
+            <typeparam name="TThirteenth">The type of the elements in the thirteenth source sequence.</typeparam>
+            <typeparam name="TFourteenth">The type of the elements in the fourteenth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <param name="tenth">Tenth observable source.</param>
+            <param name="eleventh">Eleventh observable source.</param>
+            <param name="twelfth">Twelfth observable source.</param>
+            <param name="thirteenth">Thirteenth observable source.</param>
+            <param name="fourteenth">Fourteenth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> or <paramref name="tenth"/> or <paramref name="eleventh"/> or <paramref name="twelfth"/> or <paramref name="thirteenth"/> or <paramref name="fourteenth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``15(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8},System.IObservable{``9},System.IObservable{``10},System.IObservable{``11},System.IObservable{``12},System.IObservable{``13},System.IObservable{``14})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <typeparam name="TTenth">The type of the elements in the tenth source sequence.</typeparam>
+            <typeparam name="TEleventh">The type of the elements in the eleventh source sequence.</typeparam>
+            <typeparam name="TTwelfth">The type of the elements in the twelfth source sequence.</typeparam>
+            <typeparam name="TThirteenth">The type of the elements in the thirteenth source sequence.</typeparam>
+            <typeparam name="TFourteenth">The type of the elements in the fourteenth source sequence.</typeparam>
+            <typeparam name="TFifteenth">The type of the elements in the fifteenth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <param name="tenth">Tenth observable source.</param>
+            <param name="eleventh">Eleventh observable source.</param>
+            <param name="twelfth">Twelfth observable source.</param>
+            <param name="thirteenth">Thirteenth observable source.</param>
+            <param name="fourteenth">Fourteenth observable source.</param>
+            <param name="fifteenth">Fifteenth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> or <paramref name="tenth"/> or <paramref name="eleventh"/> or <paramref name="twelfth"/> or <paramref name="thirteenth"/> or <paramref name="fourteenth"/> or <paramref name="fifteenth"/> is null.</exception>
+        </member>
+        <member name="M:System.Reactive.Linq.QbservableEx.Zip``16(System.Reactive.Linq.IQbservable{``0},System.IObservable{``1},System.IObservable{``2},System.IObservable{``3},System.IObservable{``4},System.IObservable{``5},System.IObservable{``6},System.IObservable{``7},System.IObservable{``8},System.IObservable{``9},System.IObservable{``10},System.IObservable{``11},System.IObservable{``12},System.IObservable{``13},System.IObservable{``14},System.IObservable{``15})">
+            <summary>
+            Merges the specified observable sequences into one observable sequence of tuple values whenever all of the observable sequences have produced an element at a corresponding index.
+            </summary>
+            <typeparam name="TFirst">The type of the elements in the first source sequence.</typeparam>
+            <typeparam name="TSecond">The type of the elements in the second source sequence.</typeparam>
+            <typeparam name="TThird">The type of the elements in the third source sequence.</typeparam>
+            <typeparam name="TFourth">The type of the elements in the fourth source sequence.</typeparam>
+            <typeparam name="TFifth">The type of the elements in the fifth source sequence.</typeparam>
+            <typeparam name="TSixth">The type of the elements in the sixth source sequence.</typeparam>
+            <typeparam name="TSeventh">The type of the elements in the seventh source sequence.</typeparam>
+            <typeparam name="TEighth">The type of the elements in the eighth source sequence.</typeparam>
+            <typeparam name="TNinth">The type of the elements in the ninth source sequence.</typeparam>
+            <typeparam name="TTenth">The type of the elements in the tenth source sequence.</typeparam>
+            <typeparam name="TEleventh">The type of the elements in the eleventh source sequence.</typeparam>
+            <typeparam name="TTwelfth">The type of the elements in the twelfth source sequence.</typeparam>
+            <typeparam name="TThirteenth">The type of the elements in the thirteenth source sequence.</typeparam>
+            <typeparam name="TFourteenth">The type of the elements in the fourteenth source sequence.</typeparam>
+            <typeparam name="TFifteenth">The type of the elements in the fifteenth source sequence.</typeparam>
+            <typeparam name="TSixteenth">The type of the elements in the sixteenth source sequence.</typeparam>
+            <param name="first">First observable source.</param>
+            <param name="second">Second observable source.</param>
+            <param name="third">Third observable source.</param>
+            <param name="fourth">Fourth observable source.</param>
+            <param name="fifth">Fifth observable source.</param>
+            <param name="sixth">Sixth observable source.</param>
+            <param name="seventh">Seventh observable source.</param>
+            <param name="eighth">Eighth observable source.</param>
+            <param name="ninth">Ninth observable source.</param>
+            <param name="tenth">Tenth observable source.</param>
+            <param name="eleventh">Eleventh observable source.</param>
+            <param name="twelfth">Twelfth observable source.</param>
+            <param name="thirteenth">Thirteenth observable source.</param>
+            <param name="fourteenth">Fourteenth observable source.</param>
+            <param name="fifteenth">Fifteenth observable source.</param>
+            <param name="sixteenth">Sixteenth observable source.</param>
+            <returns>An observable sequence containing the result of combining elements of the sources using tuple values.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> or <paramref name="third"/> or <paramref name="fourth"/> or <paramref name="fifth"/> or <paramref name="sixth"/> or <paramref name="seventh"/> or <paramref name="eighth"/> or <paramref name="ninth"/> or <paramref name="tenth"/> or <paramref name="eleventh"/> or <paramref name="twelfth"/> or <paramref name="thirteenth"/> or <paramref name="fourteenth"/> or <paramref name="fifteenth"/> or <paramref name="sixteenth"/> is null.</exception>
         </member>
         <member name="T:System.Reactive.Linq.QueryDebugger">
             <summary>
@@ -24833,12 +25885,12 @@
         </member>
         <member name="F:System.Reactive.Subjects.AsyncSubject`1.Terminated">
             <summary>
-            A pre-allocated empty array indicating the AsyncSubject has terminated
+            A pre-allocated empty array indicating the AsyncSubject has terminated.
             </summary>
         </member>
         <member name="F:System.Reactive.Subjects.AsyncSubject`1.Disposed">
             <summary>
-            A pre-allocated empty array indicating the AsyncSubject has terminated
+            A pre-allocated empty array indicating the AsyncSubject has been disposed.
             </summary>
         </member>
         <member name="M:System.Reactive.Subjects.AsyncSubject`1.#ctor">
@@ -26537,6 +27589,13 @@
             Gets the interval.
             </summary>
         </member>
+        <member name="M:System.Reactive.TimeInterval`1.Deconstruct(`0@,System.TimeSpan@)">
+            <summary>
+            Deconstructs the time interval value into a value and a time interval.
+            </summary>
+            <param name="value">The value.</param>
+            <param name="interval">Time interval associated with the value.</param>
+        </member>
         <member name="M:System.Reactive.TimeInterval`1.Equals(System.Reactive.TimeInterval{`0})">
             <summary>
             Determines whether the current <see cref="T:System.Reactive.TimeInterval`1"/> value has the same <see cref="P:System.Reactive.TimeInterval`1.Value"/> and <see cref="P:System.Reactive.TimeInterval`1.Interval"/> as a specified <see cref="T:System.Reactive.TimeInterval`1"/> value.
@@ -26602,6 +27661,13 @@
             <summary>
             Gets the timestamp.
             </summary>
+        </member>
+        <member name="M:System.Reactive.Timestamped`1.Deconstruct(`0@,System.DateTimeOffset@)">
+            <summary>
+            Deconstructs the timestamped value into a value and a timestamp.
+            </summary>
+            <param name="value">The value.</param>
+            <param name="timestamp">Timestamp associated with the value.</param>
         </member>
         <member name="M:System.Reactive.Timestamped`1.Equals(System.Reactive.Timestamped{`0})">
             <summary>
@@ -26736,6 +27802,115 @@
             <summary>
               Looks up a localized string similar to No current Window object found to obtain a CoreDispatcher from..
             </summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.AllowNullAttribute">
+            <summary>Specifies that null is allowed as an input even if the corresponding type disallows it.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.DisallowNullAttribute">
+            <summary>Specifies that null is disallowed as an input even if the corresponding type allows it.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MaybeNullAttribute">
+            <summary>Specifies that an output may be null even if the corresponding type disallows it.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.NotNullAttribute">
+            <summary>Specifies that an output will not be null even if the corresponding type allows it. Specifies that an input argument was not null when the call returns.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute">
+            <summary>Specifies that when a method returns <see cref="P:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.ReturnValue"/>, the parameter may be null even if the corresponding type disallows it.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.#ctor(System.Boolean)">
+            <summary>Initializes the attribute with the specified return value condition.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter may be null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.ReturnValue">
+            <summary>Gets the return value condition.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute">
+            <summary>Specifies that when a method returns <see cref="P:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.ReturnValue"/>, the parameter will not be null even if the corresponding type allows it.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.#ctor(System.Boolean)">
+            <summary>Initializes the attribute with the specified return value condition.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter will not be null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.ReturnValue">
+            <summary>Gets the return value condition.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute">
+            <summary>Specifies that the output will be non-null if the named parameter is non-null.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute.#ctor(System.String)">
+            <summary>Initializes the attribute with the associated parameter name.</summary>
+            <param name="parameterName">
+            The associated parameter name.  The output will be non-null if the argument to the parameter specified is non-null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute.ParameterName">
+            <summary>Gets the associated parameter name.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.DoesNotReturnAttribute">
+            <summary>Applied to a method that will never return under any circumstance.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute">
+            <summary>Specifies that the method will not return if the associated Boolean parameter is passed the specified value.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute.#ctor(System.Boolean)">
+            <summary>Initializes the attribute with the specified parameter value.</summary>
+            <param name="parameterValue">
+            The condition parameter value. Code after the method will be considered unreachable by diagnostics if the argument to
+            the associated parameter matches this value.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute.ParameterValue">
+            <summary>Gets the condition parameter value.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute">
+            <summary>Specifies that the method or property will ensure that the listed field and property members have not-null values.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute.#ctor(System.String)">
+            <summary>Initializes the attribute with a field or property member.</summary>
+            <param name="member">
+            The field or property member that is promised to be not-null.
+            </param>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute.#ctor(System.String[])">
+            <summary>Initializes the attribute with the list of field and property members.</summary>
+            <param name="members">
+            The list of field and property members that are promised to be not-null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute.Members">
+            <summary>Gets field or property member names.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute">
+            <summary>Specifies that the method or property will ensure that the listed field and property members have not-null values when returning with the specified return value condition.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+            <summary>Initializes the attribute with the specified return value condition and a field or property member.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter will not be null.
+            </param>
+            <param name="member">
+            The field or property member that is promised to be not-null.
+            </param>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String[])">
+            <summary>Initializes the attribute with the specified return value condition and list of field and property members.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter will not be null.
+            </param>
+            <param name="members">
+            The list of field and property members that are promised to be not-null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.ReturnValue">
+            <summary>Gets the return value condition.</summary>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.Members">
+            <summary>Gets field or property member names.</summary>
         </member>
         <member name="T:System.ObservableExtensions">
             <summary>

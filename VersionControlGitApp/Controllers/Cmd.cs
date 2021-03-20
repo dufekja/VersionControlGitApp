@@ -165,7 +165,7 @@ namespace VersionControlGitApp.Controllers {
         /// </summary>
         public static void SetDBPath() {
             // set datapath to local user
-            DATAPATH = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\VersionControlGitApp";
+            Config.DATAPATH = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\VersionControlGitApp";
 
             // create app directory if there is none yet
             if (!Directory.Exists(DATAPATH)) {
