@@ -10,26 +10,26 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Debug|Default = Debug|Default
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
-		Release|Default = Release|Default
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Debug|Default.ActiveCfg = Debug|Any CPU
-		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Debug|Default.Build.0 = Debug|Any CPU
+		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Debug|x86.ActiveCfg = Release|x86
+		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Debug|x86.Build.0 = Release|x86
 		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Release|Default.ActiveCfg = Release|Any CPU
-		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Release|Default.Build.0 = Release|Any CPU
+		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Release|x86.ActiveCfg = Release|x86
+		{4E22019D-45D3-4757-82EA-2C83C0DDDA5A}.Release|x86.Build.0 = Release|x86
 		{5FA0CBF3-82A2-45DF-8080-E85F4F4C55AA}.Debug|Any CPU.ActiveCfg = Release
-		{5FA0CBF3-82A2-45DF-8080-E85F4F4C55AA}.Debug|Default.ActiveCfg = Debug
-		{5FA0CBF3-82A2-45DF-8080-E85F4F4C55AA}.Debug|Default.Build.0 = Debug
+		{5FA0CBF3-82A2-45DF-8080-E85F4F4C55AA}.Debug|x86.ActiveCfg = Release
+		{5FA0CBF3-82A2-45DF-8080-E85F4F4C55AA}.Debug|x86.Build.0 = Release
 		{5FA0CBF3-82A2-45DF-8080-E85F4F4C55AA}.Release|Any CPU.ActiveCfg = Release
 		{5FA0CBF3-82A2-45DF-8080-E85F4F4C55AA}.Release|Any CPU.Build.0 = Release
-		{5FA0CBF3-82A2-45DF-8080-E85F4F4C55AA}.Release|Default.ActiveCfg = Release
-		{5FA0CBF3-82A2-45DF-8080-E85F4F4C55AA}.Release|Default.Build.0 = Release
+		{5FA0CBF3-82A2-45DF-8080-E85F4F4C55AA}.Release|x86.ActiveCfg = Release
+		{5FA0CBF3-82A2-45DF-8080-E85F4F4C55AA}.Release|x86.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
