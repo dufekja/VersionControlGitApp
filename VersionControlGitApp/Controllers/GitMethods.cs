@@ -244,7 +244,17 @@ namespace VersionControlGitApp.Controllers {
                 if (hashMatch) {
                     ConsoleLogger.UserPopup(HEADERMSG_FETCH_REPO, $"There are no new changes in {name}");
                 } else {
-                    ConsoleLogger.UserPopup(HEADERMSG_FETCH_REPO, $"There are new changes in {name}");
+                    MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(
+                    $"There are new changes in {name}. Would you like to pull them?",
+                    $"Changes in {name}",
+                    MessageBoxButton.YesNo);
+
+                    // pull repository changes
+                    if (messageBoxResult == MessageBoxResult.Yes) {
+                        ConsoleLogger.StatusBarUpdate("Pulling external repository", win);
+                        Task.Run(() => Cmd.PullRepo(client, path, win));
+                    }
+
                 }
 
             } else {
