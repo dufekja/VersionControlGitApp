@@ -88,7 +88,6 @@ D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\Release\System.Reac
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\Release\System.Threading.Tasks.Extensions.xml
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\Release\System.ValueTuple.xml
-D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\Release\VersionControlGitApp.csprojAssemblyReference.cache
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\Release\Styles\Dictionaries\ComboBoxDictionary.baml
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\Release\Styles\Dictionaries\FontsDictionary.baml
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\Release\Windows\BranchEditWindow.baml
