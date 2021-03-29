@@ -303,6 +303,7 @@ namespace VersionControlGitApp {
                 // start new thread which will watch new repo
                 newRepoChangesThreadState = RepoChangesThreadState.New;
 
+                // watch new repo based on new pathlabel
                 string repo = "";
                 Dispatcher.Invoke(() => repo = PathLabel.Text.ToString());
                 repoChangesThread = new Thread(() => WaitForChangesOnRepo(repo));
@@ -336,6 +337,7 @@ namespace VersionControlGitApp {
         /// <param name="path">Current repository path</param>
         private void AddTrackedFiles(List<string> untrackedFiles, string path) {
 
+            // add each untracked file to index of watched files
             foreach (string file in untrackedFiles) {
                 string command = "add " + '"' + file.Trim() + '"';
                 Cmd.Run(command, path);
@@ -356,14 +358,16 @@ namespace VersionControlGitApp {
         private void WaitForChangesOnRepo(string path) {
             ConsoleLogger.Info("MainWindow.WaitForChangesOnRepo", $"Called with state: {newRepoChangesThreadState}");
 
-            if (newRepoChangesThreadState == RepoChangesThreadState.New)
+            // change global thread state
+            if (newRepoChangesThreadState == RepoChangesThreadState.New) {
                 newRepoChangesThreadState = RepoChangesThreadState.Repeating;
-
+            }
+                
             while (newRepoChangesThreadState == RepoChangesThreadState.Repeating) {
-                ConsoleLogger.Info("MainWindow.WaitForChangesOnRepo", $"Running state: {newRepoChangesThreadState} on {path}");
+                // wait for 2.5 seconds
                 Thread.Sleep(2500);
 
-                // If there are untracked files in currently watched repo -> track them
+                // if there are untracked files in currently watched repo -> track them
                 List<string> untrackedFiles = Cmd.UntrackedFiles(path);
                 if (untrackedFiles != null) {
                     AddTrackedFiles(untrackedFiles, path);

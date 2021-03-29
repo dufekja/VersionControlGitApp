@@ -21,9 +21,9 @@ namespace VersionControlGitApp.Controllers {
         /// </summary>
         /// <param name="repoDB">Instance of repository database</param>
         public static void AddLocalRepositoryCommand(LocalRepoDB repoDB, MainWindow win) {
+            // open folder browser 
             using FolderBrowserDialog fbd = new FolderBrowserDialog();
             DialogResult result = fbd.ShowDialog();
-
             string path = fbd.SelectedPath;
 
             if (result == DialogResult.OK) {
@@ -31,13 +31,15 @@ namespace VersionControlGitApp.Controllers {
                 string name = GitMethods.GetNameFromPath(path);
                 if (!name.Trim().Contains(' ')) {
 
+                    // run method to add local repository
                     bool ok = GitMethods.AddLocalRepo(path, repoDB);
                     if (ok == true) {
+                        // update mainwindow UI
                         MainWindowUI.LoadPathLabel(path);
                         MainWindowUI.ChangeCommitButtonBranch(path, win);
                     }
                 } else {
-                    ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, "Repository cannpot contain spaces");
+                    ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, "Repository cannot contain spaces");
                 } 
             }
 
@@ -48,15 +50,18 @@ namespace VersionControlGitApp.Controllers {
         /// </summary>
         /// <param name="repoDB">Instance of repository database</param>
         public static void NewRepositoryCommand(LocalRepoDB repoDB) {
+            // open folder browser
             using FolderBrowserDialog fbd = new FolderBrowserDialog();
             DialogResult result = fbd.ShowDialog();
-
             string repoPath = fbd.SelectedPath;
 
             if (result == DialogResult.OK) {
                 if (!GitMethods.IsRepo(repoPath)) {
+
+                    // initialize repozitory
                     ConsoleState state = GitMethods.Init(repoPath, repoDB);
                     if (state == ConsoleState.Success) {
+                        // update UI and show popup
                         MainWindowUI.LoadPathLabel(repoPath);
                         ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, $"Repostiory {GitMethods.GetNameFromPath(repoPath)} added");
                     }
@@ -92,6 +97,7 @@ namespace VersionControlGitApp.Controllers {
                 string summary = win.CommitSummary.Text.ToString();
                 string desc = win.CommitDescription.Text.ToString();
 
+                // commit and change mainwindow UI
                 GitMethods.Commit(repoPath, summary, desc, win);
                 MainWindowUI.ClearCommitAndContext(win);
                 MainWindowUI.ChangeAllBranchToolsStatus(repoPath, win);

@@ -20,10 +20,14 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="dir">Directory where to execute command</param>
         /// <returns>ConsoleState variable which returns Success or Error</returns>
         public static ConsoleState Run(string command, string dir) {
+
+            // return error on empty values
             if (command == "" || dir == "")
                 return ConsoleState.Error;
 
+            // catch errors
             try {
+                // process info setup
                 ProcessStartInfo startInfo = new ProcessStartInfo {
                     FileName = GITEXE,
                     Arguments = command,
@@ -31,8 +35,9 @@ namespace VersionControlGitApp.Controllers {
                     WorkingDirectory = dir,
                     WindowStyle = ProcessWindowStyle.Hidden
                 };
-                Process process = Process.Start(startInfo);
 
+                // start process and wait for exit
+                Process process = Process.Start(startInfo);
                 process.WaitForExit();
             } catch {
                 return ConsoleState.Error;
@@ -48,11 +53,14 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="dir">Directory where to execute command</param>
         /// <returns>Returns list of output lines</returns>
         public static List<string> RunAndRead(string command, string dir) {
+
+            // return error on empty values
             if (command == "" || dir == "")
                 return null;
 
             List<string> output = new List<string>();
             try {
+                // setup process start info
                 ProcessStartInfo startInfo = new ProcessStartInfo() {
                     FileName = GITEXE,
                     CreateNoWindow = true,
@@ -64,9 +72,11 @@ namespace VersionControlGitApp.Controllers {
                     Arguments = command
                 };
 
+                // create new process with startInfo
                 Process process = new Process() { StartInfo = startInfo };
                 process.Start();
                 
+                // read console output
                 string line = process.StandardOutput.ReadLine();
                 while (line != null) {
                     output.Add(line);
@@ -102,6 +112,7 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="secondDelimeter">Second delimeter</param>
         /// <returns>Returns string between delimeters</returns>
         public static string Explode(string text, string firstDelimeter, string secondDelimeter) {
+            // split string from both sides by tags
             string[] arr = text.Split(new string[] { firstDelimeter }, StringSplitOptions.None);
             string[] arr2 = arr[1].Split(new string[] { secondDelimeter }, StringSplitOptions.None);
             return arr2[0];
@@ -113,12 +124,15 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="path">Given path of repository</param>
         /// <returns>Returns list of untracked files</returns>
         public static List<string> UntrackedFiles(string path) {
+            // run raw git sattus output command
             List<string> modifiedFiles = RunAndRead("status --porcelain", path);
             List<string> output = new List<string>();
 
-            if (modifiedFiles == null)
+            if (modifiedFiles == null) {
                 return null;
+            }
 
+            // for each untracked file
             foreach (string line in modifiedFiles) {
                 if (!line.Contains("AD ")) {
                     output.Add(line.Substring(3));
@@ -165,7 +179,7 @@ namespace VersionControlGitApp.Controllers {
         /// </summary>
         public static void SetDBPath() {
             // set datapath to local user
-            Config.DATAPATH = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\VersionControlGitApp";
+            DATAPATH = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\VersionControlGitApp";
 
             // create app directory if there is none yet
             if (!Directory.Exists(DATAPATH)) {
@@ -238,11 +252,13 @@ namespace VersionControlGitApp.Controllers {
                     
             }
 
-            
-            if (counter <= 5) {
+            // after 5 seconds
+            if (counter < 5) {
+                // get user instance and get external repository path
                 User user = client.User.Current().Result;
                 string externalRepoPath = $"{GITHUB_PATH}{user.Login}/{name}.git";
 
+                // run git commands to link and push repository
                 Run($"remote add origin {externalRepoPath}", path);
                 Run($"push -u origin master", path);
 
@@ -280,6 +296,7 @@ namespace VersionControlGitApp.Controllers {
                 User user = client.User.Current().Result;
                 string externalRepoPath = $"{GITHUB_PATH}{user.Login}/{name}.git";
 
+                // run pull git command
                 Run("pull", path);
                 ConsoleLogger.UserPopup(HEADERMSG_PULL_REPO, $"Pulled from {externalRepoPath} to {path}");
 
@@ -294,9 +311,11 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="path">Repository path</param>
         /// <returns>Returns bool if repository have commits</returns>
         public static bool HaveCommits(string path) {
+            // return log output
             List<string> lines = RunAndRead("log", path);
             bool haveCommits = false;
 
+            // search for selected substring
             if (lines != null) {
                 foreach (string line in lines) {
                     if (!line.Contains("fatal: ")) {

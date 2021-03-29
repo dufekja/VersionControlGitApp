@@ -38,11 +38,14 @@ namespace VersionControlGitApp {
 
             // parse them into combobox
             foreach (UserRepository repo in userRepos) {
+
+                // combobox item instance
                 ComboBoxItem item = new ComboBoxItem {
                     Content = repo.GetName(),
                     Tag = repo.GetHtmlUrl()
                 };
 
+                // set first item as selected
                 if (isFirst) {
                     item.IsSelected = true;
                     isFirst = false;
@@ -62,18 +65,22 @@ namespace VersionControlGitApp {
             string url = URL.Text.ToString();
 
             if (url != "") {
+                
+                // show directory selection to user and get selected path
                 using var fbd = new FolderBrowserDialog();
                 DialogResult result = fbd.ShowDialog();
                 string path = fbd.SelectedPath;
 
                 if (result.ToString() == "OK" && path != "") {
+                    // clone repo from Github and add it to listbox 
                     Task.Run(() => GitMethods.Clone(url, path, repoDB));
+                    
                     ListBoxItem item = new ListBoxItem {
                         Content = GitMethods.GetNameFromURL(url),
                     };
-
                     win.RepoListBox.Items.Add(item);
-                    this.Close();
+
+                    Close();
                 }
             } else {
                 ConsoleLogger.UserPopup("Clone", Config.USERMSG_SELECTREPO);

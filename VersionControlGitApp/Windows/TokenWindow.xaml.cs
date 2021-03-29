@@ -30,8 +30,10 @@ namespace VersionControlGitApp {
             // get logged user and init token database 
             user = System.Windows.Forms.SystemInformation.UserName;
 
+            // set DB files path
             Cmd.SetDBPath();
 
+            // initialize token database
             tokenDB = new PrivateTokenDB();
             tokenDB.InitDB();
 
@@ -72,9 +74,11 @@ namespace VersionControlGitApp {
                     Token activeToken = tokenDB.GetActiveToken(user);
                     int isActive = 0;
 
-                    if (activeToken == null)
+                    if (activeToken == null) {
                         isActive = 1;
+                    }
 
+                    // save token and redirect to mainwindow
                     tokenDB.WriteToken(token, user, isActive);
                     GoMainWindow(token);
                 } else {

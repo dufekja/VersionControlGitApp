@@ -34,6 +34,7 @@ namespace VersionControlGitApp.Controllers {
             }
 
             if (IsRepo(path) && !exist) {
+                // create new repository instance
                 Repo repo = new Repo() {
                     Name = GetNameFromPath(path),
                     Path = path,
@@ -149,6 +150,7 @@ namespace VersionControlGitApp.Controllers {
                     string command = "commit -m ";
                     command += '"' + msg;
 
+                    // add description to command
                     if (desc.Length > 0) {
                         command += '\n' + desc + '"';
                     }  else {
@@ -310,7 +312,7 @@ namespace VersionControlGitApp.Controllers {
                     return false;
                 }
 
-                // update old to false
+                // update old token to false
                 bool updated = tokenDB.UpdateTokenByValue(tk.Value, 0);
                 if (updated) {
                     Token updateToken = tokenDB.FindTokenByValue(token);

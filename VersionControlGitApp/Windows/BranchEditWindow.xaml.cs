@@ -37,6 +37,7 @@ namespace VersionControlGitApp.Windows {
             operation = _operation;
             win = _win;
 
+            // get selected branch
             string branch = GitMethods.GetCurrentBranch(dirPath);
 
             // change label based on operation
@@ -55,6 +56,8 @@ namespace VersionControlGitApp.Windows {
         /// <returns>Returns cleaned list of branches</returns>
         private List<string> CleanBranches(List<string> branches) {
             List<string> newBranches = new List<string>();
+
+            // remove selcted branch status from selected branch
             foreach (string branch in branches) {
                 newBranches.Add(branch.Replace('*', ' ').Trim());
             }
@@ -145,7 +148,7 @@ namespace VersionControlGitApp.Windows {
         /// <param name="e">All added arguments</param>
         private void DragWindownOnMouseDown(object sender, MouseButtonEventArgs e) {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
-                this.DragMove();
+                DragMove();
         }
 
     }

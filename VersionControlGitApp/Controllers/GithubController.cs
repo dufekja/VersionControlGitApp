@@ -19,8 +19,10 @@ namespace VersionControlGitApp.Controllers {
             win.Dispatcher.Invoke(() => ConsoleLogger.StatusBarUpdate("Authenticating user", win));
 
             try {
+                // authenticate client by token
                 var tokenAuth = new Credentials(token, AuthenticationType.Oauth);
                 client.Credentials = tokenAuth;
+
                 win.Dispatcher.Invoke(() => ConsoleLogger.StatusBarUpdate("User successfully authenticated", win));
             } catch {
                 win.Dispatcher.Invoke(() => ConsoleLogger.StatusBarUpdate("There was an error with authenticating", win));
@@ -35,9 +37,11 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="client">Authenticated Github client object</param>
         /// <returns>Return List of UserRepository objects</returns>
         public static List<UserRepository> GetAllRepos(GitHubClient client) {
+            // get reopsitory list
             List<UserRepository> userRepos = new List<UserRepository>();
             var repoList = client.Repository.GetAllForCurrent().Result;
 
+            // transform to custom repository class
             foreach (Repository repo in repoList) {
                 UserRepository userRepo = new UserRepository(repo);
                 userRepos.Add(userRepo);
@@ -52,8 +56,10 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="name">Repository name</param>
         /// <returns></returns>
         public static bool RepoExists(GitHubClient client, string name) {
+            // get client repositories
             IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
 
+            // check if repo exists
             foreach (Repository repo in repos) {
                 if (repo.Name == name)
                     return true;
@@ -70,6 +76,7 @@ namespace VersionControlGitApp.Controllers {
             string login = user.Login.ToString();
             string email = user.Email.ToString();
 
+            // set git config globals
             Cmd.Run("config --global user.name " + login, path);
             Cmd.Run("config --global user.email " + email, path);
         }
