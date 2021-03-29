@@ -63,3 +63,4 @@ D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\x86\Release\Version
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\x86\Release\VersionControlGitApp.csproj.CopyComplete
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\x86\Release\VersionControlGitApp.exe
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\x86\Release\VersionControlGitApp.pdb
+D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\x86\Release\VersionControlGitApp.csprojAssemblyReference.cache

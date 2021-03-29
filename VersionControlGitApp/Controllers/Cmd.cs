@@ -66,7 +66,7 @@ namespace VersionControlGitApp.Controllers {
 
                 Process process = new Process() { StartInfo = startInfo };
                 process.Start();
-
+                
                 string line = process.StandardOutput.ReadLine();
                 while (line != null) {
                     output.Add(line);

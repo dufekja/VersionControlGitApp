@@ -222,18 +222,31 @@ namespace VersionControlGitApp.Controllers {
         public static void Fetch(string path, GitHubClient client, MainWindow win) {
             string name = GetNameFromPath(path);
             bool repoExists = GithubController.RepoExists(client, name);
+            bool hashMatch = false;
 
             if (repoExists) {
-                // run dry git fetch command
-                List<string> lines = Cmd.RunAndRead("fetch --dry-run", path);
+                // fetch external repository hash
+                List<string> remoteHash = Cmd.RunAndRead("ls-remote origin -h refs/heads/master", path);
+                List<string> localHash = Cmd.RunAndRead("rev-parse HEAD", path);
+                
+                ConsoleLogger.StatusBarUpdate("External repository fetched", win);
 
-                string output = "";
-                foreach (string line in lines) {
-                    output += line;
+                if (remoteHash != null && localHash != null) {
+                    // get hashes from list
+                    string remoteHashRaw = remoteHash[0].Substring(0, 40);
+                    string localHashRaw = localHash[0];
+
+                    if (remoteHashRaw == localHashRaw) {
+                        hashMatch = true;
+                    }
                 }
 
-                ConsoleLogger.StatusBarUpdate("External repository fetched", win);
-                ConsoleLogger.UserPopup(HEADERMSG_FETCH_REPO, $"{output}");
+                if (hashMatch) {
+                    ConsoleLogger.UserPopup(HEADERMSG_FETCH_REPO, $"There are no new changes in {name}");
+                } else {
+                    ConsoleLogger.UserPopup(HEADERMSG_FETCH_REPO, $"There are new changes in {name}");
+                }
+
             } else {
                 ConsoleLogger.UserPopup(HEADERMSG_FETCH_REPO, "Selected repository not found");
             }
