@@ -109,7 +109,7 @@
 
                     <!-- Statistics menu -->
                     <MenuItem Header="Statistics" Padding="6">
-                        <MenuItem Header="User" Click="OpenStatistics" Padding="4"/>
+                        <MenuItem x:Name="UserStatsMenuItem" Header="User" Click="OpenStatistics" Padding="4"/>
                         <MenuItem x:Name="RepositoryStatsMenuItem" Header="Repository" Click="OpenStatistics" Padding="4"/>
                     </MenuItem>
 
@@ -187,7 +187,7 @@
             VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Padding="0">
 
             <Label.Content>
-                <AccessText x:Name="UserName" FontSize="14" TextWrapping="Wrap" Text="Account name placeholder"/>
+                <AccessText x:Name="UserName" FontSize="14" TextWrapping="Wrap" Text="Username"/>
             </Label.Content>
         </Label>
 

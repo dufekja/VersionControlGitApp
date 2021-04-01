@@ -21,6 +21,8 @@ namespace VersionControlGitApp {
 
         public static string DATAPATH { get; set; }
 
+        public static bool ISGITHUBUSER = true;
+
         /* Public constant variables */
         public const string GITHUB_PATH = "https://github.com/";
         public const string GITEXE = "git.exe";

@@ -61,7 +61,7 @@ namespace VersionControlGitApp.Windows {
             currentRepo = GitMethods.GetNameFromPath(_currentRepoPath);
 
             InitializeComponent();
- 
+
             // in case of user statistics
             if (header == "User") {
 
@@ -108,6 +108,7 @@ namespace VersionControlGitApp.Windows {
         /// </summary>
         /// <returns>Returns list with repo tuples</returns>
         private List<string[]> GenerateYearlyUserCommitActivity() {
+            int commitCount = 0;
             IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
             if (repos == null)
                 return null;
@@ -124,6 +125,9 @@ namespace VersionControlGitApp.Windows {
                     totalYearActivity += week.Total;
                 }
 
+                // add year activity for repostiory to commit count
+                commitCount += totalYearActivity;
+
                 // create repository tuples with name and commits for past year
                 string[] repoTuple = new string[2];
                 repoTuple[0] = $"{repo.Name}";
@@ -131,6 +135,9 @@ namespace VersionControlGitApp.Windows {
 
                 reposWithActivity.Add(repoTuple);
             }
+
+            // set commit count text to commit count
+            SetCommitCount(commitCount);
 
             return reposWithActivity;
         }
@@ -173,6 +180,13 @@ namespace VersionControlGitApp.Windows {
             // invoke chart and repo labels info
             Dispatcher.Invoke(() => SetRepoLabelsText("", ""));
             Dispatcher.Invoke(() => GenerateRepoDataCommand());
+        }
+
+        /// <summary>
+        /// Set commit count to UI text element
+        /// </summary>
+        private void SetCommitCount(int commitCount) {
+            Dispatcher.Invoke(() => NumberOfCommits.Content = $"Commits for year: {commitCount}");
         }
 
         /// <summary>

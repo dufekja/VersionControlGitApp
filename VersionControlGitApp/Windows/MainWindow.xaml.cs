@@ -51,14 +51,17 @@ namespace VersionControlGitApp {
             client = GithubController.Authenticate(client, token, this);
 
             // get user based on token and set name + picture
-            user = client.User.Current().Result;
+            try {
+                user = client.User.Current().Result;
+            } catch { user = null; ISGITHUBUSER = false; }
+
             MainWindowUI.InitUIElements(this, user, repoDB, loggedUser);
 
             // get path from pathlabel
             string path = PathLabel.Text.ToString();
 
             // set global git name and email
-            GithubController.SetGlobals(user, path);
+            //GithubController.SetGlobals(user, path);
 
             // if there is repo then watch for changes
             if (path != "") {
@@ -479,6 +482,11 @@ namespace VersionControlGitApp {
                     // authenticate user with new token
                     Dispatcher.Invoke(() => client = GithubController.Authenticate(client, token, this));
                     ConsoleLogger.UserPopup("Private token", "Private token updated and set to active");
+
+                    try {
+                        user = client.User.Current().Result;
+                        MainWindowUI.InitUIElements(this, user, repoDB, loggedUser);
+                    } catch { user = null; }
                 }
 
             } else {

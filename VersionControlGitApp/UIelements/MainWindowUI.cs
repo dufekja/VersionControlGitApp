@@ -32,11 +32,25 @@ namespace VersionControlGitApp.UIelements {
             repoDB = _repoDB;
             loggedUser = _loggedUser;
 
-            win.PathLabel.Text = "";
-            win.UserName.Text = user.Name;
+            if (user == null) {
+                Config.ISGITHUBUSER = false;
+            } else {
+                Config.ISGITHUBUSER = true;
+            }
 
-            LoadUserAvatar();
+            // load listbox repositories
             ListBoxLoad();
+            
+            // block user stats if user null
+            UserStatsBlocked(win);
+
+            if (Config.ISGITHUBUSER) {
+                win.PathLabel.Text = "";
+                win.UserName.Text = user.Name;
+
+                LoadUserAvatar();
+            }
+                   
         }
 
         /// <summary>
@@ -128,8 +142,21 @@ namespace VersionControlGitApp.UIelements {
             // repository stats status
             if (Cmd.HaveCommits(repo))
                win.Dispatcher.Invoke(() => win.RepositoryStatsMenuItem.IsEnabled = true);
-            else
+            else {
                 win.Dispatcher.Invoke(() => win.RepositoryStatsMenuItem.IsEnabled = false);
+            }
+        }
+
+        /// <summary>
+        /// Block user stats if token is unable to read user data
+        /// </summary>
+        /// <param name="win"></param>
+        public static void UserStatsBlocked(MainWindow win) {
+            if (Config.ISGITHUBUSER) {
+                win.Dispatcher.Invoke(() => win.UserStatsMenuItem.IsEnabled = true);
+            } else {
+                win.Dispatcher.Invoke(() => win.UserStatsMenuItem.IsEnabled = false);
+            }
         }
 
         /// <summary>
