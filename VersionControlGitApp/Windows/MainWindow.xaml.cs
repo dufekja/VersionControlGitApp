@@ -100,7 +100,12 @@ namespace VersionControlGitApp {
         /// <param name="sender">Object that triggered action</param>
         /// <param name="e">All added arguments</param>
         private void CloneRepository(object sender, RoutedEventArgs e) {
-            new CloneRepoWindow(repoDB, client, this).Show();   
+            try {
+                var repoList = client.Repository.GetAllForCurrent().Result;
+                new CloneRepoWindow(repoDB, client, this).Show();
+            } catch {
+                ConsoleLogger.UserPopup(HEADERMSG_PULL_REPO, "Unable to clone due to token permissions");
+            }
         }
 
         /// <summary>

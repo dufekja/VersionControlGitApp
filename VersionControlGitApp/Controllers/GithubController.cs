@@ -57,13 +57,15 @@ namespace VersionControlGitApp.Controllers {
         /// <returns></returns>
         public static bool RepoExists(GitHubClient client, string name) {
             // get client repositories
-            IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
+            try {
+                IReadOnlyList<Repository> repos = client.Repository.GetAllForCurrent().Result;
+                // check if repo exists
+                foreach (Repository repo in repos) {
+                    if (repo.Name == name)
+                        return true;
+                }
+            } catch {}
 
-            // check if repo exists
-            foreach (Repository repo in repos) {
-                if (repo.Name == name)
-                    return true;
-            }
             return false;
         }
 
