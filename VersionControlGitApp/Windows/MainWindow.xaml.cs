@@ -398,6 +398,7 @@ namespace VersionControlGitApp {
                 string fileName = ((ComboBoxItem)FilesToCommit.SelectedItem).Content.ToString();
                 string path = PathLabel.Text.ToString();
 
+                // remove tags from name
                 if (fileName.Contains('"')) {
                     fileName = fileName.Substring(1, fileName.Length - 2);
                 }
@@ -415,7 +416,6 @@ namespace VersionControlGitApp {
                     // run trought file changes
                     var color = Brushes.GhostWhite;
                     foreach (var item in textInput) {
-
                         // choose color based on symbol
                         if (item[2] == "-") {
                             color = Brushes.Red;
@@ -488,6 +488,7 @@ namespace VersionControlGitApp {
                     Dispatcher.Invoke(() => client = GithubController.Authenticate(client, token, this));
                     ConsoleLogger.UserPopup("Private token", "Private token updated and set to active");
 
+                    // check user token validity and update UIelements
                     try {
                         user = client.User.Current().Result;
                         MainWindowUI.InitUIElements(this, user, repoDB, loggedUser);
