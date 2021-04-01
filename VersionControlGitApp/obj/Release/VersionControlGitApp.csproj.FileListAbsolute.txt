@@ -28,7 +28,6 @@ C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Release\Sys
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Release\System.Threading.Tasks.Extensions.xml
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Release\System.ValueTuple.xml
-C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\VersionControlGitApp.csprojAssemblyReference.cache
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\Windows\MainWindow.baml
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\Windows\BranchEditWindow.g.cs
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\Windows\CloneRepoWindow.g.cs
