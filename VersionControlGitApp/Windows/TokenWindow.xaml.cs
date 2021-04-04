@@ -29,8 +29,15 @@ namespace VersionControlGitApp {
         public TokenWindow() {
             // check git version
             List<string> output = Cmd.RunAndRead("--version", @"\");
+            bool gitNotInstalled = false;
 
-            if (!output[0].Contains("git version ")) {
+            if (output == null) {
+                gitNotInstalled = true;
+            } else if (!output[0].Contains("git version ")) {
+                gitNotInstalled = true;
+            }
+
+            if (gitNotInstalled) {
                 ConsoleLogger.UserPopup("Git status", "Please install git first");
                 Close();
             }
