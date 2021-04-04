@@ -167,8 +167,9 @@ namespace VersionControlGitApp {
         /// <param name="sender">Object that triggered action</param>
         /// <param name="e">All added arguments</param>
         private void CommitRepository(object sender, RoutedEventArgs e) {
-            if (GitMethods.IsRepo(PathLabel.Text.ToString())) {
-                Dispatcher.Invoke(() => MainWindowController.CommitRepositoryCommand(PathLabel.Text.ToString(), this));
+            string repoPath = PathLabel.Text.ToString();
+            if (GitMethods.IsRepo(repoPath)) {
+                Dispatcher.Invoke(() => MainWindowController.CommitRepositoryCommand(repoPath, this));
             } else {
                 ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, USERMSG_SELECTREPO);
             }
@@ -180,7 +181,12 @@ namespace VersionControlGitApp {
         /// <param name="sender">Object that triggered action</param>
         /// <param name="e">All added arguments</param>
         private void RemoveRepository(object sender, RoutedEventArgs e) {
-            MainWindowController.RemoveRepositoryCommand(PathLabel.Text.ToString(), repoDB, this);
+            string repoPath = PathLabel.Text.ToString();
+            if (GitMethods.IsRepo(repoPath)) {
+                MainWindowController.RemoveRepositoryCommand(repoPath, repoDB, this);
+            } else {
+                ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, USERMSG_SELECTREPO);
+            }   
         }
 
         /// <summary>

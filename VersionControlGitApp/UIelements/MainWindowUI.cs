@@ -40,14 +40,14 @@ namespace VersionControlGitApp.UIelements {
 
             // load listbox repositories
             ListBoxLoad();
-            
+            win.PathLabel.Text = "";
+
             // block user stats if user null
             UserStatsBlocked(win);
 
+            // user avatar section
             if (Config.ISGITHUBUSER) {
-                win.PathLabel.Text = "";
                 win.UserName.Text = user.Name;
-
                 LoadUserAvatar();
             }
                    

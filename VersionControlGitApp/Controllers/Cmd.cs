@@ -52,7 +52,7 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="command">Given command</param>
         /// <param name="dir">Directory where to execute command</param>
         /// <returns>Returns list of output lines</returns>
-        public static List<string> RunAndRead(string command, string dir) {
+        public static List<string> RunAndRead(string command, string dir, bool git = true) {
 
             // return error on empty values
             if (command == "" || dir == "")

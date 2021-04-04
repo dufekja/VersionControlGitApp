@@ -27,6 +27,12 @@ namespace VersionControlGitApp {
         /// Token window construcotr
         /// </summary>
         public TokenWindow() {
+            // check git version
+            List<string> output = Cmd.RunAndRead("--version", @"\");
+            if (output == null) {
+                ConsoleLogger.UserPopup("Git status", "Please install git first");
+                Close();
+            }
 
             // get logged user and init token database 
             user = SystemInformation.UserName;
@@ -56,14 +62,8 @@ namespace VersionControlGitApp {
         /// </summary>
         /// <param name="token">Token value</param>
         private void GoMainWindow(string token) {
-            // check if git installed
-            try {
-                Cmd.Run("--version", @"/");
-                new MainWindow(token, tokenDB).Show();
-                Close();
-            } catch {
-                ConsoleLogger.UserPopup("Git status", "Git not installed");
-            }
+            new MainWindow(token, tokenDB).Show();
+            Close();
         }
 
         /// <summary>

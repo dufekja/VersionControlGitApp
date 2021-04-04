@@ -24,7 +24,8 @@ namespace VersionControlGitApp {
 
         /* Public constant variables */
         public const string GITHUB_PATH = "https://github.com/";
-        public const string GITEXE = "git.exe";
+        public static string GITEXE = @"C:\Program Files\Git\cmd\git.exe";
+        public const string CMD = @"C:\Windows\System32\cmd.exe";
 
         public const string USERMSG_SELECTREPO = "You must select repository first";
         public const string HEADERMSG_DELETE_CONF = "Delete confirmation";
