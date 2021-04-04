@@ -29,7 +29,8 @@ namespace VersionControlGitApp {
         public TokenWindow() {
             // check git version
             List<string> output = Cmd.RunAndRead("--version", @"\");
-            if (output == null) {
+
+            if (!output[0].Contains("git version ")) {
                 ConsoleLogger.UserPopup("Git status", "Please install git first");
                 Close();
             }
