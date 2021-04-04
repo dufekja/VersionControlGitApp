@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -28,10 +29,11 @@ namespace VersionControlGitApp {
         public TokenWindow() {
 
             // get logged user and init token database 
-            user = System.Windows.Forms.SystemInformation.UserName;
+            user = SystemInformation.UserName;
 
             // set DB files path
-            Cmd.SetDBPath();
+            string appdataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            Cmd.SetDBPath(appdataFolder + @"\VersionControlGitApp");
 
             // initialize token database
             tokenDB = new PrivateTokenDB();
@@ -54,8 +56,14 @@ namespace VersionControlGitApp {
         /// </summary>
         /// <param name="token">Token value</param>
         private void GoMainWindow(string token) {
-            new MainWindow(token, tokenDB).Show();
-            Close();
+            // check if git installed
+            try {
+                Cmd.Run("--version", @"/");
+                new MainWindow(token, tokenDB).Show();
+                Close();
+            } catch {
+                ConsoleLogger.UserPopup("Git status", "Git not installed");
+            }
         }
 
         /// <summary>

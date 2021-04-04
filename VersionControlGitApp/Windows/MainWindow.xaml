@@ -187,7 +187,7 @@
             VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Padding="0">
 
             <Label.Content>
-                <AccessText x:Name="UserName" FontSize="14" TextWrapping="Wrap" Text="Username"/>
+                <AccessText x:Name="UserName" FontSize="14" TextWrapping="Wrap" Text="Offline mode"/>
             </Label.Content>
         </Label>
 
