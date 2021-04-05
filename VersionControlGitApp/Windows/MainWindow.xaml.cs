@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
-using System.Windows.Media.Imaging;
 using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Database;
 using VersionControlGitApp.UIelements;
@@ -14,12 +13,13 @@ using VersionControlGitApp.Logging;
 using System.IO;
 using System.Windows.Input;
 using VersionControlGitApp.Windows;
-
-using static VersionControlGitApp.Config;
-using MenuItem = System.Windows.Controls.MenuItem;
 using System.Linq;
 using System.Windows.Media;
 using System.Windows.Documents;
+
+using static VersionControlGitApp.Config;
+using MenuItem = System.Windows.Controls.MenuItem;
+
 
 namespace VersionControlGitApp {
     public partial class MainWindow : Window {

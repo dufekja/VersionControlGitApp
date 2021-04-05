@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Database;
 using VersionControlGitApp.Logging;
@@ -48,8 +38,9 @@ namespace VersionControlGitApp {
             List<Token> tokens = tokenDB.FindTokensByUser(user);
             if (tokens != null) {
                 foreach (Token token in tokens) {
-                    if (token.IsActive == 1)
+                    if (token.IsActive == 1) {
                         GoMainWindow(token.Value);
+                    }    
                 }
             }
 
@@ -92,7 +83,7 @@ namespace VersionControlGitApp {
                     ConsoleLogger.UserPopup("Submit token", "Token already exists");
                 }
             } else {
-                ConsoleLogger.UserPopup("Submit token", "Token must be 40 characters long");
+                ConsoleLogger.UserPopup("Submit token", "Invalid token");
             }
         }
 
