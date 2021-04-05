@@ -177,14 +177,12 @@ namespace VersionControlGitApp.Controllers {
         /// <summary>
         /// Set database path to appdata (each user have theirs DB)
         /// </summary>
-        public static void SetDBPath(string path) {
+        public static void SetDBPath() {
             // set datapath to local user
-            DATAPATH = path;
+            DATAPATH = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\VersionControlGitApp"; ;
 
             // create app directory if there is none yet
-            if (!Directory.Exists(DATAPATH)) {
-                Directory.CreateDirectory(DATAPATH);
-            }
+            Directory.CreateDirectory(DATAPATH);
         }
 
         /// <summary>
@@ -325,6 +323,23 @@ namespace VersionControlGitApp.Controllers {
             }
 
             return haveCommits;
+        }
+
+        /// <summary>
+        /// Checks if git is installed on local device
+        /// </summary>
+        /// <returns>Returns boolean if git installed</returns>
+        public static bool IsGitInstalled() {
+            List<string> output = RunAndRead("--version", @"\");
+            bool isGitInstalled = true;
+
+            if (output == null) {
+                isGitInstalled = false;
+            } else if (!output[0].Contains("git version ")) {
+                isGitInstalled = false;
+            }
+
+            return isGitInstalled;
         }
 
     }

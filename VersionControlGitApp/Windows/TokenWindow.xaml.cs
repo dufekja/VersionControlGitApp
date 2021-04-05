@@ -28,16 +28,8 @@ namespace VersionControlGitApp {
         /// </summary>
         public TokenWindow() {
             // check git version
-            List<string> output = Cmd.RunAndRead("--version", @"\");
-            bool gitNotInstalled = false;
-
-            if (output == null) {
-                gitNotInstalled = true;
-            } else if (!output[0].Contains("git version ")) {
-                gitNotInstalled = true;
-            }
-
-            if (gitNotInstalled) {
+            bool isGitInstalled = Cmd.IsGitInstalled();
+            if (!isGitInstalled) {
                 ConsoleLogger.UserPopup("Git status", "Please install git first");
                 Close();
             }
@@ -46,8 +38,7 @@ namespace VersionControlGitApp {
             user = SystemInformation.UserName;
 
             // set DB files path
-            string appdataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            Cmd.SetDBPath(appdataFolder + @"\VersionControlGitApp");
+            Cmd.SetDBPath();
 
             // initialize token database
             tokenDB = new PrivateTokenDB();
