@@ -34,7 +34,6 @@ D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\x86\Debug\System.Re
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\x86\Debug\System.Runtime.CompilerServices.Unsafe.xml
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\x86\Debug\System.Threading.Tasks.Extensions.xml
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\bin\x86\Debug\System.ValueTuple.xml
-D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\x86\Debug\VersionControlGitApp.csprojAssemblyReference.cache
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\x86\Debug\Styles\Dictionaries\ButtonsDictionary.baml
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\x86\Debug\Styles\Dictionaries\ColorsDictionary.baml
 D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\x86\Debug\Styles\Dictionaries\ComboBoxDictionary.baml

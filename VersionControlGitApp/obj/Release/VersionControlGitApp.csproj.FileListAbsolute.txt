@@ -129,3 +129,4 @@ C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Release\Liv
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Release\LiveCharts.Wpf.pdb
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\bin\Release\LiveCharts.Wpf.xml
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\Release\VersionControlGitApp.csprojAssemblyReference.cache
+D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\Release\VersionControlGitApp.csprojAssemblyReference.cache

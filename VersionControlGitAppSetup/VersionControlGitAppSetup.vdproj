@@ -1300,7 +1300,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:VCSGitApp"
         "ProductCode" = "8:{142FCDAE-E59E-4819-B749-F57D4B4A0452}"
-        "PackageCode" = "8:{C94764AC-7C0B-4D11-897D-F78E5F8D489E}"
+        "PackageCode" = "8:{0086C395-23F0-455C-AC8B-5811B1B8C553}"
         "UpgradeCode" = "8:{5CB28AE5-46B0-4420-8178-9C854990875F}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
