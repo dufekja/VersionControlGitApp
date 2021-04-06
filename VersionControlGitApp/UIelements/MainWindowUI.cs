@@ -32,11 +32,14 @@ namespace VersionControlGitApp.UIelements {
             repoDB = _repoDB;
             loggedUser = _loggedUser;
 
+            // set global user status
             if (user == null) {
                 Config.ISGITHUBUSER = false;
             } else {
                 Config.ISGITHUBUSER = true;
             }
+
+            win.Dispatcher.Invoke(() => win.AllBranchToolsMenuItem.IsEnabled = false);
 
             // load listbox repositories
             ListBoxLoad();
@@ -49,8 +52,7 @@ namespace VersionControlGitApp.UIelements {
             if (Config.ISGITHUBUSER) {
                 win.UserName.Text = user.Name;
                 LoadUserAvatar();
-            }
-                   
+            }      
         }
 
         /// <summary>
@@ -59,6 +61,7 @@ namespace VersionControlGitApp.UIelements {
         public static void LoadUserAvatar() {
             var bi = new BitmapImage();
             bi.BeginInit();
+            // get source image from url
             bi.UriSource = new Uri(user.AvatarUrl);
             bi.EndInit();
             win.UserImage.Source = bi;
@@ -87,6 +90,7 @@ namespace VersionControlGitApp.UIelements {
             win.MergeBranchMenuItem.Items.Clear();
             win.ChangeBranchMenuItem.Items.Clear();
 
+            // get branches and current branch
             List<string> lines = GitMethods.GetBranches(path);
             string currentBranch = GitMethods.GetCurrentBranch(path);
 
@@ -109,13 +113,13 @@ namespace VersionControlGitApp.UIelements {
                 }
             }
 
-            // disable with one branch
+            // disable branch swapping if there is only one branch
             if (win.ChangeBranchMenuItem.Items.Count > 0) {
                 win.ChangeBranchMenuItem.IsEnabled = true;
             } else {
                 win.ChangeBranchMenuItem.IsEnabled = false;
-            }
-                
+            }             
+
             if (win.MergeBranchMenuItem.Items.Count > 0) {
                 win.MergeBranchMenuItem.IsEnabled = true;
             } else {
@@ -130,7 +134,7 @@ namespace VersionControlGitApp.UIelements {
         /// <param name="path">Repository path</param>
         /// <param name="win">Main window thread instance</param>
         public static void ChangeCommitButtonBranch(string path, MainWindow win) {
-            win.CommitButton.Content = "Commit to " + GitMethods.GetCurrentBranch(path);
+            win.CommitButton.Content = "Commit to: " + GitMethods.GetCurrentBranch(path);
         }
 
         /// <summary>
@@ -176,6 +180,7 @@ namespace VersionControlGitApp.UIelements {
                         Content = repo.Name
                     };
 
+                    // select first item
                     if (isSelected == false) {
                         item.IsSelected = true;
                         win.PathLabel.Text = repo.Path;
@@ -225,6 +230,7 @@ namespace VersionControlGitApp.UIelements {
 
             if (modifiedFiles != null) {
 
+                // get selected file name
                 string selected = "";
                 if (win.FilesToCommit.SelectedItem != null) {
                     selected = ((ComboBoxItem)win.FilesToCommit.SelectedItem).Content.ToString();
@@ -243,6 +249,7 @@ namespace VersionControlGitApp.UIelements {
                     });
                 }
 
+                // clear combobox and add new data
                 win.FilesToCommit.Items.Clear();
                 foreach (ComboBoxItem newItem in newComboBoxItems) {
                     win.FilesToCommit.Items.Add(newItem);
@@ -267,6 +274,7 @@ namespace VersionControlGitApp.UIelements {
         /// <param name="repoPath">New repository path</param>
         /// <param name="win">Main window thread instance</param>
         public static void SetDataForNewRepo(string repoName, string repoPath, MainWindow win) {
+            // clear repository data and load new
             win.PathLabel.Text = repoPath;
             win.FileContent.Blocks.Clear();
             FilesToCommitRefresh(win);

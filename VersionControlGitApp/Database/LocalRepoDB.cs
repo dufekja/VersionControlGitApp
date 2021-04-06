@@ -57,8 +57,7 @@ namespace VersionControlGitApp.Database {
         /// </summary>
         /// <param name="repo">Repository object</param>
         public void WriteDB(Repo repo) {
-            var obj = FindByName(repo.Name);
-            if (obj == null) {
+            if (FindByName(repo.Name) == null) {
                 database.Insert(repo);
                 ConsoleLogger.Success("LocalRepoDB", "New repository added");
             } else {

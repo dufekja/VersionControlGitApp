@@ -104,7 +104,7 @@ namespace VersionControlGitApp {
                 var repoList = client.Repository.GetAllForCurrent().Result;
                 new CloneRepoWindow(repoDB, client, this).Show();
             } catch {
-                ConsoleLogger.UserPopup(HEADERMSG_PULL_REPO, "Unable to clone due to token permissions");
+                ConsoleLogger.UserPopup(HEADERMSG_CLONE_REPO, ERRORMSG_PERMISSIONS);
             }
         }
 
@@ -119,7 +119,7 @@ namespace VersionControlGitApp {
                 ConsoleLogger.StatusBarUpdate("Fetching external repository", this);
                 Task.Run(() => GitMethods.Fetch(repoPath, client, this));
             } else {
-                ConsoleLogger.UserPopup(HEADERMSG_FETCH_REPO, USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup(HEADERMSG_FETCH_REPO, STATUSMSG_SELECTREPO);
             }     
         }
 
@@ -133,7 +133,7 @@ namespace VersionControlGitApp {
             if (GitMethods.IsRepo(repoPath)) {
                 Task.Run(() => GitMethods.Push(repoPath, client, this));
             } else {
-                ConsoleLogger.UserPopup(HEADERMSG_PUSH_REPO, USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup(HEADERMSG_PUSH_REPO, STATUSMSG_SELECTREPO);
             }
         }
 
@@ -147,7 +147,7 @@ namespace VersionControlGitApp {
             if (GitMethods.IsRepo(repoPath)) {
                 Task.Run(() => GitMethods.Pull(repoPath, client, this));
             } else {
-                ConsoleLogger.UserPopup(HEADERMSG_PULL_REPO, USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup(HEADERMSG_PULL_REPO, STATUSMSG_SELECTREPO);
             }
                 
         }
@@ -171,7 +171,7 @@ namespace VersionControlGitApp {
             if (GitMethods.IsRepo(repoPath)) {
                 Dispatcher.Invoke(() => MainWindowController.CommitRepositoryCommand(repoPath, this));
             } else {
-                ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, STATUSMSG_SELECTREPO);
             }
         }
 
@@ -185,7 +185,7 @@ namespace VersionControlGitApp {
             if (GitMethods.IsRepo(repoPath)) {
                 MainWindowController.RemoveRepositoryCommand(repoPath, repoDB, this);
             } else {
-                ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, STATUSMSG_SELECTREPO);
             }   
         }
 
@@ -199,7 +199,7 @@ namespace VersionControlGitApp {
             if (GitMethods.IsRepo(repoPath)) {
                 Dispatcher.Invoke(() => MainWindowController.DeleteRepositoryCommand(repoPath));
             } else {
-                ConsoleLogger.UserPopup(HEADERMSG_DELETE_REPO, USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup(HEADERMSG_DELETE_REPO, STATUSMSG_SELECTREPO);
             }
                 
         }
@@ -214,7 +214,7 @@ namespace VersionControlGitApp {
             if (GitMethods.IsRepo(repoPath)) {
                 Dispatcher.Invoke(() => MainWindowController.CreateNewBranchCommand(repoPath, this));
             } else {
-                ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, STATUSMSG_SELECTREPO);
             }
         }
 
@@ -233,7 +233,7 @@ namespace VersionControlGitApp {
             if (repoPath != "" && branch != "") {
                 MainWindowController.ChangeBranchCommand(repoPath, branch, this);
             } else {
-                ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, STATUSMSG_SELECTREPO);
             }
         }
 
@@ -247,7 +247,7 @@ namespace VersionControlGitApp {
             if (repoPath != "") {
                 MainWindowController.RenameCurrentBranchCommand(repoPath, this);
             } else {
-                ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, STATUSMSG_SELECTREPO);
             }
         }
 
@@ -264,7 +264,7 @@ namespace VersionControlGitApp {
             if (repoPath != "" && branch != "") {
                 MainWindowController.MergeCurrentBranchCommand(repoPath, branch, this);         
             } else {
-                ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, STATUSMSG_SELECTREPO);
             }
         }
 
@@ -278,7 +278,7 @@ namespace VersionControlGitApp {
             if (repoPath != "") {
                 MainWindowController.DeleteCurrentBranchCommand(repoPath, this);
             } else {
-                ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, STATUSMSG_SELECTREPO);
             }
         }
 
@@ -323,7 +323,7 @@ namespace VersionControlGitApp {
                 repoChangesThread = new Thread(() => WaitForChangesOnRepo(repo));
                 repoChangesThread.Start();
 
-                ConsoleLogger.Success("MainWindow.RepoListBox_SelectionChanged", "WaitForChangesOnRepo thread started");
+                //ConsoleLogger.Success("MainWindow.RepoListBox_SelectionChanged", "WaitForChangesOnRepo thread started");
             }
         }
 
@@ -362,7 +362,7 @@ namespace VersionControlGitApp {
                 Dispatcher.Invoke(() => MainWindowUI.FilesToCommitRefresh(this));
             } catch {}
 
-            ConsoleLogger.StatusBarUpdate("Waiting on changes in repository", this);
+            ConsoleLogger.StatusBarUpdate(STATUSMSG_WAIT, this);
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace VersionControlGitApp {
         /// </summary>
         /// <param name="path">Current repository path</param>
         private void WaitForChangesOnRepo(string path) {
-            ConsoleLogger.Info("MainWindow.WaitForChangesOnRepo", $"Called with state: {newRepoChangesThreadState}");
+            //ConsoleLogger.Info("MainWindow.WaitForChangesOnRepo", $"Called with state: {newRepoChangesThreadState}");
 
             // change global thread state
             if (newRepoChangesThreadState == RepoChangesThreadState.New) {
@@ -385,8 +385,6 @@ namespace VersionControlGitApp {
                 List<string> untrackedFiles = Cmd.UntrackedFiles(path);
                 if (untrackedFiles != null) {
                     AddTrackedFiles(untrackedFiles, path);
-                } else {
-                    ConsoleLogger.Info("MainWindow.WaitForChangesOnRepo", $"No untracked files");
                 }
             }
 
@@ -419,9 +417,9 @@ namespace VersionControlGitApp {
 
                     FileContent.Blocks.Clear();
 
-                    // run trought file changes
-                    var color = Brushes.GhostWhite;
+                    // run trought file changes                 
                     foreach (var item in textInput) {
+                        var color = Brushes.GhostWhite;
                         // choose color based on symbol
                         if (item[2] == "-") {
                             color = Brushes.Red;
@@ -434,7 +432,7 @@ namespace VersionControlGitApp {
                         // create richboxtext elements 
                         Paragraph paragraph = new Paragraph() { Margin = new Thickness(2) };
                         Run lineNumber = new Run() { Text = $"{item[0]}", Foreground = Brushes.GhostWhite };
-                        Run textFormat = new Run() {Text = $"{item[1]}", Foreground = color};
+                        Run textFormat = new Run() { Text = $"{item[1]}", Foreground = color};
 
                         // add formats to paragraph and insert into richbox
                         paragraph.Inlines.Add(lineNumber);
@@ -466,7 +464,7 @@ namespace VersionControlGitApp {
                     // open statistic for repository
                     new StatisticsWindow(this, client, user, repoDB, header, repoPath).Show();
                 } else {
-                    ConsoleLogger.UserPopup("Repository statistics", "You need to select repository first");
+                    ConsoleLogger.UserPopup(HEADERMSG_STATISTICS, STATUSMSG_SELECTREPO);
                 }
                     
             } else {
@@ -492,7 +490,7 @@ namespace VersionControlGitApp {
                 if (updated) {
                     // authenticate user with new token
                     Dispatcher.Invoke(() => client = GithubController.Authenticate(client, token, this));
-                    ConsoleLogger.UserPopup("Private token", "Private token updated and set to active");
+                    ConsoleLogger.UserPopup(HEADERMSG_TOKEN, "Private token updated and set to active");
 
                     // check user token validity and update UIelements
                     try {
@@ -502,7 +500,7 @@ namespace VersionControlGitApp {
                 }
 
             } else {
-                ConsoleLogger.UserPopup("Private token", "Please insert valid token");
+                ConsoleLogger.UserPopup(HEADERMSG_TOKEN, STATUSMSG_INSERT_TOKEN);
             }    
         }
 

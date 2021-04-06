@@ -63,6 +63,7 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="URL">URL string </param>
         /// <returns>Returns last word string</returns>
         public static string GetNameFromURL(string URL) {
+            // split url by both sides
             string[] arr = URL.Split('/');
             arr = arr[arr.Length - 1].Split('.');
             return arr[0];
@@ -75,6 +76,7 @@ namespace VersionControlGitApp.Controllers {
         /// <returns>Returns bool if folder is repo</returns>
         public static bool IsRepo(string path) {
             bool status = false;
+            // check .git folder inside repository path
             if (Directory.Exists(path + @"\.git")) {
                 status = true;
             }
@@ -92,8 +94,9 @@ namespace VersionControlGitApp.Controllers {
             string dirName = GetNameFromURL(URL);
             string dirPath = path + @"\" + dirName;
 
-            if (!Directory.Exists(dirPath))
+            if (!Directory.Exists(dirPath)) {
                 Directory.CreateDirectory(dirPath);
+            }
 
             // run repo clone
             string command = $"clone {URL} {dirPath}";
@@ -125,7 +128,7 @@ namespace VersionControlGitApp.Controllers {
                 }
 
             } else {
-                ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, "Repository cannot contain spaces");
+                ConsoleLogger.UserPopup(HEADERMSG_CREATE_REPO, "Repository can't contain spaces");
             }
 
             return state;
@@ -138,8 +141,7 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="path">Path to selected repository</param>
         /// <param name="msg">Commit message</param>
         /// <param name="desc">Commit description</param>
-        /// <param name="win">Reference to MainWindow object</param>
-        public static void Commit(string path, string msg, string desc, MainWindow win) {
+        public static void Commit(string path, string msg, string desc) {
             ConsoleState state = ConsoleState.Error;
             List<string> lines = Cmd.RunAndRead("status --porcelain", path);
 
@@ -162,15 +164,15 @@ namespace VersionControlGitApp.Controllers {
 
                 if (state == ConsoleState.Success) {
                     if (Cmd.HaveCommits(path)) {
-                        ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, "Commit successful");
+                        ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, SUCCESSMSG_COMMIT);
                     } else {
-                        ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, "There is nothing to commit");
+                        ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, STATUSMSG_NO_FILES);
                     }
                 } else {
-                    ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, "There was an error");
+                    ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, ERRORMSG);
                 }   
             } else {
-                ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, "There are no files to commit");
+                ConsoleLogger.UserPopup(HEADERMSG_COMMIT_REPO, STATUSMSG_NO_FILES);
             }  
         }
 
@@ -195,11 +197,11 @@ namespace VersionControlGitApp.Controllers {
                 if (messageBoxResult == MessageBoxResult.Yes) {
                     client.Repository.Create(new NewRepository(name));
 
-                    ConsoleLogger.StatusBarUpdate("Pushing external repository", win);
+                    ConsoleLogger.StatusBarUpdate(STATUSMSG_PUSHING, win);
                     Task.Run(() => Cmd.PushRepo(client, name, path, win));
                 }
             } else {
-                ConsoleLogger.StatusBarUpdate("Pushing external repository", win);
+                ConsoleLogger.StatusBarUpdate(STATUSMSG_PUSHING, win);
                 Task.Run(() => Cmd.PushRepo(client, name, path, win));
             }
         }
@@ -211,7 +213,7 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="client">Github client</param>
         /// <param name="win">Reference to MainWindow object</param>
         public static void Pull(string path, GitHubClient client, MainWindow win) { 
-            ConsoleLogger.StatusBarUpdate("Pulling external repository", win);
+            ConsoleLogger.StatusBarUpdate(STATUSMSG_PULLING, win);
             Task.Run(() => Cmd.PullRepo(client, path, win));
         }
 
@@ -253,14 +255,14 @@ namespace VersionControlGitApp.Controllers {
 
                     // pull repository changes
                     if (messageBoxResult == MessageBoxResult.Yes) {
-                        ConsoleLogger.StatusBarUpdate("Pulling external repository", win);
+                        ConsoleLogger.StatusBarUpdate(STATUSMSG_PULLING, win);
                         Task.Run(() => Cmd.PullRepo(client, path, win));
                     }
 
                 }
 
             } else {
-                ConsoleLogger.UserPopup(HEADERMSG_FETCH_REPO, "Selected repository not found");
+                ConsoleLogger.UserPopup(HEADERMSG_FETCH_REPO, STATUSMSG_REPO_NOTFOUND);
             }
 
         }
@@ -308,7 +310,7 @@ namespace VersionControlGitApp.Controllers {
             Token tk = tokenDB.GetActiveToken(SystemInformation.UserName);
             if (tk != null) {
                 if (tk.Value == token) {
-                    ConsoleLogger.UserPopup("Private token", "This token is already active");
+                    ConsoleLogger.UserPopup(HEADERMSG_TOKEN, "This token is already active");
                     return false;
                 }
 
@@ -364,21 +366,21 @@ namespace VersionControlGitApp.Controllers {
                 int lineNum = 1;
                 foreach (string line in changeChunks) {
                     char symbol = line[0];
-
-                    // empty symbol
+                
                     if (symbol == ' ') {
+                        // empty symbol
                         lineNumbered.Add(new string[] { $"{lineNum}.", $"   {line}", " " });
                         prevSymbol = ' ';
                         lineNum++;
-
-                        // minus symbol
+           
                     } else if (symbol == '-') {
+                        // minus symbol
                         lineNumbered.Add(new string[] { $"{lineNum}.", $"   {line}", "-" });
                         lineNum++;
                         prevSymbol = '-';
-
-                        // add symbol
+     
                     } else if (symbol == '+') {
+                        // add symbol
                         if (prevSymbol == ' ' || prevSymbol == '+') {
                             lineNumbered.Add(new string[] { $"{lineNum}.", $"   {line}", "+" });
                             lineNum++;

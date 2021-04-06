@@ -24,23 +24,38 @@ namespace VersionControlGitApp {
 
         /* Public constant variables */
         public const string GITHUB_PATH = "https://github.com/";
-        public static string GITEXE = @"C:\Program Files\Git\cmd\git.exe";
+        public const string GITEXE = @"C:\Program Files\Git\cmd\git.exe";
         public const string CMD = @"C:\Windows\System32\cmd.exe";
 
-        public const string USERMSG_SELECTREPO = "You must select repository first";
+        public const string HEADERMSG_GIT_STATUS = "Git status";
         public const string HEADERMSG_DELETE_CONF = "Delete confirmation";
         public const string HEADERMSG_REMOVE_CONF = "Remove confirmation";
         public const string HEADERMSG_DELETE_REPO = "Delete repository";
         public const string HEADERMSG_REMOVE_REPO = "Remove repository";
         public const string HEADERMSG_CREATE_REPO = "Create repository";
         public const string HEADERMSG_COMMIT_REPO = "Commit repository";
+        public const string HEADERMSG_CLONE_REPO = "Clone repository";
         public const string HEADERMSG_PUSH_REPO = "Push repository";
         public const string HEADERMSG_PULL_REPO = "Pull repository"; 
         public const string HEADERMSG_FETCH_REPO = "Fetch repository";
         public const string HEADERMSG_BRANCH_RELATED = "Branch edit";
         public const string HEADERMSG_CHART_RELATED = "Chart loading";
+        public const string HEADERMSG_STATISTICS = "Repository statistics";
+        public const string HEADERMSG_TOKEN = "Private token";
 
-        public const string ERROR_MSG = "There was an error";
+        public const string ERRORMSG = "There was an error";
+        public const string ERRORMSG_TOKEN = "Invalid token";
+        public const string ERRORMSG_TOKEN_EXISTS = "Token already exists";
+        public const string ERRORMSG_PERMISSIONS = "Unable due to token permissions";
+        public const string STATUSMSG_SELECTREPO = "You must select repository first";
+        public const string STATUSMSG_REPO_NOTFOUND = "Selected repository not found";
+        public const string STATUSMSG_WAIT = "Waiting on changes in repository"; 
+        public const string STATUSMSG_INSERT_TOKEN = "Please insert valid token";
+        public const string STATUSMSG_NO_FILES = "There is nothing to commit";
+        public const string STATUSMSG_PUSHING = "Pushing external repository";
+        public const string STATUSMSG_PULLING = "Pulling external repository";
+
+        public const string SUCCESSMSG_COMMIT = "Commit successful";
 
         public const string NEWFILE = "?? ";
         public const string MODIFIEDNEW = "M ";

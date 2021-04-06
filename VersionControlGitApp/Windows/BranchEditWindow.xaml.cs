@@ -15,6 +15,8 @@ using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Logging;
 using VersionControlGitApp.UIelements;
 
+using static VersionControlGitApp.Config;
+
 namespace VersionControlGitApp.Windows {
     public partial class BranchEditWindow : Window {
 
@@ -87,29 +89,29 @@ namespace VersionControlGitApp.Windows {
             if (branchExists && currentBranch != null) {
                 if (currentBranch != branch) {
                     Cmd.Run($"checkout {branch}", dirPath);
-                    ConsoleLogger.UserPopup("Branch swap", $"Swapped from {branch} to {branch}");
+                    ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, $"Swapped from {branch} to {branch}");
                     close = true;
                 } else {
-                    ConsoleLogger.UserPopup("Branch swap", $"Can't swap to same branch");
+                    ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, $"Can't swap to same branch");
                 }
 
             // in case of rename current branch
             } else if (operation == "rename") {
                 if (currentBranch != "master") {
                     Cmd.Run($"branch -m {branch}", dirPath);
-                    ConsoleLogger.UserPopup("Branch swap", $"Renamed to {branch}");
+                    ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, $"Renamed to {branch}");
                     close = true;
                 } else {
-                    ConsoleLogger.UserPopup("Branch swap", $"Can't rename branch master");
+                    ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, $"Can't rename branch master");
                 }
 
             // in case of creating new branch
             } else if (operation == "create") {
                 Cmd.Run($"checkout -b {branch}", dirPath);
-                ConsoleLogger.UserPopup("Branch create", $"Branch {branch} created");
+                ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, $"Branch {branch} created");
                 close = true;
             } else {
-                ConsoleLogger.UserPopup("Branch edit", $"There was an error\n Try to commit changes first");
+                ConsoleLogger.UserPopup(HEADERMSG_BRANCH_RELATED, $"There was an error\n Try to commit changes first");
                 Dispatcher.Invoke(() => win.CommitButton.Content = "Commit to master");
                 close = true;
             }

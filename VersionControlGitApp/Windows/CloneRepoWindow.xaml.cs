@@ -10,6 +10,8 @@ using Octokit;
 using VersionControlGitApp.Logging;
 using System.Windows.Input;
 
+using static VersionControlGitApp.Config;
+
 namespace VersionControlGitApp {
     public partial class CloneRepoWindow : Window {
 
@@ -83,7 +85,7 @@ namespace VersionControlGitApp {
                     Close();
                 }
             } else {
-                ConsoleLogger.UserPopup("Clone", Config.USERMSG_SELECTREPO);
+                ConsoleLogger.UserPopup(HEADERMSG_CLONE_REPO, STATUSMSG_SELECTREPO);
             }
            
         }

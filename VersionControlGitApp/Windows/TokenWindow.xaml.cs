@@ -6,11 +6,12 @@ using System.Windows.Input;
 using VersionControlGitApp.Controllers;
 using VersionControlGitApp.Database;
 using VersionControlGitApp.Logging;
+using static VersionControlGitApp.Config;
 
 namespace VersionControlGitApp {
     public partial class TokenWindow : Window {
 
-        private PrivateTokenDB tokenDB;
+        private static PrivateTokenDB tokenDB;
         public static string user;
 
         /// <summary>
@@ -20,7 +21,7 @@ namespace VersionControlGitApp {
             // check git version
             bool isGitInstalled = Cmd.IsGitInstalled();
             if (!isGitInstalled) {
-                ConsoleLogger.UserPopup("Git status", "Please install git first");
+                ConsoleLogger.UserPopup(HEADERMSG_GIT_STATUS, "Please install git first");
                 Close();
             }
 
@@ -80,10 +81,10 @@ namespace VersionControlGitApp {
                     tokenDB.WriteToken(token, user, isActive);
                     GoMainWindow(token);
                 } else {
-                    ConsoleLogger.UserPopup("Submit token", "Token already exists");
+                    ConsoleLogger.UserPopup(HEADERMSG_TOKEN, ERRORMSG_TOKEN_EXISTS);
                 }
             } else {
-                ConsoleLogger.UserPopup("Submit token", "Invalid token");
+                ConsoleLogger.UserPopup(HEADERMSG_TOKEN, ERRORMSG_TOKEN);
             }
         }
 

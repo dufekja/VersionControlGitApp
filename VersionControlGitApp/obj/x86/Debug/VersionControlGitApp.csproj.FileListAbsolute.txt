@@ -129,3 +129,4 @@ C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\x86\Debug\V
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\x86\Debug\VersionControlGitApp.csproj.CopyComplete
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\x86\Debug\VersionControlGitApp.exe
 C:\Users\jandu\Desktop\VersionControlGitApp\VersionControlGitApp\obj\x86\Debug\VersionControlGitApp.pdb
+D:\Projects\C#\VersionControlGitApp\VersionControlGitApp\obj\x86\Debug\VersionControlGitApp.csprojAssemblyReference.cache

@@ -52,7 +52,7 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="command">Given command</param>
         /// <param name="dir">Directory where to execute command</param>
         /// <returns>Returns list of output lines</returns>
-        public static List<string> RunAndRead(string command, string dir, bool git = true) {
+        public static List<string> RunAndRead(string command, string dir) {
 
             // return error on empty values
             if (command == "" || dir == "")
@@ -148,11 +148,13 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="path">Path to selected repository</param>
         /// <returns>Returns list of modified files</returns>
         public static List<string> ModifiedFiles(string path) {
+            // run git status and read output
             List<string> files = RunAndRead("status --porcelain", path);
             List<string> output = new List<string>();
             bool wasModified = false;
 
             if (files != null) {
+                // check for modified tags in output
                 foreach (string line in files) {
                     if (line.Contains("M ")) {
                         output.Add(line.Replace("M ", "").Trim());
@@ -191,7 +193,8 @@ namespace VersionControlGitApp.Controllers {
         /// <param name="files">List of files</param>
         /// <param name="path">Path to selected repository</param>
         public static void AddFile(List<string> files, string path) {
-            foreach (string file in files) {
+            // run git add for each file
+            foreach (string file in files) {                
                 Run($"add {file}", path);
             }
         }

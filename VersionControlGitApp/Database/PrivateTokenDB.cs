@@ -54,9 +54,8 @@ namespace VersionControlGitApp.Database {
         /// <summary>
         /// Get first token of usser
         /// </summary>
-        /// <param name="user">Username</param>
         /// <returns>Returns token object</returns>
-        public Token GetFirstToken(string user) {
+        public Token GetFirstToken() {
             if (database.Table<Token>().Count() != 0) {
                 var tokens = database.Table<Token>();
                 return tokens.First();
