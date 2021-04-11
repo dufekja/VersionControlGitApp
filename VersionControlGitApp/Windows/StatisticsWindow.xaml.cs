@@ -69,8 +69,8 @@ namespace VersionControlGitApp.Windows {
                 PieSeriesCollection = new SeriesCollection();
                 
                 // remove column chart 
-                CartesianChart chart = (CartesianChart)this.MainGrid.FindName("Columnchart");
-                this.MainGrid.Children.Remove(chart);
+                CartesianChart chart = (CartesianChart)MainGrid.FindName("Columnchart");
+                MainGrid.Children.Remove(chart);
 
                 chartThread = new Thread(() => GenerateUserData());
                 chartThread.Start();
@@ -79,8 +79,8 @@ namespace VersionControlGitApp.Windows {
             } else if (header == "Repository") {
 
                 // remove pie chart 
-                PieChart chart = (PieChart)this.MainGrid.FindName("Piechart");
-                this.MainGrid.Children.Remove(chart);
+                PieChart chart = (PieChart)MainGrid.FindName("Piechart");
+                MainGrid.Children.Remove(chart);
 
                 chartThread = new Thread(() => GenerateRepoData());
                 chartThread.Start();
@@ -193,9 +193,18 @@ namespace VersionControlGitApp.Windows {
         /// Obtain single repository data from git log function and fill columnt chart with it
         /// </summary>
         private void GenerateRepoDataCommand() {
-            string userName = user.Login.ToLower();
+           
             string totalCommits = $"Total commits in {currentRepo}: ";
-            string commitsFromLoggedUser = $"Commits from {userName}: ";
+            string commitsFromLoggedUser = "";
+            string userName = "";
+
+            // show user commits only if user has valid token
+            if (ISGITHUBUSER) {
+                userName = user.Login.ToString().ToLower();
+                commitsFromLoggedUser = $"Commits from {userName}: ";
+            } else {
+                PrivateReposLabel.Visibility = Visibility.Hidden;
+            }
 
             // generate from local git func
             List<string> commits = GetCommitsFromGitLog();
@@ -253,8 +262,8 @@ namespace VersionControlGitApp.Windows {
 
             } else {
                 SetRepoLabelsText("There are no commits yet", "");
-                CartesianChart chart = (CartesianChart)this.MainGrid.FindName("Columnchart");
-                this.MainGrid.Children.Remove(chart);
+                CartesianChart chart = (CartesianChart)MainGrid.FindName("Columnchart");
+                MainGrid.Children.Remove(chart);
                 Dispatcher.Invoke(() => LoadingLabel.Content = "");
             }
 
@@ -320,7 +329,7 @@ namespace VersionControlGitApp.Windows {
         /// <param name="sender">Object that triggered action</param>
         /// <param name="e">All added arguments</param>
         private void Window_Closed(object sender, RoutedEventArgs e) {
-            this.Close();
+            Close();
         }
 
         /// <summary>
@@ -330,7 +339,7 @@ namespace VersionControlGitApp.Windows {
         /// <param name="e">All added arguments</param>
         private void DragWindownOnMouseDown(object sender, MouseButtonEventArgs e) {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
-                this.DragMove();
+                DragMove();
         }
     }
 }
